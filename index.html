@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>勇者題庫：惡龍討伐戰 - 丙級檢定練習</title>
+    <meta name="description" content="結合勇者鬥惡龍元素的丙級檢定練習網站，讓你一邊練習一邊打敗惡龍！">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- docx.js for Word export -->
+    <script src="https://unpkg.com/docx@8.2.2/build/index.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+</head>
+<body class="dark-theme">
+    <!-- Top Controls (View, A11y & Auth) -->
+    <div class="top-controls">
+        <span id="user-status" style="margin-right: 1rem; align-self: center; font-weight: bold; color: var(--gold);">未登入</span>
+        <button id="auth-btn" class="control-btn" onclick="toggleAuthModal()"><i class="fas fa-user"></i> 登入/註冊</button>
+        <button onclick="toggleA11yModal()" class="control-btn"><i class="fas fa-universal-access"></i> 無障礙設定</button>
+        <button onclick="setViewMode('desktop')" class="control-btn"><i class="fas fa-desktop"></i> 電腦版</button>
+        <button onclick="setViewMode('mobile')" class="control-btn"><i class="fas fa-mobile-alt"></i> 手機版</button>
+    </div>
+
+    <div id="app" class="mode-desktop">
+        <!-- Setup Screen -->
+        <section id="setup-screen" class="screen active">
+            <div class="glass-card main-card">
+                <header>
+                    <h1 class="glow-text"><i class="fas fa-dragon"></i> 勇者題庫</h1>
+                    <p class="subtitle">準備好挑戰惡龍了嗎？選擇你的戰場！</p>
+                </header>
+
+                <div class="form-group">
+                    <label for="hero-id"><i class="fas fa-user-shield"></i> 勇者 ID (排行榜用)</label>
+                    <input type="text" id="hero-id" placeholder="輸入你的勇者名字..." maxlength="10">
+                </div>
+
+                <div class="form-group">
+                    <label for="subject-select"><i class="fas fa-map"></i> 選擇領域</label>
+                    <select id="subject-select">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="chinese_pasta">中式麵食加工</option>
+                        <option value="beverage">飲料調製</option>
+                        <option value="technical">技術士技能檢定</option>
+                        <option value="food_safety">食品安全衛生</option>
+                    </select>
+                </div>
+
+                <div id="sub-options" class="hidden">
+                    <div class="form-group">
+                        <label for="filter-type"><i class="fas fa-filter"></i> 練習模式</label>
+                        <select id="filter-type">
+                            <option value="category">依工作項目 (官方大綱)</option>
+                            <option value="knowledge">依知識類別 (統整概念)</option>
+                            <option value="keyword">關鍵字搜尋 (精準打擊)</option>
+                            <option value="random">隨機選題</option>
+                        </select>
+                    </div>
+
+                    <div id="filter-value-container" class="form-group hidden">
+                        <label for="filter-value" id="filter-value-label">子類別</label>
+                        <select id="filter-value"></select>
+                    </div>
+
+                    <div id="keyword-search-container" class="form-group hidden">
+                        <label for="keyword-input">輸入關鍵字</label>
+                        <input type="text" id="keyword-input" placeholder="例如：酵母、冷水麵...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="question-count"><i class="fas fa-list-ol"></i> 練習題數 (10-50)</label>
+                        <input type="number" id="question-count" min="10" max="50" value="20">
+                    </div>
+
+                    <button id="start-btn" class="btn btn-primary btn-large">
+                        <i class="fas fa-sword"></i> 開始練習
+                    </button>
+                </div>
+
+                <button id="show-leaderboard-btn" class="btn btn-outline auth-required hidden" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-trophy"></i> 查看我的歷史紀錄 (需登入)
+                </button>
+            </div>
+        </section>
+
+        <!-- Quiz Screen -->
+        <section id="quiz-screen" class="screen hidden">
+            <div class="battle-container">
+                <!-- Battle Stage Area -->
+                <div class="battle-stage">
+                    <div class="hero-area">
+                        <div id="hero-sprite" class="hero-idle">
+                            <i class="fas fa-user-ninja"></i>
+                        </div>
+                    </div>
+                    <div class="dragon-area">
+                        <div id="dragon-sprite" class="dragon-idle">
+                            <i class="fas fa-dragon"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hp-bar-container dragon-hp-container">
+                    <div class="hp-label-container">
+                        <span><i class="fas fa-heart"></i> 惡龍血條</span>
+                        <span id="dragon-hp-text">100%</span>
+                    </div>
+                    <div class="hp-bar">
+                        <div id="dragon-hp" class="hp-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Quiz Area -->
+                <div class="glass-card quiz-card">
+                    <div class="quiz-header">
+                        <span id="timer"><i class="fas fa-clock"></i> 00:00</span>
+                        <span id="progress">題目 1 / 20</span>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div id="question-text" class="question-box">載入中...</div>
+                        <button id="tts-btn" class="control-btn tts-btn hidden" onclick="readQuestionAloud()"><i class="fas fa-volume-up"></i> 朗讀</button>
+                    </div>
+                    
+                    <div id="options-container" class="options-grid">
+                        <!-- Options will be injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Screen -->
+        <section id="result-screen" class="screen hidden">
+            <div class="glass-card result-card">
+                <h2 id="result-title">戰鬥結束</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">花費時間</div>
+                        <div id="final-time" class="stat-value">00:00</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-label">正確率</div>
+                        <div id="final-score" class="stat-value">0%</div>
+                    </div>
+                </div>
+
+                <div id="victory-message" class="message-box"></div>
+
+                <div class="action-buttons">
+                    <button id="retry-wrong-btn" class="btn btn-secondary">
+                        <i class="fas fa-redo"></i> 錯題練習
+                    </button>
+                    <button id="restart-btn" class="btn btn-outline">
+                        <i class="fas fa-home"></i> 重新選擇
+                    </button>
+                    <button id="show-leaderboard-result-btn" class="btn btn-primary auth-required hidden">
+                        <i class="fas fa-trophy"></i> 查看歷史紀錄
+                    </button>
+                    <button id="export-btn" class="btn btn-gold auth-required hidden">
+                        <i class="fas fa-file-alt"></i> 匯出錯題 (txt)
+                    </button>
+                </div>
+
+                <div id="wrong-questions-review" class="review-area">
+                    <h3><i class="fas fa-book-open"></i> 錯題回顧</h3>
+                    <div id="review-list"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard Modal -->
+        <div id="leaderboard-modal" class="modal hidden">
+            <div class="glass-card modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-trophy"></i> 勇者排行榜 (前20名)</h2>
+                    <button class="close-modal" onclick="document.getElementById('leaderboard-modal').classList.add('hidden')">&times;</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>勇者 ID</th>
+                                <th>題庫</th>
+                                <th>模式</th>
+                                <th>題數</th>
+                                <th>正確率</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessibility Modal -->
+        <div id="a11y-modal" class="modal hidden">
+            <div class="glass-card modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-universal-access"></i> 無障礙輔助設定</h2>
+                    <button class="close-modal" onclick="document.getElementById('a11y-modal').classList.add('hidden')">&times;</button>
+                </div>
+                <div class="a11y-settings">
+                    <div class="form-group">
+                        <label>字體大小</label>
+                        <select id="a11y-fontsize" onchange="applyA11y()">
+                            <option value="normal">標準</option>
+                            <option value="large">放大</option>
+                            <option value="xlarge">特大</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>高對比模式</label>
+                        <select id="a11y-contrast" onchange="applyA11y()">
+                            <option value="off">關閉</option>
+                            <option value="high">開啟 (高對比)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>閱讀輔助字體 (減輕閱讀障礙)</label>
+                        <select id="a11y-font" onchange="applyA11y()">
+                            <option value="off">關閉</option>
+                            <option value="dyslexia">開啟</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>語音朗讀功能 (TTS)</label>
+                        <select id="a11y-tts" onchange="applyA11y()">
+                            <option value="off">關閉</option>
+                            <option value="on">開啟 (在題目旁顯示朗讀按鈕)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="modal hidden">
+            <div class="glass-card modal-content" style="max-width: 400px;">
+                <div class="modal-header">
+                    <h2 id="auth-title"><i class="fas fa-user-circle"></i> 勇者登入</h2>
+                    <button class="close-modal" onclick="document.getElementById('auth-modal').classList.add('hidden')">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label>電子郵件</label>
+                    <input type="email" id="auth-email" placeholder="hero@example.com">
+                </div>
+                <div class="form-group">
+                    <label>密碼 (至少 6 碼)</label>
+                    <input type="password" id="auth-password" placeholder="******">
+                </div>
+                <div id="auth-error" style="color: var(--danger); margin-bottom: 1rem; font-size: 0.875rem;"></div>
+                <button id="auth-submit-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">登入</button>
+                <button id="auth-google-btn" class="btn btn-outline" style="width: 100%; border-color: #4285F4; color: #4285F4;">
+                    <i class="fab fa-google"></i> 使用 Google 帳號登入
+                </button>
+                <div style="text-align: center; margin-top: 1rem; font-size: 0.875rem;">
+                    <a href="#" id="auth-toggle-link" style="color: var(--primary);">還沒有帳號？點此註冊</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="main.js?v=2"></script>
+</body>
+</html>

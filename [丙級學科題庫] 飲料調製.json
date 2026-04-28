@@ -1,0 +1,6370 @@
+[
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 1,
+    "question": "吧檯設備器具的維護及清潔工作是誰的任務?",
+    "options": [
+      "工程部及清潔員",
+      "餐飲部及餐務部",
+      "飲務部及養護組",
+      "飲務員及助理員"
+    ],
+    "answer": 4,
+    "knowledge_tag": "吧檯類型",
+    "explanation": "飲務員和助理員就像吧檯的小管家，負責把所有的杯子和機器洗乾淨並照顧好。",
+    "keyword_tag": "Mini Bar"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 2,
+    "question": "由餐廳服務人員點單(Order),再由餐廳服務人員將調製好的飲料送至顧客餐桌上,此種供應飲料之吧檯型態稱之為:",
+    "options": [
+      "Front Bar",
+      "Open Bar",
+      "Service Bar",
+      "Lounge"
+    ],
+    "answer": 3,
+    "knowledge_tag": "吧檯類型",
+    "explanation": "Service Bar 就像是飲料的秘密基地，服務生點完單後去那裡拿飲料，再送到客人的桌上。",
+    "keyword_tag": "Lobby Bar"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 3,
+    "question": "吧檯內的Under Bar 指",
+    "options": [
+      "放托盤的地方",
+      "出納收錢的地方",
+      "陳列、儲存酒的地方",
+      "飲務員工作的地方"
+    ],
+    "answer": 4,
+    "knowledge_tag": "活動類型",
+    "explanation": "Under Bar 就是吧檯裡面、客人的視線下方，那是飲料師傅大顯身手、準備飲料的工作區。",
+    "keyword_tag": "Cocktail Party"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 4,
+    "question": "吧檯檯前,作為顧客座位使用的高腳椅稱為:",
+    "options": [
+      "Bar Chair",
+      "Bar Stool",
+      "High Chair",
+      "Arm Chair"
+    ],
+    "answer": 2,
+    "knowledge_tag": "吧檯設備",
+    "explanation": "Bar Stool 就是吧檯前面那種高高的椅子，讓客人可以坐得高高的，舒服地喝飲料。",
+    "keyword_tag": "Soda Gun"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 5,
+    "question": "以下那一項是飲務員的工具(Bartender Tools)?",
+    "options": [
+      "Coaster、Straw",
+      "Cocktail Shaker、Jigger",
+      "Cocktail Station、Sink",
+      "Ice Making Machine、Refrigerator"
+    ],
+    "answer": 2,
+    "knowledge_tag": "設備用途",
+    "explanation": "雪克杯用來搖飲料，量酒器用來量多少，這兩樣都是飲料師傅最重要的小幫手。",
+    "keyword_tag": "義式咖啡機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 6,
+    "question": "吧檯杯子洗好時,應先置放何處?",
+    "options": [
+      "置杯架(Glass Display)",
+      "雞尾酒工作檯(Cocktail Station)",
+      "瀝水墊(Drain Board)",
+      "冰箱(Refrigerator)"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材種類",
+    "explanation": "杯子洗好後要放在瀝水墊上讓水滴乾，就像我們洗完碗要放在架子上晾乾一樣。",
+    "keyword_tag": "飲料裝飾"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 7,
+    "question": "從製冰機的儲冰槽內取冰塊,應該使用何種工具較佳?",
+    "options": [
+      "冰夾(Ice Tong)",
+      "冰鏟(Ice Scoop)",
+      "冰桶 (Ice Bucket)",
+      "吧匙(Bar Spoon)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "職務內容",
+    "explanation": "拿冰塊要用專門的冰鏟，這樣既衛生又方便，千萬不能直接用手去抓喔！",
+    "keyword_tag": "營業準備"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 8,
+    "question": "串聯飲料裝飾品所用的小叉子稱為",
+    "options": [
+      "Garnish Tray",
+      "Fruit Fork",
+      "Cocktail Fork",
+      "Cocktail Pick"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食材種類",
+    "explanation": "Cocktail Pick 就像是漂亮的小牙籤，把水果串在一起放在杯子邊，讓飲料變得更美。",
+    "keyword_tag": "裝飾物材料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 9,
+    "question": "工作檯(Bar Station)邊的一個放冰塊槽,稱為:",
+    "options": [
+      "Ice Bin",
+      "Sink",
+      "Ice Cooler",
+      "Ice Bucket"
+    ],
+    "answer": 1,
+    "knowledge_tag": "職務內容",
+    "explanation": "Ice Bin 就是吧檯裡專門放冰塊的小池子，讓師傅隨時都能拿到冰塊來調飲料。",
+    "keyword_tag": "吧檯靈魂"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 10,
+    "question": "調製飲料時,使用最多的冰塊型態是",
+    "options": [
+      "塊狀冰塊(Ice Cube)",
+      "刨冰(Shaved Ice)",
+      "碎冰(Crashed Ice)",
+      "冰片(Flake Ice)"
+    ],
+    "answer": 1,
+    "knowledge_tag": "活動類型",
+    "explanation": "塊狀冰塊就像小方糖一樣，是調飲料最常用到的，可以讓飲料冰冰涼涼的很清爽。",
+    "keyword_tag": "Champagne Party"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 11,
+    "question": "Garnish Tray 是用來裝:",
+    "options": [
+      "鹽",
+      "糖",
+      "飲料",
+      "裝飾物"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職務名稱",
+    "explanation": "Garnish Tray 就像是一個裝飾品的小盒子，裡面放著切好的水果，隨時可以裝飾飲料。",
+    "keyword_tag": "Bartender"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 12,
+    "question": "Glass Rimmer 是",
+    "options": [
+      "沾杯器",
+      "開罐器",
+      "掛杯架",
+      "洗杯機"
+    ],
+    "answer": 1,
+    "knowledge_tag": "組織架構",
+    "explanation": "沾杯器是用來在杯口沾上一圈鹽巴或糖的工具，讓杯子邊緣看起來像下雪一樣漂亮。",
+    "keyword_tag": "飲務組織"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 13,
+    "question": "雪克杯(Shaker)應每天清洗幾次?",
+    "options": [
+      "每天1次",
+      "每天2次",
+      "每天3次",
+      "每次用完即清洗"
+    ],
+    "answer": 4,
+    "knowledge_tag": "成本概念",
+    "explanation": "雪克杯每調完一杯飲料就要洗一次，這樣味道才不會混在一起，也能保持乾淨衛生。",
+    "keyword_tag": "成本計算"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 14,
+    "question": "傳統雪克杯(Shaker)是由幾個部分組成?",
+    "options": [
+      "1個",
+      "2個",
+      "3個",
+      "4個"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備構造",
+    "explanation": "傳統的雪克杯有三個部分組合起來，就像玩具積木一樣可以分開又組合起來。",
+    "keyword_tag": "雪克杯構造"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 15,
+    "question": "杯皿的清洗程序是:",
+    "options": [
+      "清水沖洗→洗潔劑→消毒液→晾乾",
+      "洗潔劑→清水沖洗→消毒液→晾乾",
+      "洗潔劑→消毒液→清水沖洗→晾乾",
+      "消毒液→洗潔劑→清水沖洗→晾乾"
+    ],
+    "answer": 2,
+    "knowledge_tag": "清潔流程",
+    "explanation": "洗杯子要先用洗碗精，再用清水沖，然後消毒，最後晾乾，這樣杯子才最乾淨！",
+    "keyword_tag": "杯皿清洗"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 16,
+    "question": "清洗玻璃杯一般均使用何種消毒液殺菌?",
+    "options": [
+      "清潔藥水",
+      "漂白水",
+      "清潔劑",
+      "肥皂粉"
+    ],
+    "answer": 2,
+    "knowledge_tag": "消毒方式",
+    "explanation": "洗玻璃杯時，加一點點漂白水泡一下，可以把細菌殺光光，杯子就消毒好了！",
+    "keyword_tag": "玻璃杯消毒"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 17,
+    "question": "清洗香甜酒杯(Liqueur Glass)要使用:",
+    "options": [
+      "長柄刷",
+      "抹布",
+      "菜瓜布",
+      "尖嘴刷"
+    ],
+    "answer": 4,
+    "knowledge_tag": "清潔工具",
+    "explanation": "香甜酒杯細細長長的，要用尖嘴刷才能伸進去，把杯子每個角落都刷乾淨。",
+    "keyword_tag": "香甜酒杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 18,
+    "question": "清洗後不須要掛於吊杯架的是:",
+    "options": [
+      "白蘭地杯",
+      "香檳杯",
+      "雞尾酒杯",
+      "高飛球杯"
+    ],
+    "answer": 4,
+    "knowledge_tag": "杯具收納",
+    "explanation": "高飛球杯比較大，洗好後不用掛起來，可以直接放在櫃子裡就好囉。",
+    "keyword_tag": "高飛球杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 19,
+    "question": "打開後必須要冷藏的調味品是:",
+    "options": [
+      "可可粉",
+      "液態鮮奶油",
+      "咖啡豆",
+      "蜂蜜"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食材保存",
+    "explanation": "液態鮮奶油打開後，一定要冰在冰箱裡，不然它會很快就壞掉不能用喔！",
+    "keyword_tag": "液態鮮奶油"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 20,
+    "question": "吧檯水源要充足,並應設置足夠水槽,水槽及工作檯之材質最好為:",
+    "options": [
+      "木材",
+      "塑膠",
+      "不銹鋼",
+      "水泥"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備材質",
+    "explanation": "吧檯的水槽和工作檯最好是用不銹鋼做的，這樣才不容易生鏽，也比較好清洗。",
+    "keyword_tag": "吧檯材質"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 21,
+    "question": "一般吧檯冰箱冷藏溫度需維護正常指示,以不超過多少度較佳?",
+    "options": [
+      "20℃",
+      "15°C",
+      "10℃",
+      "5℃"
+    ],
+    "answer": 4,
+    "knowledge_tag": "設備操作",
+    "explanation": "吧檯冰箱的溫度要維持在五度以下，這樣裡面的食物和飲料才不會壞掉喔！",
+    "keyword_tag": "冰箱溫度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 22,
+    "question": "下列何種器皿,不可盛裝飲料供顧客飲用?",
+    "options": [
+      "古典酒杯(Old Fashioned Glass)",
+      "高飛球杯(Highball Glass)",
+      "可林杯(Collins Glass)",
+      "公杯 (Lipped Glass)"
+    ],
+    "answer": 4,
+    "knowledge_tag": "器皿使用",
+    "explanation": "公杯是拿來量東西的，不能直接拿給客人喝飲料喔，這樣不衛生！",
+    "keyword_tag": "公杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 23,
+    "question": "吧檯的砧板(Cutting Board)的主要用途",
+    "options": [
+      "切水果及製作裝飾物",
+      "可放在吧檯上調酒的工作檯且會止滑",
+      "偶而也可用來製作三明治或火腿類的食物",
+      "可直接在上面調製飲料"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備使用",
+    "explanation": "吧檯的砧板是專門用來切水果和做飲料裝飾品的，要保持乾淨衛生喔！",
+    "keyword_tag": "砧板用途"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 24,
+    "question": "為了讓吧檯工作檯面保持乾淨,應",
+    "options": [
+      "每做完一道飲料不需急著整理",
+      "Rush Hour 時先放著,等打烊再一起整理",
+      "做完一道飲料即刻將器皿清洗歸位,檯面要擦拭乾淨並處理殘渣",
+      "飲務員不必親力親為,可請助手稍後再整理"
+    ],
+    "answer": 3,
+    "knowledge_tag": "清潔習慣",
+    "explanation": "做完一杯飲料，就要馬上把用過的工具洗好、檯面擦乾淨，這樣吧檯才不會亂七八糟。",
+    "keyword_tag": "檯面清潔"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 25,
+    "question": "吧檯工作檯內的腳踏墊應",
+    "options": [
+      "天天清洗",
+      "三天洗一次",
+      "一週洗一次",
+      "為節省水費、響應環保,髒了再洗"
+    ],
+    "answer": 1,
+    "knowledge_tag": "清潔頻率",
+    "explanation": "吧檯的腳踏墊每天都要洗乾淨，就像我們每天都要洗腳踏墊一樣，保持整潔。",
+    "keyword_tag": "腳踏墊"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 26,
+    "question": "咖啡杯及茶杯,每週應浸泡在下列何者,以除去咖啡和茶垢,保持杯皿光亮?",
+    "options": [
+      "80℃以上的熱水",
+      "稀釋的漂白水",
+      "稀釋的沙拉脫",
+      "稀釋的銀器清潔液"
+    ],
+    "answer": 2,
+    "knowledge_tag": "清潔維護",
+    "explanation": "咖啡杯和茶杯常常會有黑黑的茶垢，每個禮拜用稀釋的漂白水泡一下，就會亮晶晶了！",
+    "keyword_tag": "杯垢清除"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 27,
+    "question": "下列哪一種吧檯器具設備,不需要每天清洗?",
+    "options": [
+      "吧叉匙",
+      "量酒器",
+      "製冰機",
+      "咖啡機"
+    ],
+    "answer": 3,
+    "knowledge_tag": "清潔頻率",
+    "explanation": "製冰機不像杯子那樣需要每天洗，但也要定期清潔，確保冰塊乾淨衛生。",
+    "keyword_tag": "製冰機清潔"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 28,
+    "question": "清洗拿鐵玻璃杯要使用清潔劑和下列何者,來清洗並檢查杯子是否有破損?",
+    "options": [
+      "洗杯刷",
+      "用手指直接搓揉",
+      "菜瓜布",
+      "鐵刷"
+    ],
+    "answer": 1,
+    "knowledge_tag": "清潔工具",
+    "explanation": "洗拿鐵玻璃杯要用洗碗精和洗杯刷，仔細刷過，還要檢查杯子有沒有破掉喔！",
+    "keyword_tag": "拿鐵杯清洗"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 29,
+    "question": "清潔吧檯地板最佳時機是?",
+    "options": [
+      "營業前",
+      "營業後",
+      "地板濕掉隨時擦乾以保安全",
+      "不必太在意,穿工作鞋止滑即可"
+    ],
+    "answer": 3,
+    "knowledge_tag": "清潔時機",
+    "explanation": "吧檯地板如果濕濕的，要馬上擦乾，才不會有人滑倒受傷，要特別注意安全！",
+    "keyword_tag": "地板清潔"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 30,
+    "question": "以下敘述何者不正確?",
+    "options": [
+      "飲務員作業前需洗淨雙手",
+      "飲務員上班前,最好先洗澡以去除個人體味",
+      "飲務員上班前,應擦指甲油以帶給顧客好印象",
+      "飲務員應該隨時保持整潔的儀容"
+    ],
+    "answer": 3,
+    "knowledge_tag": "職場禮儀",
+    "explanation": "飲料師傅不可以擦指甲油，因為指甲油可能會掉到飲料裡，不衛生也不專業喔！",
+    "keyword_tag": "飲務員儀容"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 31,
+    "question": "飲務員隨時將清潔的調飲工具,擺放在工作檯上方,以利工作方便迅速,下列哪一選項敘述正確?",
+    "options": [
+      "清洗完成之玻璃器皿,應陰乾或使用抹布擦拭後才可使用",
+      "雪克杯(Shaker)每次使用後都應清洗",
+      "為了工作方便與節省時間,必須準備多套,打烊後再一起集中清理",
+      "吧檯的杯子最好送到廚房的洗碗機一起清洗"
+    ],
+    "answer": 2,
+    "knowledge_tag": "清潔頻率",
+    "explanation": "雪克杯每次用完都要洗乾淨，這樣才能確保下一杯飲料也是乾淨衛生的。",
+    "keyword_tag": "工具清潔"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 32,
+    "question": "吧檯物料使用前應檢視其新鮮度,下列敘述何者正確?",
+    "options": [
+      "購買回來之奶精粉,開封後應立即冷藏",
+      "打開濃縮果汁或糖漿時若有「嘶」聲音,表示已經發酵變質",
+      "已切好的裝飾用水果,可預先掛在杯口備用",
+      "水蜜桃罐頭若未使用完,可用保鮮膜包覆開口處冷藏備用"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食材判斷",
+    "explanation": "如果濃縮果汁或糖漿打開有『嘶』的聲音，就表示它壞掉了，不能再用了喔！",
+    "keyword_tag": "物料檢視"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 33,
+    "question": "\"Can Opener\"是指",
+    "options": [
+      "過濾器",
+      "量酒器",
+      "開罐器",
+      "開瓶器"
+    ],
+    "answer": 3,
+    "knowledge_tag": "工具辨識",
+    "explanation": "Can Opener 就是開罐器，用來打開罐頭的，方便又安全。",
+    "keyword_tag": "Can Opener"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 34,
+    "question": "吧檯內的工作檯高度,一般多調整在?",
+    "options": [
+      "50公分高",
+      "75公分高",
+      "110公分高",
+      "150公分高"
+    ],
+    "answer": 2,
+    "knowledge_tag": "設備規格",
+    "explanation": "吧檯的工作檯通常是75公分高，這樣飲料師傅站著工作才舒服，不會腰痠背痛。",
+    "keyword_tag": "工作檯高度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 01: 吧檯清潔",
+    "id": 35,
+    "question": "Reach-in Refrigerator 是吧檯必備的設備,其中文稱?",
+    "options": [
+      "一般的冷藏冰箱",
+      "可推車進去的冷藏冰箱",
+      "低溫冷凍庫",
+      "冰啤酒專用冰箱"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備辨識",
+    "explanation": "Reach-in Refrigerator 就是我們常看到的冷藏冰箱，用來冰各種飲料和食材的。",
+    "keyword_tag": "冷藏冰箱"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 1,
+    "question": "吧檯的種類很多,有獨立經營、有附屬在餐廳或飯店內,有一種吧檯設在飯店的客房內,現場並不需要人員服務,其英文稱為下列何者?",
+    "options": [
+      "Cocktail Lounge",
+      "Sky Lounge",
+      "Night Club",
+      "Mini Bar"
+    ],
+    "answer": 4,
+    "knowledge_tag": "吧檯類型",
+    "explanation": "Mini Bar 是飯店房間裡的小冰箱，裡面有放飲料和零食，客人可以自己拿來吃喝。",
+    "keyword_tag": "Mini Bar"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 2,
+    "question": "飯店的大廳處,設有桌子及座位,並供應酒類、飲料的地方,其英文稱為下列何者?",
+    "options": [
+      "Sport Bar",
+      "Lobby Bar",
+      "Music Bar",
+      "Mobile Bar"
+    ],
+    "answer": 2,
+    "knowledge_tag": "吧檯類型",
+    "explanation": "Lobby Bar 就在飯店的大廳，客人可以在這裡休息、聊天，喝點飲料或酒。",
+    "keyword_tag": "Lobby Bar"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 3,
+    "question": "可在晚宴前等待賓客時所舉行的酒會,其英文稱為下列何者?",
+    "options": [
+      "Punch Party",
+      "Champagne Party",
+      "Birthday Party",
+      "Cocktail Party"
+    ],
+    "answer": 4,
+    "knowledge_tag": "活動類型",
+    "explanation": "Cocktail Party 是一種派對，大家站著聊天、喝雞尾酒，很輕鬆的。",
+    "keyword_tag": "Cocktail Party"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 4,
+    "question": "大型的吧檯,常設有專供給蘇打飲料的器具,其英文稱為下列何者?",
+    "options": [
+      "Draft Beer Dispenser",
+      "Speed Gun",
+      "Soda Gun",
+      "Syrup Container"
+    ],
+    "answer": 3,
+    "knowledge_tag": "吧檯設備",
+    "explanation": "Soda Gun 是一種機器，可以快速壓出各種汽水，做飲料很方便。",
+    "keyword_tag": "Soda Gun"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 5,
+    "question": "一般營業時,下列何種設備或器皿較不常在大型酒會中使用?",
+    "options": [
+      "冰夾(Ice Tong)",
+      "冰車(Ice Trolley)",
+      "開瓶器(Opener)",
+      "義式咖啡機(Espresso Machine)"
+    ],
+    "answer": 4,
+    "knowledge_tag": "設備用途",
+    "explanation": "義式咖啡機通常是拿來煮咖啡的，在大型的酒會上比較少用到，因為大家大多喝別的酒。",
+    "keyword_tag": "義式咖啡機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 6,
+    "question": "下列何者比較不常用在飲料之裝飾物?",
+    "options": [
+      "櫻桃",
+      "檸檬",
+      "小黃瓜",
+      "柳橙"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材種類",
+    "explanation": "做飲料裝飾品通常用漂亮的水果，小黃瓜比較少用，因為味道不搭。",
+    "keyword_tag": "飲料裝飾"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 7,
+    "question": "飲務員每天於營業前的首要任務是下列何者?",
+    "options": [
+      "核視採購報表",
+      "檢視營業月報表",
+      "檢視庫存月報表",
+      "檢視營業日報表(含工作日誌)"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職務內容",
+    "explanation": "飲料師傅上班第一件事，要先看昨天賣了多少東西，還有有沒有什麼重要的事情要處理。",
+    "keyword_tag": "營業準備"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 8,
+    "question": "飲料裝飾物、杯飾以何種材料最適宜?",
+    "options": [
+      "蔬菜水果",
+      "花、草",
+      "藥草",
+      "豆類穀物"
+    ],
+    "answer": 1,
+    "knowledge_tag": "食材種類",
+    "explanation": "飲料的裝飾品最好是用新鮮的蔬菜水果，看起來漂亮又衛生，吃起來也安全。",
+    "keyword_tag": "裝飾物材料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 9,
+    "question": "吧檯作業內的靈魂人物是下列何者?",
+    "options": [
+      "餐飲經理",
+      "吧檯經理",
+      "吧檯領班",
+      "吧檯飲務員"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職務內容",
+    "explanation": "吧檯最重要的就是飲料師傅，他把飲料調得好喝，客人就會喜歡再來！",
+    "keyword_tag": "吧檯靈魂"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 10,
+    "question": "國家元首接受外交使節呈遞國書及富商高官所舉辦的豪華酒會稱為",
+    "options": [
+      "Punch Party",
+      "Cocktail Party",
+      "Tea Party",
+      "Champagne Party"
+    ],
+    "answer": 4,
+    "knowledge_tag": "活動類型",
+    "explanation": "Champagne Party 是很高檔的派對，會喝香檳酒，就像電視上總統參加的宴會一樣。",
+    "keyword_tag": "Champagne Party"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 11,
+    "question": "負責吧檯飲品調製的人員,英文稱為下列何者?",
+    "options": [
+      "Bartender",
+      "Sommelier",
+      "Waiter",
+      "Waitress"
+    ],
+    "answer": 1,
+    "knowledge_tag": "職務名稱",
+    "explanation": "Bartender 就是飲料師傅，專門負責在吧檯裡調製好喝的飲料給客人。",
+    "keyword_tag": "Bartender"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 12,
+    "question": "飯店的飲務組織是歸屬在",
+    "options": [
+      "餐飲部",
+      "客務部",
+      "房務部",
+      "工程部"
+    ],
+    "answer": 1,
+    "knowledge_tag": "組織架構",
+    "explanation": "在飯店裡，負責飲料的地方是屬於『餐飲部』的一部分，就像我們家有客廳、廚房一樣。",
+    "keyword_tag": "飲務組織"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 13,
+    "question": "成本的計算公式,以下何者為正確?",
+    "options": [
+      "成本/售價=進貨成本",
+      "成本×售價=成本率",
+      "售價/成本=成本率",
+      "售價×成本率=成本"
+    ],
+    "answer": 4,
+    "knowledge_tag": "成本概念",
+    "explanation": "算東西的成本，就是把東西的售價乘以它佔成本的比例，就可以算出這東西花了多少錢。",
+    "keyword_tag": "成本計算"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 14,
+    "question": "作帳盤存的程序,以下何者為正確?",
+    "options": [
+      "今日進貨-前日存貨=今日盤存",
+      "今日銷售+前日存貨=今日盤存",
+      "今日進貨+前日存貨+今日銷售=今日盤存",
+      "今日進貨+前日存貨-今日銷售=今日盤存"
+    ],
+    "answer": 4,
+    "knowledge_tag": "門市管理",
+    "explanation": "算貨很簡單：原有的加新進的，再扣掉賣掉的，就是剩下的。",
+    "keyword_tag": "盤存"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 15,
+    "question": "營業吧檯,會將先行製作完成之裝飾物安全儲存何處?",
+    "options": [
+      "工作檯砧板正前方",
+      "近水槽處",
+      "冷藏冰箱內",
+      "冷凍冰箱中"
+    ],
+    "answer": 3,
+    "knowledge_tag": "吧檯管理",
+    "explanation": "做好的漂亮裝飾品要放冰箱冷藏，才不會壞掉或變醜。",
+    "keyword_tag": "裝飾物"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 16,
+    "question": "下列何者是量酒器?",
+    "options": [
+      "(選項1)",
+      "(選項2)",
+      "(選項3)",
+      "(選項4)"
+    ],
+    "answer": 3,
+    "knowledge_tag": "工具辨識",
+    "explanation": "量酒器就像兩個小杯子背對背黏在一起，可以用來量要倒多少酒喔！",
+    "keyword_tag": "量酒器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 17,
+    "question": "下列何者不是碳酸氣飲料?",
+    "options": [
+      "礦泉水",
+      "蘇打水",
+      "薑汁汽水",
+      "奎寧水"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲品分類",
+    "explanation": "礦泉水喝起來沒有嗶嗶啵啵的氣泡，所以不是碳酸飲料。",
+    "keyword_tag": "礦泉水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 18,
+    "question": "下列何者不是吧檯所使用的器皿?",
+    "options": [
+      "砧板",
+      "水果刀",
+      "果汁機",
+      "龍蝦鉗"
+    ],
+    "answer": 4,
+    "knowledge_tag": "工具辨識",
+    "explanation": "吧檯是調飲料的地方，不是吃海鮮餐廳，所以不用龍蝦鉗。",
+    "keyword_tag": "龍蝦鉗"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 19,
+    "question": "飲料貯存管理是採",
+    "options": [
+      "先進後出",
+      "先進先出",
+      "後進先出",
+      "隨心所欲"
+    ],
+    "answer": 2,
+    "knowledge_tag": "存貨管理",
+    "explanation": "先買回來的飲料要先拿出來賣，才不會放到過期。",
+    "keyword_tag": "先進先出"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 20,
+    "question": "作業準備時,不需要檢視水果的",
+    "options": [
+      "新鮮度",
+      "生產地",
+      "大小",
+      "形狀"
+    ],
+    "answer": 2,
+    "knowledge_tag": "準備工作",
+    "explanation": "準備水果時只要看它新不新鮮，不用特別管它是哪裡種的。",
+    "keyword_tag": "水果"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 21,
+    "question": "水果擺切時,下列何種水果不宜在作業準備時切好?",
+    "options": [
+      "西瓜",
+      "鳳梨",
+      "香蕉",
+      "柳丁"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材處理",
+    "explanation": "香蕉切開很快會變黑黑的，要用的時候再切才漂亮。",
+    "keyword_tag": "香蕉"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 22,
+    "question": "下列何者不適合在作業準備時即做好備用?",
+    "options": [
+      "冰紅茶",
+      "聖代",
+      "冰咖啡",
+      "裝飾物"
+    ],
+    "answer": 2,
+    "knowledge_tag": "準備工作",
+    "explanation": "聖代冰淇淋很快就會融化，要等客人點的時候再做。",
+    "keyword_tag": "聖代"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 23,
+    "question": "作業準備時,下列何者不需冰鎮?",
+    "options": [
+      "奎寧水",
+      "果糖",
+      "汽水",
+      "可樂"
+    ],
+    "answer": 2,
+    "knowledge_tag": "吧檯管理",
+    "explanation": "果糖放在常溫環境就可以，不需要特別放進冰箱冰鎮。",
+    "keyword_tag": "果糖"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 24,
+    "question": "義式咖啡機須在什麼時間開機較適當?",
+    "options": [
+      "作業準備開始時",
+      "前一天晚上",
+      "要用時再開機",
+      "不用關機"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備操作",
+    "explanation": "一上班就要先開咖啡機，這樣機器熱好了才能煮出好咖啡。",
+    "keyword_tag": "咖啡機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 25,
+    "question": "為方便切割及止滑,一般會於砧板下方墊上",
+    "options": [
+      "乾抹片",
+      "微溼抹布",
+      "菜瓜布",
+      "紙巾"
+    ],
+    "answer": 2,
+    "knowledge_tag": "作業安全",
+    "explanation": "砧板下面墊塊溼抹布，切東西才不會滑掉割到手。",
+    "keyword_tag": "砧板"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 26,
+    "question": "吧檯作業準備時,不需要準備的是哪種刀具?",
+    "options": [
+      "剁刀",
+      "水果刀",
+      "三角尖刀",
+      "檸檬刮絲器"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工具辨識",
+    "explanation": "吧檯有專門切水果的工具，所以不用另外準備家裡用的水果刀喔！",
+    "keyword_tag": "水果刀"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 27,
+    "question": "準備製作虹吸式(Syphon)咖啡時,需",
+    "options": [
+      "將下座於加水前點火保溫",
+      "檢視酒精燈組",
+      "每次更換棉線",
+      "每次更換濾布"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備操作",
+    "explanation": "先把下面的壺稍微加熱，就像幫杯子取暖一樣，這樣煮咖啡才好喝喔！",
+    "keyword_tag": "虹吸咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 28,
+    "question": "吧檯作業準備時,下列何者不需準備?",
+    "options": [
+      "OK繃",
+      "創傷軟膏",
+      "沙拉油",
+      "塑膠手套"
+    ],
+    "answer": 3,
+    "knowledge_tag": "材料辨識",
+    "explanation": "吧檯是做飲料的地方，不用像廚房一樣準備沙拉油來炒菜。",
+    "keyword_tag": "沙拉油"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 29,
+    "question": "吧檯作業準備時,不需要",
+    "options": [
+      "研磨咖啡豆",
+      "製作裝飾物",
+      "檢視物料新鮮度",
+      "擦拭杯皿"
+    ],
+    "answer": 1,
+    "knowledge_tag": "準備工作",
+    "explanation": "咖啡豆要煮的時候再磨才香，不用在準備時先全部磨好。",
+    "keyword_tag": "咖啡豆"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 30,
+    "question": "有關泡茶三要素,下列何者較正確?",
+    "options": [
+      "茶量、時間、水量",
+      "茶壺、茶杯、茶海",
+      "茶量、茶杯、水量",
+      "茶壺、水溫、水量"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲品調製",
+    "explanation": "泡好茶有三個秘訣：茶葉放多少、泡多久和水加多少。",
+    "keyword_tag": "泡茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 31,
+    "question": "對於每日工作前之敘述,下列何者為非?",
+    "options": [
+      "檢查工作環境有無異樣",
+      "檢查是否有蟑螂、老鼠的排泄物",
+      "發現製冰機漏水,只要把水清乾淨即可",
+      "檢查飲水機溫度是否有異常"
+    ],
+    "answer": 3,
+    "knowledge_tag": "安全衛生",
+    "explanation": "機器漏水要趕快找人修理，只把水擦乾的話機器還是壞的。",
+    "keyword_tag": "製冰機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 32,
+    "question": "作業準備時,應將哪種器具浸泡在乾淨的水中備用?",
+    "options": [
+      "攪拌棒",
+      "冰淇淋杓",
+      "搖酒器",
+      "隔冰器"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工具衛生",
+    "explanation": "冰淇淋杓要泡在乾淨的水裡，才不會黏答答的又長細菌。",
+    "keyword_tag": "冰淇淋杓"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 33,
+    "question": "調製咖啡時,應在何時溫杯匙?",
+    "options": [
+      "前一天晚上",
+      "作業準備時",
+      "調製過程時",
+      "善後處理時"
+    ],
+    "answer": 3,
+    "knowledge_tag": "飲品調製",
+    "explanation": "泡咖啡時順便熱一下杯子和湯匙，咖啡才不會太快變冷。",
+    "keyword_tag": "溫杯匙"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 34,
+    "question": "吧檯從業人員不可戴戒指及手錶,應在何時摘除?",
+    "options": [
+      "上班前",
+      "作業準備前",
+      "調製過程時",
+      "善後處理時"
+    ],
+    "answer": 2,
+    "knowledge_tag": "安全衛生",
+    "explanation": "開始工作前要把戒指手錶拿掉，手才洗得乾淨，也比較衛生。",
+    "keyword_tag": "服裝儀容"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 35,
+    "question": "下列何種水果切開後需浸泡在鹽水中,預防氧化變色?",
+    "options": [
+      "香蕉",
+      "鳳梨",
+      "蘋果",
+      "草莓"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材處理",
+    "explanation": "蘋果切開會變黃變醜，泡一下鹽水可以讓它看起來白白嫩嫩。",
+    "keyword_tag": "蘋果"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 36,
+    "question": "下列何種物料,受潮不新鮮時,不會結成硬塊?",
+    "options": [
+      "即溶咖啡粉",
+      "可可亞",
+      "阿華田",
+      "咖啡豆"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食材辨識",
+    "explanation": "咖啡豆就算受潮也不會黏在一起變硬塊，但味道會變不好。",
+    "keyword_tag": "咖啡豆"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 37,
+    "question": "下列何種水果於常溫中較容易產生果蠅?",
+    "options": [
+      "西瓜",
+      "鳳梨",
+      "柳丁",
+      "檸檬"
+    ],
+    "answer": 2,
+    "knowledge_tag": "吧檯衛生",
+    "explanation": "鳳梨的味道很甜，最容易吸引討厭的小果蠅飛過來。",
+    "keyword_tag": "鳳梨"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 38,
+    "question": "作業準備時,若非特殊需要,下列何種水果儘量不要準備?",
+    "options": [
+      "西瓜",
+      "柳丁",
+      "榴槤",
+      "檸檬"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材選擇",
+    "explanation": "榴槤的味道非常重，除非有客人點，不然不要先切開準備。",
+    "keyword_tag": "榴槤"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 39,
+    "question": "開罐後,在保存期限中,可存放較長時間的是",
+    "options": [
+      "櫻桃",
+      "奶水",
+      "鮮奶",
+      "水蜜桃"
+    ],
+    "answer": 1,
+    "knowledge_tag": "食材保存",
+    "explanation": "罐裝櫻桃因為有糖水浸泡，開罐後放在冰箱可以放比較久。",
+    "keyword_tag": "櫻桃"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 40,
+    "question": "作業準備時,不需要清洗的是",
+    "options": [
+      "吧叉匙",
+      "紙杯墊",
+      "抹布",
+      "砧板"
+    ],
+    "answer": 2,
+    "knowledge_tag": "物品清潔",
+    "explanation": "紙做的墊子碰到水會爛掉，所以髒了直接換新的就好，不用拿去洗。",
+    "keyword_tag": "紙杯墊"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 41,
+    "question": "前一天晚上放在冰箱中的物料,於作業準備時,必需要丟棄的是",
+    "options": [
+      "半顆檸檬",
+      "一壺冰紅茶",
+      "開過的橄欖罐",
+      "用過的奶水"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食安保存",
+    "explanation": "紅茶放隔夜會變酸、變澀，為了客人的肚子健康，一定要倒掉不能用。",
+    "keyword_tag": "冰紅茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 42,
+    "question": "吧檯的工作服應在何時著裝完成",
+    "options": [
+      "由家中出發時",
+      "作業準備前",
+      "調製過程時",
+      "下班時"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工作紀律",
+    "explanation": "就像上學要先穿制服，開始工作前就要把衣服穿整齊，看起來才專業。",
+    "keyword_tag": "工作服"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 43,
+    "question": "吧檯從業人員的手機,何時要關機或轉成震動?",
+    "options": [
+      "上班前一晚",
+      "作業準備前",
+      "調製過程時",
+      "下班後"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工作禮儀",
+    "explanation": "工作時不能分心玩手機，所以準備開始做事時，就要先調成靜音或關機。",
+    "keyword_tag": "手機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 44,
+    "question": "乾冰放入保存容器後,置於下列何處較佳?",
+    "options": [
+      "冷凍庫",
+      "冷藏室",
+      "沒曬到太陽的地方",
+      "浸泡在水中"
+    ],
+    "answer": 1,
+    "knowledge_tag": "食材保存",
+    "explanation": "乾冰非常冰冷，要放在最冷的冷凍庫裡，才不會太快化掉變不見。",
+    "keyword_tag": "乾冰"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 45,
+    "question": "台灣在哪一期間為「水蜜桃」的產期?",
+    "options": [
+      "4-5月",
+      "6~9月",
+      "10-12月",
+      "全年"
+    ],
+    "answer": 2,
+    "knowledge_tag": "認識食材",
+    "explanation": "夏天是水蜜桃最甜最好吃的季節，大約是在 6 月到 9 月的時候。",
+    "keyword_tag": "水蜜桃"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 46,
+    "question": "「Automatic Glass Washer」之中文名稱為下列何者?",
+    "options": [
+      "洗杯架",
+      "自動洗碗機",
+      "製冰機",
+      "自動洗杯機"
+    ],
+    "answer": 4,
+    "knowledge_tag": "設備辨識",
+    "explanation": "這台機器專門幫我們把杯子洗乾淨，英文開頭的 A 就是「自動」的意思。",
+    "keyword_tag": "自動洗杯機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 47,
+    "question": "下列何者非承辦酒會之注意事項?",
+    "options": [
+      "堅持服裝方面之要求,全體服裝必須協調一致",
+      "瞭解酒會之場地,原則上應先前往該酒會地點觀察場地",
+      "工作直到合約明定之時間為止,當然在經同意後早走也是可以",
+      "向酒會主辦人詢問所期盼執行之其他服務或工作"
+    ],
+    "answer": 3,
+    "knowledge_tag": "職業道德",
+    "explanation": "工作要有始有終，不能因為想偷懶就隨便早退，要遵守約定的時間。",
+    "keyword_tag": "酒會規範"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 48,
+    "question": "一般吧檯工作檯的前下方,會擺放常用的基酒、飲料及配料,下列何項為此設備之名稱",
+    "options": [
+      "Speed Rack",
+      "Server Pick-up Area",
+      "Wine Shelf",
+      "Speed Pouring"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備辨識",
+    "explanation": "這是一個專門放常用飲料的架子，讓你拿東西變很快，就像快速通道一樣。",
+    "keyword_tag": "Speed Rack"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 49,
+    "question": "下列咖啡原生種,何種產量最多?",
+    "options": [
+      "Robusta",
+      "Arabica",
+      "Liberica",
+      "Java"
+    ],
+    "answer": 2,
+    "knowledge_tag": "咖啡知識",
+    "explanation": "全世界產量最多的咖啡豆就是阿拉比卡，大家都很喜歡它的香氣。",
+    "keyword_tag": "阿拉比卡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 50,
+    "question": "使用個人式茶具沖泡茶葉時,3g的茶葉量,最好使用多少的水量為佳?",
+    "options": [
+      "100 cc",
+      "120 cc",
+      "150 cc",
+      "180 cc"
+    ],
+    "answer": 3,
+    "knowledge_tag": "調製技能",
+    "explanation": "泡茶時茶葉和水的比例要剛剛好，3公克茶配150cc水，喝起來最順口。",
+    "keyword_tag": "泡茶比例"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 51,
+    "question": "素有「美如觀音,重似鐵」之稱的茶為下列何者?",
+    "options": [
+      "綠茶",
+      "龍井茶",
+      "鐵觀音",
+      "椪風茶"
+    ],
+    "answer": 3,
+    "knowledge_tag": "認識茶葉",
+    "explanation": "這種茶的葉子重重的、看起來很漂亮，所以名字裡有「鐵」也有「觀音」。",
+    "keyword_tag": "鐵觀音"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 52,
+    "question": "咖啡樹適合成長在熱帶和亞熱帶氣候的地區,也就是位於南北迴歸線之間,以赤道為中心,約於北緯25度到南緯30度之間,並形成一個環狀地帶稱之為下列何者?",
+    "options": [
+      "咖啡赤道",
+      "咖啡歸線",
+      "咖啡腰帶",
+      "無特別稱號"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡知識",
+    "explanation": "地球中間熱熱的地方像皮帶一樣，最適合種咖啡，所以叫咖啡腰帶。",
+    "keyword_tag": "咖啡腰帶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 53,
+    "question": "下列何者茶葉不屬於部分發酵茶",
+    "options": [
+      "凍頂烏龍茶",
+      "東方美人茶",
+      "鐵觀音",
+      "碧螺春"
+    ],
+    "answer": 4,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "碧螺春是綠茶的一種，完全沒有經過發酵，所以跟其他發酵茶不一樣。",
+    "keyword_tag": "碧螺春"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 54,
+    "question": "1茶匙<Tea Spoon>=多少oz?",
+    "options": [
+      "1/2",
+      "1/4",
+      "1/6",
+      "1/12"
+    ],
+    "answer": 3,
+    "knowledge_tag": "單位換算",
+    "explanation": "茶匙是拿來量少少份量的工具，一茶匙大約是 1/6 盎司。",
+    "keyword_tag": "茶匙"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 55,
+    "question": "下列何者為後發酵茶?",
+    "options": [
+      "白毫銀針",
+      "玉露茶",
+      "普洱茶",
+      "烏龍茶"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "普洱茶是放越久越香的茶，這種放很久讓它慢慢變化的過程叫後發酵。",
+    "keyword_tag": "普洱茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 56,
+    "question": "一般而言,茶類發酵程度較輕者呈飄逸的花香,較深者呈熟果香或蜜糖香;而完全發酵係指茶葉中的哪一物質經酵素氧化作用,產生一連串化學變化過程。下列何者為是?",
+    "options": [
+      "胺基酸",
+      "多元酚類",
+      "單元酚類",
+      "黃腐酚"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉知識",
+    "explanation": "茶葉裡的多元酚碰到空氣變色後，茶就會產生甜甜的果香味或蜜糖香。",
+    "keyword_tag": "多元酚"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 57,
+    "question": "下列哪種咖啡煮器適合細研磨的咖啡粉?",
+    "options": [
+      "濾杯式",
+      "虹吸式",
+      "義式咖啡機",
+      "法式濾壓壺"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備使用",
+    "explanation": "義式機器煮咖啡速度很快，所以要把咖啡粉磨得很細，味道才出得來。",
+    "keyword_tag": "義式咖啡機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 58,
+    "question": "工作檯上,應設有一處重要的地方提供服務人員傳送飲料,這個地方稱之為",
+    "options": [
+      "Server Pick-up Area",
+      "Take Out Area",
+      "Service Account",
+      "Cashier"
+    ],
+    "answer": 1,
+    "knowledge_tag": "空間辨識",
+    "explanation": "這是專門讓服務生拿走飲料送給客人的地方，就像外送的取餐櫃檯。",
+    "keyword_tag": "取餐區"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 59,
+    "question": "飲務員隨時把清潔過的調製工具擺在下列何處上方,以利工作方便迅速?",
+    "options": [
+      "備餐區",
+      "服務區",
+      "回收台",
+      "飲料工作檯"
+    ],
+    "answer": 4,
+    "knowledge_tag": "整理整頓",
+    "explanation": "洗好的工具要整齊放在桌面上，這樣要用時隨手就能拿到，才不會亂。",
+    "keyword_tag": "工作檯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 60,
+    "question": "在開放式吧檯(Open Bar)的正確作業程式,其順序為下列何者?",
+    "options": [
+      "按開單→點酒→調製→結帳",
+      "按密碼→開單→調製→結帳",
+      "按點酒→開單→調製→結帳",
+      "按帳號→開單→調製→結帳"
+    ],
+    "answer": 3,
+    "knowledge_tag": "服務流程",
+    "explanation": "先幫客人點酒，接著寫單子，然後開始調飲料，最後再結帳收錢。",
+    "keyword_tag": "作業流程"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 61,
+    "question": "各種不同的製造過程會造就完全不同的風味與茶品,下列何者不是影響茶葉品質的製作基本過程?",
+    "options": [
+      "焙火",
+      "揉捻",
+      "發酵",
+      "榨乾"
+    ],
+    "answer": 4,
+    "knowledge_tag": "製茶知識",
+    "explanation": "製作茶葉要經過揉、烤等動作，但絕對沒有「榨乾」這個步驟喔。",
+    "keyword_tag": "茶葉製作"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 62,
+    "question": "各種吧檯工作檯因供應商品的特性不同,擺設的方式也不同,但都以下列何者為主要考量?",
+    "options": [
+      "餐廳風格",
+      "操作方便",
+      "服務員個性",
+      "節省成本"
+    ],
+    "answer": 2,
+    "knowledge_tag": "空間規劃",
+    "explanation": "吧檯的擺設一定要考慮到讓工作的人好拿、好動，做事才會又快又順。",
+    "keyword_tag": "吧檯設計"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 63,
+    "question": "義式咖啡機前置作業時,磨咖啡粉最好的方式是",
+    "options": [
+      "大量磨好,以迅速作業",
+      "每次磨三杯份",
+      "控制研磨份量、當天使用完畢即可",
+      "現磨現煮"
+    ],
+    "answer": 4,
+    "knowledge_tag": "調製技能",
+    "explanation": "咖啡粉磨好久放會不香，要煮之前才現磨現煮，味道才是最新鮮的。",
+    "keyword_tag": "現磨咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 64,
+    "question": "常用的新鮮果汁,應使用何種容器盛裝後冷藏以便取用?",
+    "options": [
+      "服務水壺中",
+      "咖啡壺",
+      "塑膠容器裡",
+      "金屬容器中"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材保存",
+    "explanation": "果汁要裝在乾淨的塑膠瓶裡並冰起來，要用的時候好拿也好倒。",
+    "keyword_tag": "塑膠容器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 65,
+    "question": "酒會的臨時吧檯最佳設立的位置,為方便主人招呼賓客,應該設在下列何處?",
+    "options": [
+      "盡量靠近入口不遠的地方",
+      "筵席中央",
+      "電梯口",
+      "沙發區"
+    ],
+    "answer": 1,
+    "knowledge_tag": "會場規劃",
+    "explanation": "吧檯設在門口附近，客人一進來就能馬上喝到飲料，會覺得很貼心。",
+    "keyword_tag": "吧檯位置"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 66,
+    "question": "宴席前酒會之時間較其他型酒會時間短,通常在宴席前多久時間較為恰當?",
+    "options": [
+      "十分鐘",
+      "二十分鐘",
+      "半小時至一小時",
+      "視情形而定"
+    ],
+    "answer": 3,
+    "knowledge_tag": "服務常識",
+    "explanation": "正式吃飯前的小聚會，時間大約是半小時到一小時，讓大家先聊聊天。",
+    "keyword_tag": "酒會時間"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 67,
+    "question": "關於一般品茶的方式,下列何者錯誤?",
+    "options": [
+      "看乾茶外觀",
+      "嚼茶葉",
+      "評茶湯滋味和香氣",
+      "看茶湯水色"
+    ],
+    "answer": 2,
+    "knowledge_tag": "生活禮儀",
+    "explanation": "喝茶是用鼻子聞、用嘴巴喝，不是把茶葉拿起來像嚼口香糖一樣吃掉。",
+    "keyword_tag": "品茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 68,
+    "question": "酒會的準備工作以下列哪一份資料之內容來準備?",
+    "options": [
+      "Banquet Order",
+      "Drinks Order",
+      "Special Order",
+      "Function Order"
+    ],
+    "answer": 4,
+    "knowledge_tag": "行政作業",
+    "explanation": "這張單子記錄了客人的需求，看著它來準備酒會，就不會少拿東西。",
+    "keyword_tag": "宴會通知單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 69,
+    "question": "飲用碳酸飲料最適合的玻璃器皿之英文為",
+    "options": [
+      "Champagne Flute",
+      "Old Fashioned Glass",
+      "Collins",
+      "Liqueur"
+    ],
+    "answer": 3,
+    "knowledge_tag": "器皿辨識",
+    "explanation": "這種高高瘦瘦的杯子叫可林杯，最適合用來裝汽水那樣有泡泡的飲料。",
+    "keyword_tag": "可林杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 70,
+    "question": "下列飲料何者含有二氧化碳?",
+    "options": [
+      "可可",
+      "咖啡",
+      "茶",
+      "碳酸飲料"
+    ],
+    "answer": 4,
+    "knowledge_tag": "飲品分類",
+    "explanation": "就像可樂跟汽水一樣，裡面有氣泡的飲料，就是含有二氧化碳喔。",
+    "keyword_tag": "碳酸飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 71,
+    "question": "雞尾酒會的特性是人數眾多、供應量大及速度快,所以飲料的供應多以哪種飲料為主",
+    "options": [
+      "Milk",
+      "Mixed Drinks",
+      "Virgin Drinks",
+      "Ice Tea"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲品分類",
+    "explanation": "人很多的時候，先把幾種飲料混在一起準備好，大家拿了就能喝，最方便快速。",
+    "keyword_tag": "混合飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 72,
+    "question": "下列那一個冷藏溫度比較適合新鮮果汁?",
+    "options": [
+      "0℃",
+      "4℃",
+      "12℃",
+      "20°C"
+    ],
+    "answer": 2,
+    "knowledge_tag": "儲存常識",
+    "explanation": "新鮮果汁跟家裡的牛奶一樣，冰在 4℃ 的冷藏室最能保持新鮮不壞掉。",
+    "keyword_tag": "新鮮果汁"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 73,
+    "question": "下列那一種物料是屬調味品?",
+    "options": [
+      "Coke",
+      "Whisky",
+      "Tabasco Sauce",
+      "Red Cherry"
+    ],
+    "answer": 3,
+    "knowledge_tag": "材料認識",
+    "explanation": "Tabasco 是一種辣辣的調味料，只要加一點點，就能讓飲料的味道變得很特別。",
+    "keyword_tag": "辣椒醬"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 74,
+    "question": "無論使用那一種調飲方式,每次都要用到的器具是下列何者?",
+    "options": [
+      "雪克杯(Shaker)",
+      "量酒器(Jigger)",
+      "吧叉匙(Bar Spoon)",
+      "刻度調酒杯(Mixing Glass)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工具辨識",
+    "explanation": "不管做哪種飲料，都要用這個像小杯子的量杯量好，味道才不會一下太甜一下太淡。",
+    "keyword_tag": "量酒器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 75,
+    "question": "下列何者是略帶鹼性(不甜)的碳酸飲料?",
+    "options": [
+      "薑汁汽水(Ginger Ale)",
+      "蘇打水(Soda Water)",
+      "奎寧水(Tonic Water)",
+      "可樂(Coke)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲品分類",
+    "explanation": "這是一種有氣泡但不甜的水，喝起來有一點點鹹鹹鹼鹼的味道。",
+    "keyword_tag": "蘇打水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 76,
+    "question": "罐裝番石榴汁(Guava Juice)未用完,其保存方式最好是",
+    "options": [
+      "繼續存罐內,入冷藏冰箱",
+      "加保鮮膜封緊",
+      "倒入加蓋玻璃器皿,存冷藏冰箱",
+      "即刻丟掉"
+    ],
+    "answer": 3,
+    "knowledge_tag": "儲存常識",
+    "explanation": "罐頭果汁沒喝完要換到玻璃瓶裡蓋好，才不會讓鐵罐生鏽影響味道。",
+    "keyword_tag": "果汁保存"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 77,
+    "question": "一般常用吧檯發泡氮氣槍是為下列何者準備的?",
+    "options": [
+      "奎寧水(Tonic Water)",
+      "發泡鮮奶油(Whipped Cream)",
+      "紅石榴糖漿(Grenadine Syrup)",
+      "荳蔻粉(Nutmeg Powder)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工具辨識",
+    "explanation": "用發泡槍裝氮氣，就可以噴出像雲朵一樣軟綿綿、白白的鮮奶油。",
+    "keyword_tag": "發泡槍"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 78,
+    "question": "已切好的檸檬、柳丁等裝飾物未用完,應該",
+    "options": [
+      "放入冷凍庫以加強保鮮效果",
+      "以保鮮盒加蓋儲放在冷藏冰箱,隔天仍可使用",
+      "在常溫下以保鮮膜包妥,隔夜仍可使用",
+      "成本不高直接丟掉"
+    ],
+    "answer": 2,
+    "knowledge_tag": "儲存常識",
+    "explanation": "切好的檸檬或柳丁要裝進保鮮盒冰起來，這樣明天拿出來才不會乾乾黃黃的。",
+    "keyword_tag": "裝飾水果"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 79,
+    "question": "下列哪一種容器不適合裝糖水?",
+    "options": [
+      "馬口鐵罐",
+      "玻璃罐",
+      "瓷罐",
+      "塑膠罐"
+    ],
+    "answer": 1,
+    "knowledge_tag": "工具辨識",
+    "explanation": "糖水不能裝在鐵罐裡，因為鐵罐容易生鏽，會讓糖水變味甚至壞掉。",
+    "keyword_tag": "馬口鐵罐"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 80,
+    "question": "放置冰箱過久的水果,常會引起果皮產生凹狀斑點、塊斑或變成褐黑色,果肉變褐色並呈水爛狀等,嚴重地影響食用品質。這種現象稱為下列何者?",
+    "options": [
+      "撞傷",
+      "結凍",
+      "冷害",
+      "農藥殘留"
+    ],
+    "answer": 3,
+    "knowledge_tag": "儲存常識",
+    "explanation": "水果冰太久會凍傷，外皮會變黑變爛，這就是水果在冰箱裡「感冒」受傷了。",
+    "keyword_tag": "冷害"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 81,
+    "question": "水果成熟時會產生下列何種氣體,加速水果的成熟和老化?",
+    "options": [
+      "丙烯",
+      "乙炔",
+      "氯乙烯",
+      "乙烯"
+    ],
+    "answer": 4,
+    "knowledge_tag": "植物常識",
+    "explanation": "這是水果成熟時會排出的氣體，會像小廣播一樣，叫旁邊的水果趕快變熟。",
+    "keyword_tag": "乙烯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 82,
+    "question": "水果削皮或切片後,可灑上特殊物質使其減少褐化,下列何者為非?",
+    "options": [
+      "葡萄汁",
+      "檸檬汁",
+      "鳳梨汁",
+      "浸泡鹽水"
+    ],
+    "answer": 1,
+    "knowledge_tag": "處理常識",
+    "explanation": "水果切開泡鹽水或檸檬汁可以不變黑，但泡葡萄汁就沒辦法防止變色喔。",
+    "keyword_tag": "褐化現象"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 83,
+    "question": "標準的飲料配方,不包括下列何者?",
+    "options": [
+      "杯子",
+      "份量",
+      "裝飾物",
+      "人員"
+    ],
+    "answer": 4,
+    "knowledge_tag": "標準作業",
+    "explanation": "飲料配方就像食譜，寫的是材料跟做法，不需要把工作人員寫在裡面。",
+    "keyword_tag": "標準配方"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 84,
+    "question": "下列裝飾物中,何者不屬於Garnish?",
+    "options": [
+      "櫻桃",
+      "小洋蔥",
+      "小紙傘",
+      "檸檬塊"
+    ],
+    "answer": 3,
+    "knowledge_tag": "工具辨識",
+    "explanation": "Garnish 是指可以吃的裝飾，小紙傘是紙做的不能吃，所以不屬於這一類。",
+    "keyword_tag": "裝飾物"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 85,
+    "question": "西元1933年發明摩卡壺(Moka Pot)的是哪一國人?",
+    "options": [
+      "日本人",
+      "義大利人",
+      "美國人",
+      "德國人"
+    ],
+    "answer": 2,
+    "knowledge_tag": "咖啡工具",
+    "explanation": "這種可以放在火上煮出香噴噴咖啡的小壺，是由義大利人發明的。",
+    "keyword_tag": "摩卡壺"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 86,
+    "question": "可樂最好的存放方法是",
+    "options": [
+      "放在恆溫室",
+      "放在陰暗處",
+      "放在冷藏室",
+      "放在冷凍庫裡"
+    ],
+    "answer": 3,
+    "knowledge_tag": "儲存常識",
+    "explanation": "可樂就是要冰冰的才好喝，氣才不會跑掉，所以放進冷藏室最適合。",
+    "keyword_tag": "可樂保存"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 02: 作業準備",
+    "id": 87,
+    "question": "台灣高山烏龍茶係種植於海拔多少公尺?",
+    "options": [
+      "700公尺以下",
+      "700~800",
+      "800~900公尺",
+      "1,000公尺以上"
+    ],
+    "answer": 4,
+    "knowledge_tag": "茶葉常識",
+    "explanation": "要在 1,000 公尺以上的高山上種的茶，才可以大聲地叫做「高山茶」喔。",
+    "keyword_tag": "高山茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 1,
+    "question": "液體容量換算,下述何者不當?",
+    "options": [
+      "1 Jigger 45ml",
+      "1公升=1000ml",
+      "1盎司(oz)=30ml",
+      "1茶匙(tsp)=15ml"
+    ],
+    "answer": 4,
+    "knowledge_tag": "單位換算",
+    "explanation": "小小的一茶匙(tsp)大約是 5 毫升，15 毫升是大湯匙(Tbsp)的大小。",
+    "keyword_tag": "容量單位"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 2,
+    "question": "吧檯飲料操作步驟,以下何者最佳?",
+    "options": [
+      "認識配方→準備裝飾→取用冰塊→量取用酒",
+      "準備杯皿→認識配方→量取用酒→取用冰塊",
+      "認識配方→準備杯皿→準備裝飾→準備材料",
+      "準備材料→量取用酒→取用冰塊→準備杯皿"
+    ],
+    "answer": 3,
+    "knowledge_tag": "標準作業",
+    "explanation": "先看懂怎麼做、拿好杯子跟裝飾，最後才拿材料開始動手，這樣才不會手忙腳亂。",
+    "keyword_tag": "調飲步驟"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 3,
+    "question": "酒精含量在多少以上的飲料,即稱之為酒?",
+    "options": [
+      "0.5%",
+      "1%",
+      "3%",
+      "5%"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲品分類",
+    "explanation": "只要飲料裡面的酒精成分超過 0.5%，我們就把它當成「酒」來管理喔。",
+    "keyword_tag": "酒的定義"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 4,
+    "question": "Seltzer Water 是一種碳酸水,如果用完了,由下列何種可代替?",
+    "options": [
+      "Ginger Ale",
+      "7-Up",
+      "Tonic Water",
+      "Club Soda"
+    ],
+    "answer": 4,
+    "knowledge_tag": "材料認識",
+    "explanation": "Seltzer 跟 Club Soda 都是有氣的氣泡水，如果手邊缺一種，可以用另一種代替。",
+    "keyword_tag": "碳酸水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 5,
+    "question": "酒吧工作手冊是酒吧工作人員的書面作業指導,其英文稱為下列何者?",
+    "options": [
+      "Bar Menu",
+      "Requisition Form",
+      "Bar Manual",
+      "Inventory Sheet"
+    ],
+    "answer": 3,
+    "knowledge_tag": "專業術語",
+    "explanation": "這就是吧檯的「使用說明書」，教員工該怎麼工作，英文叫 Bar Manual。",
+    "keyword_tag": "工作手冊"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 6,
+    "question": "在酒吧的專有名詞中「Cash Bar」是指?",
+    "options": [
+      "酒吧內設有收帳櫃檯",
+      "每點一杯付一杯錢",
+      "結帳時要付現不得簽帳",
+      "會計派一位出納專門收現金"
+    ],
+    "answer": 2,
+    "knowledge_tag": "專業術語",
+    "explanation": "Cash Bar 就是點一杯飲料就馬上付一次錢，像在便利商店買東西一樣。",
+    "keyword_tag": "現金酒吧"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 7,
+    "question": "專有名詞的「Call Out」是解釋成?",
+    "options": [
+      "酒吧打烊",
+      "把雞尾酒外送",
+      "打電話出去",
+      "雞尾酒外帶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "專業術語",
+    "explanation": "聽到「Call Out」就是老闆要準備收攤關門，大家可以收拾東西回家了。",
+    "keyword_tag": "打烊"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 8,
+    "question": "吧檯調飲常用的糖,以下那一種最方便?",
+    "options": [
+      "糖水 (Simple Syrup)",
+      "砂糖(Granulated Sugar)",
+      "蜜糖(Honey)",
+      "冰糖(Crystal Sugar)"
+    ],
+    "answer": 1,
+    "knowledge_tag": "材料認識",
+    "explanation": "用煮好的糖水調飲料最方便，因為它是液體，一下子就能跟飲料混均勻。",
+    "keyword_tag": "糖水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 9,
+    "question": "調製一杯飲料,內含有雞蛋及牛奶,應以何種方法調製最恰當?",
+    "options": [
+      "直接注入法(Building)",
+      "攪拌法(Stirring)",
+      "搖盪法(Shaking)",
+      "霜凍法(Frozen)"
+    ],
+    "answer": 3,
+    "knowledge_tag": "調飲技術",
+    "explanation": "有雞蛋或牛奶的飲料，要用手用力搖一搖，味道才會融合在一起變得好喝。",
+    "keyword_tag": "搖盪法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 10,
+    "question": "吧檯專業術語中「Fill Up」中文之意為?",
+    "options": [
+      "不加冰",
+      "加滿",
+      "一半份量",
+      "不加客人指示之酒水"
+    ],
+    "answer": 2,
+    "knowledge_tag": "專業術語",
+    "explanation": "Fill Up 就是把飲料倒到杯子滿為止，像去加油站跟店員說「加滿」一樣。",
+    "keyword_tag": "加滿"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 11,
+    "question": "Pourer 中文之意為?",
+    "options": [
+      "杯蓋",
+      "開酒器",
+      "酒嘴",
+      "濾酒器"
+    ],
+    "answer": 3,
+    "knowledge_tag": "工具辨識",
+    "explanation": "這是裝在酒瓶口的小蓋子，可以讓酒像小噴泉一樣順順地流出來，不會亂灑。",
+    "keyword_tag": "酒嘴"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 12,
+    "question": "1個 Jigger 的容量,下列何者不當?",
+    "options": [
+      "1.5oz",
+      "45cc",
+      "4.5cl",
+      "40ml"
+    ],
+    "answer": 4,
+    "knowledge_tag": "單位換算",
+    "explanation": "量酒器兩頭不一樣大，小的一頭通常是 15 或是 30 毫升，不是 40 毫升喔。",
+    "keyword_tag": "量酒器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 13,
+    "question": "下列哪一種咖啡未加入乳品類?",
+    "options": [
+      "Irish Coffee",
+      "Viennese Coffee",
+      "Caf'e Royal",
+      "Caf'e Latte"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡辨識",
+    "explanation": "皇家咖啡通常是加了白蘭地燒過的，裡面沒有加牛奶喔！",
+    "keyword_tag": "皇家咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 14,
+    "question": "下列何者是有酒精飲料?",
+    "options": [
+      "純真可樂達(Virgin Pina Colada)",
+      "雪莉登波(Shirley Temple)",
+      "純真瑪莉(Virgin Mary)",
+      "龍舌蘭日出(Tequila Sunrise)"
+    ],
+    "answer": 4,
+    "knowledge_tag": "飲料分類",
+    "explanation": "這款飲料裡面有加酒，喝了會醉，所以是有酒精飲料。",
+    "keyword_tag": "龍舌蘭日出"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 15,
+    "question": "以下哪一種材料在製作飲料時,不可放入雪克杯中搖盪?",
+    "options": [
+      "含碳酸氣飲料",
+      "新鮮果汁",
+      "雞蛋",
+      "牛奶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "調製禁忌",
+    "explanation": "有氣的汽水不能放進杯子用力搖，不然會像噴泉一樣噴出來喔！",
+    "keyword_tag": "碳酸飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 16,
+    "question": "通常用搖盪法製作飲料時,使用的器皿為下列何者?",
+    "options": [
+      "吧叉匙(Bar Spoon)",
+      "搖酒器(Shaker)",
+      "刻度調酒杯(Mixing Glass)",
+      "攪拌棒(Stirrer)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工具辨識",
+    "explanation": "想要把飲料搖均勻，就要用這個亮亮的搖酒器來幫忙。",
+    "keyword_tag": "搖酒器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 17,
+    "question": "調製碳酸飲料,是採用下列那一種方法調製?",
+    "options": [
+      "搖盪法(Shaking)",
+      "攪拌法(Stirring)",
+      "直接注入法(Building)",
+      "電動攪拌法(Blending)"
+    ],
+    "answer": 3,
+    "knowledge_tag": "調製方法",
+    "explanation": "做汽水飲料很簡單，只要把材料直接倒進杯子裡就好了。",
+    "keyword_tag": "直接注入法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 18,
+    "question": "咖啡豆是那一個國家的人所發現",
+    "options": [
+      "衣索比亞人",
+      "美國人",
+      "法國人",
+      "阿拉伯人"
+    ],
+    "answer": 4,
+    "knowledge_tag": "咖啡歷史",
+    "explanation": "很久很久以前，是阿拉伯人最先發現咖啡豆可以煮來喝的。",
+    "keyword_tag": "阿拉伯人"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 19,
+    "question": "下列何者不屬於生產咖啡豆的國家?",
+    "options": [
+      "台灣",
+      "美國",
+      "日本",
+      "印尼"
+    ],
+    "answer": 3,
+    "knowledge_tag": "產地辨識",
+    "explanation": "日本的天氣比較冷，不適合種咖啡，所以咖啡豆不是日本產的。",
+    "keyword_tag": "生產國家"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 20,
+    "question": "下列哪一種的咖啡豆特性最酸?",
+    "options": [
+      "藍山",
+      "曼特寧",
+      "摩卡",
+      "巴西"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡風味",
+    "explanation": "摩卡咖啡喝起來酸酸的，有一種像水果一樣的味道。",
+    "keyword_tag": "摩卡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 21,
+    "question": "下列哪一種的咖啡豆特性最苦?",
+    "options": [
+      "哥倫比亞",
+      "曼特寧",
+      "巴西",
+      "藍山"
+    ],
+    "answer": 2,
+    "knowledge_tag": "咖啡風味",
+    "explanation": "曼特寧咖啡喝起來苦味比較重，味道非常香濃。",
+    "keyword_tag": "曼特寧"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 22,
+    "question": "製作飲料時,加入蛋白主要目的是",
+    "options": [
+      "色澤較好看",
+      "增加份量",
+      "使其產生泡沫",
+      "節省材料"
+    ],
+    "answer": 3,
+    "knowledge_tag": "材料功能",
+    "explanation": "加蛋白進去搖，飲料上面就會出現像雲朵一樣白白的泡沫。",
+    "keyword_tag": "蛋白"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 23,
+    "question": "鮮奶的飲料會發生凝結現象,是因為加入了含有什麼成份的食品?",
+    "options": [
+      "糖份",
+      "酸性",
+      "苦味",
+      "脂肪"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料特性",
+    "explanation": "牛奶遇到酸酸的東西會結成小塊，像壞掉一樣，所以要小心。",
+    "keyword_tag": "酸性"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 24,
+    "question": "第一個製作咖啡飲料的國家是",
+    "options": [
+      "墨西哥",
+      "巴西",
+      "哥倫比亞",
+      "土耳其"
+    ],
+    "answer": 4,
+    "knowledge_tag": "咖啡歷史",
+    "explanation": "土耳其是世界上第一個把咖啡做成好喝飲料的國家。",
+    "keyword_tag": "土耳其"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 25,
+    "question": "製作下列何種咖啡會使用到烤杯架?",
+    "options": [
+      "皇家咖啡",
+      "愛爾蘭咖啡",
+      "維也納咖啡",
+      "卡布奇諾咖啡"
+    ],
+    "answer": 2,
+    "knowledge_tag": "調製工具",
+    "explanation": "做愛爾蘭咖啡會用火燒杯子，所以需要用到專用的烤杯架。",
+    "keyword_tag": "愛爾蘭咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 26,
+    "question": "購買回來的咖啡豆,密封的咖啡袋隔天有膨脹的情形,是因為咖啡豆釋出的二氧化碳所造成,這表示豆子",
+    "options": [
+      "不新鮮",
+      "受潮",
+      "新鮮",
+      "過期不可食用"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡選購",
+    "explanation": "咖啡袋子澎澎的，代表豆子剛炒好、很新鮮，正在呼吸喔！",
+    "keyword_tag": "新鮮度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 27,
+    "question": "操作義式咖啡機的奶泡時,若有像噴射機轟隆的聲音是表示",
+    "options": [
+      "水溫太高",
+      "水溫太低",
+      "蒸氣管離杯底太高",
+      "蒸氣管離杯底太近"
+    ],
+    "answer": 4,
+    "knowledge_tag": "機器操作",
+    "explanation": "聲音太吵表示管子放太深了，要調高一點，泡泡才會漂亮。",
+    "keyword_tag": "蒸氣管"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 28,
+    "question": "高酸性飲料不能置於",
+    "options": [
+      "紙製容器",
+      "陶瓷容器",
+      "銅製容器",
+      "玻璃容器"
+    ],
+    "answer": 3,
+    "knowledge_tag": "器皿安全",
+    "explanation": "酸酸的果汁不能放進銅杯子，不然會產生毒素對身體不好。",
+    "keyword_tag": "銅製容器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 29,
+    "question": "下列那一種茶的單寧酸含量最高?",
+    "options": [
+      "白毫烏龍",
+      "碧螺春",
+      "普洱茶",
+      "鐵觀音"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉特性",
+    "explanation": "碧螺春這種茶喝起來舌頭會有一點澀澀的，因為單寧酸比較多。",
+    "keyword_tag": "碧螺春"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 30,
+    "question": "下列那一種茶的維生素C含量最多?",
+    "options": [
+      "茉莉花茶",
+      "桂花茶",
+      "菊花茶",
+      "龍井綠茶"
+    ],
+    "answer": 4,
+    "knowledge_tag": "營養成分",
+    "explanation": "綠茶有很多維他命C，多喝可以幫我們身體變健康。",
+    "keyword_tag": "龍井綠茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 31,
+    "question": "必須使用較高水溫沖泡的是那一種茶?",
+    "options": [
+      "綠茶",
+      "鐵觀音",
+      "抹茶",
+      "白毫烏龍"
+    ],
+    "answer": 2,
+    "knowledge_tag": "沖泡技巧",
+    "explanation": "沖泡鐵觀音要用很燙很燙的熱水，茶的味道才會完全跑出來。",
+    "keyword_tag": "鐵觀音"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 32,
+    "question": "下列哪一種咖啡是以玻璃杯盛裝?",
+    "options": [
+      "愛爾蘭咖啡",
+      "爪哇式咖啡",
+      "貴夫人咖啡",
+      "維也納熱咖啡"
+    ],
+    "answer": 1,
+    "knowledge_tag": "器皿選擇",
+    "explanation": "這種咖啡要用有把手的玻璃杯裝，看起來才漂亮又不會燙手。",
+    "keyword_tag": "愛爾蘭咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 33,
+    "question": "義大利傳統的卡布奇諾(Cappuccino),其中濃縮咖啡與牛奶和奶泡的比例為多少?",
+    "options": [
+      "1:1:1",
+      "1:2:1",
+      "2:1:1",
+      "3:2:1"
+    ],
+    "answer": 1,
+    "knowledge_tag": "產品配方",
+    "explanation": "咖啡、牛奶、奶泡各放一樣多，就是好喝的卡布奇諾比例。",
+    "keyword_tag": "卡布奇諾"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 34,
+    "question": "儲茶罐以何種材質具有較好的密閉性?",
+    "options": [
+      "紙盒罐",
+      "塑膠罐",
+      "金屬罐",
+      "陶罐"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶葉保存",
+    "explanation": "用金屬做的鐵罐裝茶葉，空氣才不會跑進去讓茶葉變難喝。",
+    "keyword_tag": "金屬罐"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 35,
+    "question": "多為低脂乳或脫脂乳,有添加其他營養成分之鮮奶是",
+    "options": [
+      "低脂鮮乳",
+      "脫脂鮮乳",
+      "強化鮮乳",
+      "保久乳"
+    ],
+    "answer": 3,
+    "knowledge_tag": "鮮乳分類",
+    "explanation": "在牛奶裡特別多加一些營養成分，就叫做「強化」牛奶。",
+    "keyword_tag": "強化鮮乳"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 36,
+    "question": "牛奶中有下列何種營養素,可以防止骨質疏鬆症?",
+    "options": [
+      "磷脂",
+      "鈣質",
+      "糖",
+      "泛酸"
+    ],
+    "answer": 2,
+    "knowledge_tag": "營養知識",
+    "explanation": "多喝牛奶補充鈣質，骨頭才會硬梆梆，變得很強壯喔！",
+    "keyword_tag": "鈣質"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 37,
+    "question": "所謂果汁飲料,其原汁含有率,最少應達百分之幾以上?",
+    "options": [
+      "5%",
+      "10%",
+      "15%",
+      "20%"
+    ],
+    "answer": 2,
+    "knowledge_tag": "法規標示",
+    "explanation": "瓶子寫果汁，裡面最少要有十分之一是真的果汁才合格。",
+    "keyword_tag": "果汁含量"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 38,
+    "question": "多使用於柳橙、檸檬、葡萄柚等水果果汁調製方法為",
+    "options": [
+      "壓榨法",
+      "搖盪法",
+      "電動攪拌法",
+      "直接注入法"
+    ],
+    "answer": 1,
+    "knowledge_tag": "製作方法",
+    "explanation": "像柳丁或檸檬，用力壓一壓把汁擠出來，這就叫壓榨法。",
+    "keyword_tag": "壓榨法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 39,
+    "question": "無色透明、帶有奎寧味及微苦的碳酸水,稱之為",
+    "options": [
+      "Soda Water",
+      "Tonic Water",
+      "Cola",
+      "7-Up"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料辨識",
+    "explanation": "喝起來苦苦的汽水就是通寧水，通常會用來配酒喝。",
+    "keyword_tag": "通寧水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 40,
+    "question": "西元1884年(清光緒10年)英國人引入咖啡,在台灣哪裡種植?",
+    "options": [
+      "桃園",
+      "三峽",
+      "淡水",
+      "木柵"
+    ],
+    "answer": 2,
+    "knowledge_tag": "台灣咖啡",
+    "explanation": "很久以前，英國人最先把咖啡種在台灣的三峽這個地方。",
+    "keyword_tag": "三峽"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 41,
+    "question": "由冰淇淋加上牛奶打成,稱為",
+    "options": [
+      "蛋蜜汁",
+      "奶昔",
+      "聖代",
+      "百匯"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料辨識",
+    "explanation": "把冰淇淋和牛奶放一起攪拌得稠稠的，就是好喝的奶昔。",
+    "keyword_tag": "奶昔"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 42,
+    "question": "養樂多、優酪乳就是一種",
+    "options": [
+      "發酵乳",
+      "調味乳",
+      "保久乳",
+      "脫脂乳"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲料分類",
+    "explanation": "養樂多和優酪乳裡面有對肚子好的細菌，所以是發酵乳。",
+    "keyword_tag": "發酵乳"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 43,
+    "question": "虹吸式沖煮法是利用何種原理?",
+    "options": [
+      "對流",
+      "真空",
+      "蒸氣",
+      "咖啡表面的高壓"
+    ],
+    "answer": 2,
+    "knowledge_tag": "咖啡沖泡",
+    "explanation": "像用吸管吸水一樣，利用吸力把熱水吸上去煮咖啡。",
+    "keyword_tag": "虹吸咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 44,
+    "question": "台灣紅茶的鄉是在",
+    "options": [
+      "新北市坪林區",
+      "南投縣魚池鄉",
+      "南投縣鹿谷鄉",
+      "高雄市六甲區"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉產地",
+    "explanation": "南投魚池鄉的環境很適合種茶，那裡的紅茶世界有名。",
+    "keyword_tag": "魚池紅茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 45,
+    "question": "下列有關綠茶之說明何者錯誤?",
+    "options": [
+      "不揉捻",
+      "不萎凋",
+      "不發酵",
+      "不烘焙"
+    ],
+    "answer": 4,
+    "knowledge_tag": "飲品基礎",
+    "explanation": "綠茶也要經過加熱烘乾，才能保持茶葉綠綠的顏色。",
+    "keyword_tag": "綠茶製作"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 46,
+    "question": "「鐵觀音茶」其發酵程度約",
+    "options": [
+      "10%",
+      "30%",
+      "70%",
+      "90%"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "鐵觀音就像發酵到一半的茶，喝起來味道比較香濃。",
+    "keyword_tag": "鐵觀音"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 47,
+    "question": "下列何者不屬於綠茶?",
+    "options": [
+      "龍井",
+      "文山包種茶",
+      "玉露茶",
+      "碧螺春"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "包種茶是有發酵過的茶，跟完全不發酵的綠茶不一樣。",
+    "keyword_tag": "文山包種茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 48,
+    "question": "台灣最有名的「龍井茶」是在",
+    "options": [
+      "苗栗",
+      "桃園",
+      "大溪",
+      "三峽"
+    ],
+    "answer": 4,
+    "knowledge_tag": "茶葉產地",
+    "explanation": "在新北市的三峽，可以買到台灣最好喝的龍井茶。",
+    "keyword_tag": "三峽龍井"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 49,
+    "question": "有「茶中香檳」之稱的是",
+    "options": [
+      "大吉嶺紅茶",
+      "阿薩姆紅茶",
+      "莫斯科紅茶",
+      "台灣紅茶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "紅茶認識",
+    "explanation": "這種茶的味道像香檳一樣高級，是紅茶裡的明星。",
+    "keyword_tag": "大吉嶺紅茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 50,
+    "question": "「碧螺春」是屬哪一種茶葉?",
+    "options": [
+      "不發酵茶",
+      "輕發酵茶",
+      "全發酵茶",
+      "後發酵茶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "碧螺春是綠茶的一種，是完全沒有經過發酵的茶。",
+    "keyword_tag": "碧螺春"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 51,
+    "question": "「紅茶」是屬於",
+    "options": [
+      "輕發酵茶",
+      "不發酵茶",
+      "重發酵茶",
+      "全發酵茶"
+    ],
+    "answer": 4,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "紅茶讓葉子完全變熟了，所以泡出來顏色紅紅的。",
+    "keyword_tag": "紅茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 52,
+    "question": "「茶池」即是",
+    "options": [
+      "茶壺",
+      "茶盅",
+      "茶船",
+      "茶荷"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶具辨識",
+    "explanation": "茶船就像是給茶壺坐的小盆子，可以用來接多出來的水。",
+    "keyword_tag": "茶船"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 53,
+    "question": "最早將中國茶道引進日本的是哪個朝代?",
+    "options": [
+      "清",
+      "宋",
+      "明",
+      "唐"
+    ],
+    "answer": 4,
+    "knowledge_tag": "飲料文化",
+    "explanation": "很久以前的唐朝人最先開始喝茶，後來日本人也跟著學。",
+    "keyword_tag": "茶道歷史"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 54,
+    "question": "飲用紅茶如添加牛奶後,不可再添加以下哪一種材料,以避免產生凝結作用:",
+    "options": [
+      "糖",
+      "檸檬",
+      "蜂蜜",
+      "茶湯"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料調製",
+    "explanation": "牛奶碰到酸酸的檸檬會結成硬塊，喝起來口感會變得很奇怪。",
+    "keyword_tag": "鮮奶茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 55,
+    "question": "以50%生乳為原料所製成的乳製品是",
+    "options": [
+      "保久乳",
+      "發酵乳",
+      "調味乳",
+      "強化乳"
+    ],
+    "answer": 3,
+    "knowledge_tag": "乳品辨識",
+    "explanation": "牛奶含量只有一半，另外加了果汁或巧克力的就是調味乳。",
+    "keyword_tag": "調味乳"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 56,
+    "question": "「無酒精的飲料」稱之為",
+    "options": [
+      "Sweet Drink",
+      "Soft Drink",
+      "Straight",
+      "Fresh Drink"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料分類",
+    "explanation": "像汽水、果汁這種喝了不會醉的飲料，英文叫 Soft Drink。",
+    "keyword_tag": "軟性飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 57,
+    "question": "乳製品置於常溫太久會變得黏稠,是因為乳酸菌使下列哪種成分凝固?",
+    "options": [
+      "乳清蛋白",
+      "酪蛋白",
+      "脂肪",
+      "鈣質"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食品常識",
+    "explanation": "牛奶裡的蛋白質碰到酸會變黏稠，所以放久了會像果凍一樣。",
+    "keyword_tag": "酪蛋白"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 58,
+    "question": "咖啡生長的條件年均溫最好在",
+    "options": [
+      "20℃",
+      "30 C",
+      "35℃",
+      "40℃左右"
+    ],
+    "answer": 1,
+    "knowledge_tag": "咖啡基礎",
+    "explanation": "咖啡樹喜歡涼爽的天氣，大約20度左右生長得最好。",
+    "keyword_tag": "咖啡溫度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 59,
+    "question": "咖啡樹適合生長南北迴歸線之間,以赤道為中心約",
+    "options": [
+      "北緯10到南緯15度",
+      "北緯15到南緯20度",
+      "北緯25到南緯30度",
+      "北緯35到南緯40度"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡基礎",
+    "explanation": "咖啡喜歡住在地球中間溫暖的地方，不能太冷或太熱。",
+    "keyword_tag": "咖啡帶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 60,
+    "question": "冰淇淋加上切碎水果或者果漿、果汁之類,稱為下列何者?",
+    "options": [
+      "奶昔",
+      "雪糕",
+      "聖代",
+      "冰沙"
+    ],
+    "answer": 3,
+    "knowledge_tag": "甜點認識",
+    "explanation": "冰淇淋上面淋了甜甜的果醬和水果，就是好吃的聖代。",
+    "keyword_tag": "聖代"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 61,
+    "question": "「純天然果汁」是如何製成的?",
+    "options": [
+      "現壓果汁",
+      "需添加冰塊",
+      "比例接近",
+      "濃縮還原"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲品辨識",
+    "explanation": "直接拿新鮮水果壓出來的汁，不加糖和水最健康。",
+    "keyword_tag": "天然果汁"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 62,
+    "question": "Espresso Coffee 是採用哪一種咖啡機調製而成",
+    "options": [
+      "過濾式",
+      "壓力式",
+      "水滴式",
+      "蒸餾式"
+    ],
+    "answer": 2,
+    "knowledge_tag": "咖啡沖泡",
+    "explanation": "用機器強大的壓力把咖啡精華擠出來，味道非常濃郁。",
+    "keyword_tag": "義式咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 63,
+    "question": "沖泡大量冰咖啡,宜選用何種沖泡方式?",
+    "options": [
+      "濾紙沖泡法",
+      "濾布沖泡法",
+      "虹吸式咖啡壺沖泡法",
+      "濾壓壺沖泡法"
+    ],
+    "answer": 2,
+    "knowledge_tag": "咖啡沖泡",
+    "explanation": "用一塊大大的濾布來過濾咖啡，一次可以泡好幾人份。",
+    "keyword_tag": "濾布沖泡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 64,
+    "question": "下列何者咖啡有薄荷的味道?",
+    "options": [
+      "愛爾蘭咖啡",
+      "亞歷山大咖啡",
+      "維也納咖啡",
+      "貴夫人咖啡"
+    ],
+    "answer": 4,
+    "knowledge_tag": "咖啡品項",
+    "explanation": "這款咖啡喝起來涼涼的，很有薄荷的清爽感覺。",
+    "keyword_tag": "貴夫人咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 65,
+    "question": "綠茶的沖泡水溫,以下列何者為宜?",
+    "options": [
+      "75~80℃",
+      "85~95℃",
+      "95~100℃",
+      "100℃以上"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶葉沖泡",
+    "explanation": "綠茶比較嫩，不能用太燙的滾水，水溫大約80度最剛好。",
+    "keyword_tag": "綠茶水溫"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 66,
+    "question": "重焙火、重喉韻的茶,適合選用下列何種壺?",
+    "options": [
+      "瓷壺",
+      "金屬壺",
+      "陶壺",
+      "玻璃壺"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶具選用",
+    "explanation": "味道很重的茶要用陶土做的壺來泡，喝起來會更順口。",
+    "keyword_tag": "陶壺"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 67,
+    "question": "台灣的凍頂茶主要產於",
+    "options": [
+      "彰化",
+      "南投",
+      "苗栗",
+      "雲林"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉產地",
+    "explanation": "南投鹿谷產的凍頂茶很有名，喝起來有特別的碳焙香味。",
+    "keyword_tag": "凍頂烏龍"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 68,
+    "question": "下列哪一種茶的發酵程度最多?",
+    "options": [
+      "紅茶",
+      "凍頂茶",
+      "白毫烏龍茶",
+      "包種茶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "紅茶是讓茶葉完全變色、變熟，是發酵程度最高的茶。",
+    "keyword_tag": "全發酵茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 69,
+    "question": "關於紅茶葉片的等級,屬於最尖端的嫩芽,稱之為",
+    "options": [
+      "Flowery Orange Pekoe (FOP)",
+      "Orange Pekoe (OP)",
+      "Fanning (F)",
+      "Pekoe(P)"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶葉知識",
+    "explanation": "這是指採茶時摘下最頂端、最嫩的芽尖，等級最高。",
+    "keyword_tag": "紅茶等級"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 70,
+    "question": "下列何種果汁不適合直接飲用,須加水稀釋?",
+    "options": [
+      "柳丁汁",
+      "檸檬汁",
+      "木瓜汁",
+      "葡萄柚汁"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲品常識",
+    "explanation": "檸檬汁直接喝會太酸，通常要加水和糖稀釋才好喝。",
+    "keyword_tag": "檸檬汁"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 71,
+    "question": "下列哪一種碳酸飲料含有咖啡因?",
+    "options": [
+      "Soda Water",
+      "7-up",
+      "Ginger Ale",
+      "Coke"
+    ],
+    "answer": 4,
+    "knowledge_tag": "飲品成分",
+    "explanation": "黑黑的可樂裡面含有咖啡因，喝了可能會讓人比較興奮。",
+    "keyword_tag": "可樂"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 72,
+    "question": "下列哪一種罐裝飲料打開後,隔夜仍可使用?",
+    "options": [
+      "薑汁汽水",
+      "蕃茄汁",
+      "可樂",
+      "奎寧水"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食品存放",
+    "explanation": "像蕃茄汁這種鹹口味的飲料，開了沒喝完冰起來還能喝。",
+    "keyword_tag": "罐裝飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 73,
+    "question": "有「形美、色綠、香濃、味醇」四絕之稱的是下列何者?",
+    "options": [
+      "烏龍茶",
+      "包種茶",
+      "龍井茶",
+      "紅茶"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶葉認識",
+    "explanation": "龍井茶就像是茶葉界的選美冠軍，外表綠綠的，喝起來又香又純。",
+    "keyword_tag": "龍井茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 74,
+    "question": "下列何者為不含咖啡因飲料?",
+    "options": [
+      "咖啡",
+      "水果醋",
+      "綠茶",
+      "可可"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料分類",
+    "explanation": "水果醋是用果汁做的酸甜飲料，裡面沒有咖啡因，晚上喝也能好好睡覺。",
+    "keyword_tag": "水果醋"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 75,
+    "question": "茶葉的生長環境相對濕度在",
+    "options": [
+      "55%~65%",
+      "65%~70%",
+      "75%~80%",
+      "85%~90%之間"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶葉生長",
+    "explanation": "茶樹喜歡住在有點潮濕、空氣涼涼的地方，就像住在舒服的雲霧裡。",
+    "keyword_tag": "濕度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 76,
+    "question": "以下何者不是主要西瓜產地?",
+    "options": [
+      "彰化",
+      "雲林",
+      "屏東",
+      "澎湖"
+    ],
+    "answer": 4,
+    "knowledge_tag": "水果知識",
+    "explanation": "台灣很多地方都有種西瓜，但澎湖因為環境的關係，並不是主要生產的地方。",
+    "keyword_tag": "西瓜產地"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 77,
+    "question": "以下哪一個月份是西瓜主要盛產季?",
+    "options": [
+      "1~3月",
+      "4~7月",
+      "8~9月",
+      "10~12月"
+    ],
+    "answer": 2,
+    "knowledge_tag": "水果知識",
+    "explanation": "夏天最適合吃西瓜消暑了，所以 4 月到 7 月是西瓜最好吃的時候。",
+    "keyword_tag": "西瓜產季"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 78,
+    "question": "以下何者不是芒果的主要產區?",
+    "options": [
+      "屏東縣",
+      "高雄市",
+      "台南市",
+      "花蓮縣"
+    ],
+    "answer": 4,
+    "knowledge_tag": "水果知識",
+    "explanation": "芒果喜歡南部暖和的太陽，東部的花蓮縣比較不是主要的芒果產地。",
+    "keyword_tag": "芒果產地"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 79,
+    "question": "以下何者為芒果的盛產季節?",
+    "options": [
+      "春",
+      "夏",
+      "秋",
+      "冬"
+    ],
+    "answer": 2,
+    "knowledge_tag": "水果知識",
+    "explanation": "想到夏天就會想到金黃色的芒果，夏天就是芒果盛產的季節喔。",
+    "keyword_tag": "芒果產季"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 80,
+    "question": "以下何者不是香蕉的主要產區?",
+    "options": [
+      "屏東縣",
+      "高雄市",
+      "南投縣",
+      "花蓮縣"
+    ],
+    "answer": 4,
+    "knowledge_tag": "水果知識",
+    "explanation": "台灣南部最出名種香蕉，而東部的花蓮比較不是主要的香蕉產區。",
+    "keyword_tag": "香蕉產地"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 81,
+    "question": "最適合調製水果冰沙的作法為下列何者?",
+    "options": [
+      "電動攪拌法",
+      "搖盪法",
+      "攪拌法",
+      "直接注入法"
+    ],
+    "answer": 1,
+    "knowledge_tag": "調飲技巧",
+    "explanation": "要做冰冰涼涼的水果冰沙，一定要用機器轉快快，才能把冰塊打碎。",
+    "keyword_tag": "電動攪拌法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 82,
+    "question": "以新鮮果汁加入調味 Syrup,一般稱為",
+    "options": [
+      "Cocktail",
+      "Mocktail",
+      "Fizz",
+      "Cooler"
+    ],
+    "answer": 2,
+    "knowledge_tag": "專業術語",
+    "explanation": "這種飲料只有果汁和糖漿，雖然長得像酒但沒有酒精，英文叫 Mocktail。",
+    "keyword_tag": "無酒精雞尾酒"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 83,
+    "question": "調製 Frozen 主要的工具為下列何者?",
+    "options": [
+      "冰沙機",
+      "搖酒器",
+      "刻度調酒杯",
+      "雪平鍋"
+    ],
+    "answer": 1,
+    "knowledge_tag": "工具辨識",
+    "explanation": "想喝綿綿密密的冰沙（Frozen），就要請出專業的冰沙機來幫忙。",
+    "keyword_tag": "冰沙機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 84,
+    "question": "以櫻桃、檸檬作為杯口裝飾,我們稱為下列何者?",
+    "options": [
+      "Decoration",
+      "Garnish",
+      "Furnishing",
+      "Rimming"
+    ],
+    "answer": 2,
+    "knowledge_tag": "專業術語",
+    "explanation": "在杯口放上櫻桃或檸檬片，就像幫飲料穿漂亮衣服，這就叫 Garnish。",
+    "keyword_tag": "裝飾物"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 85,
+    "question": "調製含有碳酸氣體的飲料,應使用以下何種器具?",
+    "options": [
+      "Shaker",
+      "Blender",
+      "Mixing Glass",
+      "Bar Spoon"
+    ],
+    "answer": 4,
+    "knowledge_tag": "工具辨識",
+    "explanation": "攪拌汽水要用長長的吧叉匙輕輕拌，這樣才不會讓泡泡全部跑光光。",
+    "keyword_tag": "吧叉匙"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 86,
+    "question": "義大利式咖啡(Espresso)所使用的咖啡豆是",
+    "options": [
+      "摩卡豆",
+      "巴西豆",
+      "綜合豆",
+      "藍山豆"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡認識",
+    "explanation": "做義式咖啡時會把不同種的豆子混在一起，這樣喝起來味道才會豐富。",
+    "keyword_tag": "綜合豆"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 87,
+    "question": "使用義大利式(蒸氣、壓力)咖啡機來調製熱奶泡,以下何者為最恰當溫度?",
+    "options": [
+      "35~40℃",
+      "45~50℃",
+      "65~70℃",
+      "80~85℃"
+    ],
+    "answer": 3,
+    "knowledge_tag": "飲品調製",
+    "explanation": "熱奶泡大約在 65 到 70 度最好喝，摸杯子會覺得熱熱燙燙的感覺。",
+    "keyword_tag": "奶泡溫度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 88,
+    "question": "以下何者不是無酒精飲料的英文名稱?",
+    "options": [
+      "Soft Drinks",
+      "Virgin Drinks",
+      "Mocktail",
+      "Hard Drinks"
+    ],
+    "answer": 4,
+    "knowledge_tag": "專業術語",
+    "explanation": "英文的 Hard Drinks 是指有酒精的酒，不是給小朋友喝的無酒精飲料。",
+    "keyword_tag": "硬飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 89,
+    "question": "以下哪一種不屬於軟性飲料?",
+    "options": [
+      "紅茶",
+      "果汁",
+      "雞尾酒",
+      "咖啡"
+    ],
+    "answer": 3,
+    "knowledge_tag": "飲料分類",
+    "explanation": "軟性飲料是指不含酒的果汁或汽水，雞尾酒裡面有酒，所以不是軟性飲料。",
+    "keyword_tag": "軟性飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 90,
+    "question": "在咖啡的成份中,哪一項最能夠刺激中樞神經系統,使人情緒激昂、提高思考力、消除睡意,具有提神效果?",
+    "options": [
+      "咖啡因",
+      "脂肪",
+      "蛋白質",
+      "單寧酸"
+    ],
+    "answer": 1,
+    "knowledge_tag": "咖啡成分",
+    "explanation": "咖啡裡面有一種神奇的東西叫咖啡因，喝了會讓人精神變好、不想睡覺。",
+    "keyword_tag": "咖啡因"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 91,
+    "question": "下列何者為不發酵茶的製造過程?",
+    "options": [
+      "茶菁→炒菁→揉捻→乾燥→成品",
+      "茶菁→日光萎凋→室內萎凋",
+      "茶菁→揉捻→炒菁→乾燥→成品",
+      "茶菁→炒菁→揉捻→成品"
+    ],
+    "answer": 1,
+    "knowledge_tag": "製茶過程",
+    "explanation": "這種茶採下來後趕快炒一炒加熱，不讓它變色，就能保持綠綠的清香味。",
+    "keyword_tag": "不發酵茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 92,
+    "question": "以下哪一種茶葉的成份是茶葉中多元酚類的通稱,是茶中主要的成分,有幫助消化的功能,也是茶帶澀味的主要因素?",
+    "options": [
+      "胺基酸",
+      "單寧酸",
+      "礦物質",
+      "維生素"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉成分",
+    "explanation": "喝茶時舌頭覺得澀澀的東西就是單寧酸，它還能幫忙腸胃消化食物喔。",
+    "keyword_tag": "單寧酸"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 93,
+    "question": "以下哪一個國家非紅茶主要出產國?",
+    "options": [
+      "西班牙",
+      "印度",
+      "斯里蘭卡",
+      "肯亞"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶葉知識",
+    "explanation": "西班牙人比較喜歡喝酒，紅茶的主要產地通常是在亞洲或非洲的國家。",
+    "keyword_tag": "西班牙"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 94,
+    "question": "以下何者不為茶葉的功效?",
+    "options": [
+      "提神醒腦、消除疲勞",
+      "抗菌作用",
+      "強化微血管",
+      "幫助睡眠"
+    ],
+    "answer": 4,
+    "knowledge_tag": "生活常識",
+    "explanation": "茶裡面有咖啡因，喝了會更有精神，所以它沒有幫助睡眠的功能喔。",
+    "keyword_tag": "幫助睡眠"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 95,
+    "question": "台灣氣候適宜種植茶樹,一年最多可採收幾次?",
+    "options": [
+      "一次",
+      "二次",
+      "四次",
+      "六次"
+    ],
+    "answer": 4,
+    "knowledge_tag": "茶葉知識",
+    "explanation": "台灣的天氣太適合種茶了，茶樹長得很快，一年最多可以採收六次。",
+    "keyword_tag": "採收次數"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 96,
+    "question": "全發酵茶的紅茶類以幾度的熱水沖泡為宜?",
+    "options": [
+      "95℃",
+      "90 C",
+      "80℃",
+      "70℃"
+    ],
+    "answer": 1,
+    "knowledge_tag": "沖泡技巧",
+    "explanation": "泡紅茶要用快要滾開的 95 度熱水，這樣泡出來的紅茶才香才好喝。",
+    "keyword_tag": "紅茶泡法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 97,
+    "question": "沖泡中國茶的器具很多,以下何者「非」泡茶時會使用的器具?",
+    "options": [
+      "茶壺",
+      "茶海",
+      "水方",
+      "濾杯"
+    ],
+    "answer": 4,
+    "knowledge_tag": "工具辨識",
+    "explanation": "濾杯通常是手沖咖啡在用的，傳統泡中國茶時不太會用到這個東西。",
+    "keyword_tag": "濾杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 98,
+    "question": "英式下午茶點心的吃法,下列何者正確?",
+    "options": [
+      "由上而下,由甜而鹹,由淡而濃",
+      "由下而上,由鹹而甜,由淡而濃",
+      "由上而下,由鹹而甜,由濃而淡",
+      "由下而上,由甜而鹹,由淡而濃"
+    ],
+    "answer": 2,
+    "knowledge_tag": "餐飲禮儀",
+    "explanation": "吃下午茶有點像爬樓梯，要從最下面的鹹點心開始往上面吃甜的。",
+    "keyword_tag": "下午茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 99,
+    "question": "以下何種茶雖名為「茶」,卻是由天然花草製成,不含咖啡因、茶鹼等刺激性的成分?",
+    "options": [
+      "花草茶",
+      "紅茶",
+      "綠茶",
+      "烏龍茶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲料分類",
+    "explanation": "花草茶是用漂亮的花朵或葉子泡的，沒有咖啡因，喝了不會讓心跳變快。",
+    "keyword_tag": "花草茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 100,
+    "question": "以下何種花茶不是常見的飲用花茶?",
+    "options": [
+      "玫瑰花茶",
+      "紫羅蘭花茶",
+      "鬱金香花茶",
+      "檸檬草"
+    ],
+    "answer": 3,
+    "knowledge_tag": "生活常識",
+    "explanation": "我們常喝菊花茶或茉莉花茶，很少看到有人拿鬱金香來泡茶喝。",
+    "keyword_tag": "常見花茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 101,
+    "question": "以下何種茶含有豐富的維生素,帶有酸味及花果香?",
+    "options": [
+      "花茶",
+      "果粒茶",
+      "烏龍茶",
+      "綠茶"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲料分類",
+    "explanation": "果粒茶裡面有很多乾掉的小水果，喝起來酸酸甜甜的，很有營養。",
+    "keyword_tag": "果粒茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 102,
+    "question": "以下敘述何者錯誤?",
+    "options": [
+      "泡沫茶品是以各式茶品為基茶,添加果糖調製而成,如泡沫紅茶、綠茶等",
+      "加味茶品是以紅茶或綠茶為基茶,添加梅子、薄荷、蜂蜜等調配,如梅子綠茶、薄荷綠茶等",
+      "泡沫果茶是以紅茶或綠茶為基茶,添加各式果汁,如葡萄柚綠茶、百香果綠茶等",
+      "泡沫奶茶是以綠茶為基茶,添加奶粉調製而成,如伯爵奶茶等"
+    ],
+    "answer": 4,
+    "knowledge_tag": "飲品辨識",
+    "explanation": "泡沫奶茶一般是用紅茶當底調成的，不是用綠茶加奶粉做的伯爵奶茶。",
+    "keyword_tag": "泡沫奶茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 103,
+    "question": "下列何者是將採摘的茶葉蒸氣殺菁,然後乾製碾碎,製成粉末沖泡飲用?",
+    "options": [
+      "玄米茶",
+      "抹茶",
+      "薄荷茶",
+      "煎茶"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉辨識",
+    "explanation": "抹茶就是把茶葉蒸熟磨成粉，喝起來很有茶香味。",
+    "keyword_tag": "抹茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 104,
+    "question": "以下四種水果中,哪一項不適合加牛奶調製?",
+    "options": [
+      "木瓜",
+      "萊姆",
+      "西瓜",
+      "酪梨"
+    ],
+    "answer": 2,
+    "knowledge_tag": "水果知識",
+    "explanation": "萊姆太酸了，加進牛奶裡會讓牛奶結塊變質，不適合一起喝。",
+    "keyword_tag": "萊姆"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 105,
+    "question": "以下四種水果中,哪一項不是夏季盛產的水果?",
+    "options": [
+      "西瓜",
+      "芒果",
+      "草莓",
+      "荔枝"
+    ],
+    "answer": 3,
+    "knowledge_tag": "季節水果",
+    "explanation": "草莓喜歡冷冷的天，通常在冬天和春天長大，不是夏天。 ",
+    "keyword_tag": "草莓"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 106,
+    "question": "以下四種水果中,哪一項是源自中國,本名彌猴桃?",
+    "options": [
+      "鳳梨",
+      "百香果",
+      "奇異果",
+      "蕃茄"
+    ],
+    "answer": 3,
+    "knowledge_tag": "水果由來",
+    "explanation": "奇異果以前叫獼猴桃，原本是從中國傳出去的。",
+    "keyword_tag": "奇異果"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 107,
+    "question": "以下何者在調製果汁時,不適合用果汁機操作?",
+    "options": [
+      "哈密瓜",
+      "水蜜桃",
+      "西瓜",
+      "甘蔗"
+    ],
+    "answer": 4,
+    "knowledge_tag": "工具使用",
+    "explanation": "甘蔗太硬了，果汁機會被弄壞，要用專門的機器壓汁。",
+    "keyword_tag": "甘蔗"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 108,
+    "question": "何種型態之碳酸飲料是以添加水果味道的香料來做為果味的來源,且顏色鮮艷,價格也很便宜?",
+    "options": [
+      "果味型碳酸飲料",
+      "可樂型碳酸飲料",
+      "麥芽碳酸飲料",
+      "其他碳酸飲料"
+    ],
+    "answer": 1,
+    "knowledge_tag": "飲料種類",
+    "explanation": "這是用香料調成的汽水，顏色漂亮又便宜，像我們喝的橘子汽水。",
+    "keyword_tag": "果味型碳酸飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 109,
+    "question": "下列何者「非」為製造冰淇淋的材料?",
+    "options": [
+      "冰塊",
+      "牛奶製品",
+      "糖",
+      "香料、穩定劑、乳化劑"
+    ],
+    "answer": 1,
+    "knowledge_tag": "材料辨識",
+    "explanation": "做冰淇淋要用牛奶跟奶油，直接放冰塊口感就不對了。",
+    "keyword_tag": "冰塊"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 110,
+    "question": "可可樹是熱帶常綠植物,果實為莢狀,香氣濃郁,剔開果肉取出可可豆後,可加工製成下列何者?",
+    "options": [
+      "巧克力",
+      "即溶咖啡",
+      "花草茶",
+      "果粒茶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "加工食品",
+    "explanation": "可可豆是巧克力的靈魂，磨碎加工後就變成好吃的巧克力。",
+    "keyword_tag": "巧克力"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 111,
+    "question": "咖啡果實成熟時,在尚未去皮及加工過程,呈現什麼顏色?",
+    "options": [
+      "綠色",
+      "白色",
+      "紅色",
+      "黑色"
+    ],
+    "answer": 3,
+    "knowledge_tag": "植物外觀",
+    "explanation": "咖啡豆沒採下來前像紅櫻桃一樣，成熟時是漂亮的紅色。",
+    "keyword_tag": "紅色"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 112,
+    "question": "台灣最早大量種植咖啡的地區是",
+    "options": [
+      "新北市",
+      "雲林縣",
+      "台南市",
+      "花蓮縣"
+    ],
+    "answer": 2,
+    "knowledge_tag": "台灣產區",
+    "explanation": "雲林的古坑以前有很多咖啡樹，是台灣早期種最多的地方。",
+    "keyword_tag": "雲林縣"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 113,
+    "question": "最早引進咖啡樹至台灣種植是於西元哪一年?",
+    "options": [
+      "1500年",
+      "1624年",
+      "1884年",
+      "1914年"
+    ],
+    "answer": 2,
+    "knowledge_tag": "台灣歷史",
+    "explanation": "很久以前荷蘭人來到台灣時，就把咖啡樹帶來種了。",
+    "keyword_tag": "1624年"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 114,
+    "question": "台灣有名的古坑咖啡位於哪一個縣市?",
+    "options": [
+      "嘉義縣",
+      "雲林縣",
+      "台南市",
+      "花蓮縣"
+    ],
+    "answer": 2,
+    "knowledge_tag": "台灣產區",
+    "explanation": "看到古坑就要想到雲林，那裡的咖啡全台灣都有名。",
+    "keyword_tag": "雲林縣"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 115,
+    "question": "咖啡豆最適合種植於哪種環境?",
+    "options": [
+      "全日照地區",
+      "半日照地區",
+      "無日照地區",
+      "雨林中"
+    ],
+    "answer": 2,
+    "knowledge_tag": "植物生長",
+    "explanation": "咖啡樹怕曬傷，所以要種在有太陽但不會曬整天的地方。",
+    "keyword_tag": "半日照地區"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 116,
+    "question": "首先在台灣大量種植咖啡豆的人是",
+    "options": [
+      "日本人",
+      "荷蘭人",
+      "西班牙人",
+      "英國人"
+    ],
+    "answer": 1,
+    "knowledge_tag": "台灣歷史",
+    "explanation": "日治時期的時候，日本人為了產咖啡，在台灣種了很多。",
+    "keyword_tag": "日本人"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 117,
+    "question": "台灣第一家以重烘焙咖啡豆起家的直營咖啡連鎖店,是來自哪個國家?",
+    "options": [
+      "日本",
+      "義大利",
+      "美國",
+      "法國"
+    ],
+    "answer": 3,
+    "knowledge_tag": "品牌來源",
+    "explanation": "最早開這種重口味連鎖咖啡店的是美國人，像星巴克就是。",
+    "keyword_tag": "美國"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 118,
+    "question": "即溶式咖啡是在何時正式在市面上發行?",
+    "options": [
+      "西元1933年",
+      "西元1938年",
+      "西元1943年",
+      "西元1948年"
+    ],
+    "answer": 2,
+    "knowledge_tag": "產品歷史",
+    "explanation": "即溶咖啡是在大約 80 多年前正式發明的，讓大家喝咖啡變方便。",
+    "keyword_tag": "西元1938年"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 119,
+    "question": "摩卡咖啡豆是指哪個國家的咖啡豆?",
+    "options": [
+      "剛果",
+      "坦尚尼亞",
+      "葉門及衣索比亞",
+      "南非"
+    ],
+    "answer": 3,
+    "knowledge_tag": "品種產地",
+    "explanation": "摩卡原本是個出口咖啡的港口名，就是指那附近的咖啡豆。",
+    "keyword_tag": "摩卡咖啡豆"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 120,
+    "question": "以噴霧乾燥法(Spray Dried)製造的即溶咖啡,俗稱為第幾代咖啡?",
+    "options": [
+      "一",
+      "二",
+      "三",
+      "四"
+    ],
+    "answer": 1,
+    "knowledge_tag": "加工技術",
+    "explanation": "噴霧法做出的咖啡粉是最早期的技術，所以稱為第一代。",
+    "keyword_tag": "第一代咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 121,
+    "question": "以凍結乾燥法(Freeze Dried)製造的即溶咖啡,俗稱為第幾代咖啡?",
+    "options": [
+      "一",
+      "二",
+      "三",
+      "四"
+    ],
+    "answer": 3,
+    "knowledge_tag": "加工技術",
+    "explanation": "這種凍結法可以留住咖啡香味，是比較進步的第三代技術。",
+    "keyword_tag": "第三代咖啡"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 122,
+    "question": "下面哪種咖啡豆不屬於阿拉比卡種(Arabica)?",
+    "options": [
+      "曼特寧豆",
+      "可娜豆",
+      "爪哇豆",
+      "摩卡豆"
+    ],
+    "answer": 3,
+    "knowledge_tag": "品種分類",
+    "explanation": "爪哇豆通常被歸類在羅布斯塔種，跟阿拉比卡不一樣。",
+    "keyword_tag": "爪哇豆"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 123,
+    "question": "西元1843年由哪一個國家的人發明手搖式製冰機,才使冰淇淋成為大眾化冰品?",
+    "options": [
+      "英國人",
+      "義大利人",
+      "美國人",
+      "德國人"
+    ],
+    "answer": 3,
+    "knowledge_tag": "器材歷史",
+    "explanation": "美國人發明了手搖機器，大家才能更容易吃到冰淇淋。",
+    "keyword_tag": "美國人"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 124,
+    "question": "西元1923年發明無咖啡因咖啡的是那一國人?",
+    "options": [
+      "美國人",
+      "義大利人",
+      "法國人",
+      "德國人"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食品研發",
+    "explanation": "德國人發明把咖啡因拿掉的方法，讓怕睡不著的人也能喝。",
+    "keyword_tag": "德國人"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 125,
+    "question": "西元1960年發明罐裝飲料,留置型易開罐拉環的是哪一國人?",
+    "options": [
+      "美國人",
+      "英國人",
+      "法國人",
+      "德國人"
+    ],
+    "answer": 1,
+    "knowledge_tag": "包裝設計",
+    "explanation": "美國人想出把拉環留在罐子上的方法，方便喝又不會弄丟拉環。",
+    "keyword_tag": "美國人"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 126,
+    "question": "可娜豆(Kona)主要產於",
+    "options": [
+      "印尼",
+      "夏威夷",
+      "宏都拉斯",
+      "哥倫比亞"
+    ],
+    "answer": 2,
+    "knowledge_tag": "世界產區",
+    "explanation": "可娜豆是很有名的咖啡豆，是在漂亮的夏威夷種出來的。",
+    "keyword_tag": "夏威夷"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 127,
+    "question": "下列哪個國家最早種植咖啡豆?",
+    "options": [
+      "巴西",
+      "哥倫比亞",
+      "印尼",
+      "印度"
+    ],
+    "answer": 4,
+    "knowledge_tag": "咖啡歷史",
+    "explanation": "咖啡最早在印度等地區開始種植，然後才慢慢傳到世界各地。",
+    "keyword_tag": "印度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 128,
+    "question": "世界咖啡生豆期貨最大的交易地點位於",
+    "options": [
+      "倫敦",
+      "紐約",
+      "東京",
+      "巴黎"
+    ],
+    "answer": 2,
+    "knowledge_tag": "國際市場",
+    "explanation": "紐約是全球最大的咖啡買賣中心，決定世界咖啡的價格。",
+    "keyword_tag": "紐約"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 129,
+    "question": "台灣包種茶主要產地在",
+    "options": [
+      "新北市",
+      "嘉義縣",
+      "南投縣",
+      "雲林縣"
+    ],
+    "answer": 1,
+    "knowledge_tag": "台灣產區",
+    "explanation": "新北市的坪林有很多好喝的包種茶，大家常去那裡買。",
+    "keyword_tag": "新北市"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 130,
+    "question": "台灣的港口茶主要產地在",
+    "options": [
+      "新北市",
+      "宜蘭縣",
+      "高雄市",
+      "屏東縣"
+    ],
+    "answer": 4,
+    "knowledge_tag": "台灣產區",
+    "explanation": "港口茶是屏東恆春的名產，喝起來有獨特的海邊味道。",
+    "keyword_tag": "屏東縣"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 131,
+    "question": "台灣的三星上將茶的主要產地在",
+    "options": [
+      "花蓮縣",
+      "宜蘭縣",
+      "南投縣",
+      "屏東縣"
+    ],
+    "answer": 2,
+    "knowledge_tag": "台灣產區",
+    "explanation": "宜蘭三星除了蔥，種出來的「上將茶」也是當地的名產。",
+    "keyword_tag": "宜蘭縣"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 132,
+    "question": "可樂加冰塊點綴檸檬片,這種不需要攪拌的方法稱之為",
+    "options": [
+      "壓榨法(Muddle)",
+      "飄浮法(Float)",
+      "注入法(Pour)",
+      "攪拌法(Stir)"
+    ],
+    "answer": 3,
+    "knowledge_tag": "調製技術",
+    "explanation": "就是直接把飲料倒進杯子裡，不用搖也不用攪拌的方法。",
+    "keyword_tag": "注入法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 133,
+    "question": "水果切盤不會使用下列哪種切法?",
+    "options": [
+      "拉切",
+      "推切",
+      "鋸切",
+      "滾切"
+    ],
+    "answer": 4,
+    "knowledge_tag": "刀法辨識",
+    "explanation": "水果拼盤講求漂亮好入口，通常不會用這種切出來大小不一的滾切法。",
+    "keyword_tag": "滾切"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 134,
+    "question": "可可飲用時覺得有點苦苦的,其原因是",
+    "options": [
+      "受潮",
+      "過期",
+      "含生物鹼",
+      "發霉"
+    ],
+    "answer": 3,
+    "knowledge_tag": "飲品成分",
+    "explanation": "可可豆裡有一種叫生物鹼的天然成分，這就是讓它喝起來苦苦的原因喔。",
+    "keyword_tag": "生物鹼"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 135,
+    "question": "製作水果茶時,一般不使用哪種水果?",
+    "options": [
+      "奇異果",
+      "蘋果",
+      "酪梨",
+      "柳橙"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材選用",
+    "explanation": "酪梨吃起來油油滑滑的，不適合跟其他水果放在一起做清爽的水果茶。",
+    "keyword_tag": "酪梨"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 136,
+    "question": "全世界最大的紅茶生產國是",
+    "options": [
+      "中國",
+      "斯里蘭卡",
+      "印度",
+      "台灣"
+    ],
+    "answer": 3,
+    "knowledge_tag": "產地常識",
+    "explanation": "印度是世界上出產最多紅茶的地方，就像是茶葉的超級大工廠。",
+    "keyword_tag": "印度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 137,
+    "question": "茶葉製作過程中,不需經過萎凋處理的是",
+    "options": [
+      "綠茶",
+      "紅茶",
+      "烏龍茶",
+      "包種茶"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶葉加工",
+    "explanation": "綠茶為了保持鮮綠，採下來就直接處理，不需要像別種茶一樣放著讓它變軟萎縮。",
+    "keyword_tag": "綠茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 138,
+    "question": "泡製中國茶時,用以盛放泡好之茶湯,再分倒各小杯,使各小杯茶湯濃度平均的用具,稱之為",
+    "options": [
+      "茶海",
+      "茶盤",
+      "茶則",
+      "茶漏"
+    ],
+    "answer": 1,
+    "knowledge_tag": "茶具認識",
+    "explanation": "茶海像是一個大杯子，先把泡好的茶倒進去，這樣分給每個人喝的濃度才會一樣。",
+    "keyword_tag": "茶海"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 139,
+    "question": "台茶12號是指哪一種品種的茶?",
+    "options": [
+      "烏龍茶",
+      "金萱茶",
+      "翠玉茶",
+      "四季春"
+    ],
+    "answer": 2,
+    "knowledge_tag": "茶葉品種",
+    "explanation": "金萱茶是台灣很有名的品種，它還有一個專屬的編號叫「台茶 12 號」喔。",
+    "keyword_tag": "金萱茶"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 140,
+    "question": "下列有關飲料容積單位,何者錯誤?",
+    "options": [
+      "ml為Milliliter 的簡寫",
+      "cl為Centiliter",
+      "10 g = 1cc",
+      "10ml=1cl"
+    ],
+    "answer": 3,
+    "knowledge_tag": "度量常識",
+    "explanation": "重量（公克）和容量（cc）是不一樣的，不能直接說 10 公克等於 1 cc 喔。",
+    "keyword_tag": "容積單位"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 141,
+    "question": "飲務員在調製飲料過程中,不用量酒器來量製,直接倒入的方式稱之為",
+    "options": [
+      "Fine Pour",
+      "Easy Pour",
+      "Full Pour",
+      "Free Pour"
+    ],
+    "answer": 4,
+    "knowledge_tag": "調酒技術",
+    "explanation": "不使用量杯、直接把酒倒入杯子裡的動作，在吧檯英文裡叫做 Free Pour。",
+    "keyword_tag": "Free Pour"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 142,
+    "question": "下列那一項不可放入雪克杯(Shaker)內調製飲料?",
+    "options": [
+      "奎寧水(Tonic Water)",
+      "鮮奶(Milk)",
+      "蕃茄汁(Tomato Juice)",
+      "苦精(Bitters)"
+    ],
+    "answer": 1,
+    "knowledge_tag": "調製禁忌",
+    "explanation": "有氣泡的飲料不能放進搖酒器搖，不然會像汽水被搖過一樣，打開時噴得滿臉都是。",
+    "keyword_tag": "奎寧水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 143,
+    "question": "下列何者操作方式有誤?",
+    "options": [
+      "含有蛋黃或乳製品的材料,可用搖盪法來調製",
+      "倒碳酸飲料時,在酒杯快倒滿前,應將酒杯扶正立直",
+      "電動攪拌機(Electrical Blender)使用後,需立即清洗,並擦拭乾淨",
+      "清洗玻璃杯皿時,要使用清潔劑和菜瓜布,並檢查杯子是否有破損"
+    ],
+    "answer": 4,
+    "knowledge_tag": "器皿清潔",
+    "explanation": "玻璃杯很嬌貴，用粗糙的菜瓜布刷會留下刮痕，要用柔軟的海綿清洗才對。",
+    "keyword_tag": "玻璃杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 144,
+    "question": "對人類健康有益,經濟又實惠的飲料是",
+    "options": [
+      "茶",
+      "果汁",
+      "水",
+      "咖啡"
+    ],
+    "answer": 3,
+    "knowledge_tag": "健康飲品",
+    "explanation": "多喝水對身體最健康，而且不用花什麼錢，是世界上最實惠的飲料。",
+    "keyword_tag": "水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 145,
+    "question": "下列那一種茶的發酵程度最高?",
+    "options": [
+      "鐵觀音",
+      "凍頂烏龍茶",
+      "白毫烏龍",
+      "包種茶"
+    ],
+    "answer": 3,
+    "knowledge_tag": "茶葉分類",
+    "explanation": "白毫烏龍又叫東方美人茶，它是烏龍茶裡面發酵程度最高的茶類。",
+    "keyword_tag": "白毫烏龍"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 146,
+    "question": "熱咖啡最適宜飲用的溫度約在",
+    "options": [
+      "40℃",
+      "60℃",
+      "80°C",
+      "100℃"
+    ],
+    "answer": 2,
+    "knowledge_tag": "飲用溫度",
+    "explanation": "熱咖啡不要燙到舌頭才好喝，大約 60 度就像洗澡水再熱一點的感覺，喝起來最舒服。",
+    "keyword_tag": "60℃"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 03: 飲料調製",
+    "id": 147,
+    "question": "無咖啡因咖啡之英文為",
+    "options": [
+      "Light Coffee",
+      "Free Coffee",
+      "Light Coffee with Decaffeinated",
+      "Decaffeinated Coffee"
+    ],
+    "answer": 4,
+    "knowledge_tag": "英文術語",
+    "explanation": "這種咖啡去掉了讓人精神亢奮的咖啡因，英文縮寫通常叫做 Decaf。",
+    "keyword_tag": "Decaf"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 1,
+    "question": "飲料成本是屬於",
+    "options": [
+      "變動成本",
+      "半變動成本",
+      "固定成本",
+      "視情況而定"
+    ],
+    "answer": 1,
+    "knowledge_tag": "成本概念",
+    "explanation": "賣越多杯飲料，材料費就花越多，這種會跟著產量改變的支出就叫變動成本。",
+    "keyword_tag": "變動成本"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 2,
+    "question": "飲料的售價減飲料的成本等於",
+    "options": [
+      "毛利",
+      "淨利",
+      "單位成本",
+      "總利潤"
+    ],
+    "answer": 1,
+    "knowledge_tag": "帳務基礎",
+    "explanation": "把賣掉拿到的錢減掉買材料的錢，就是我們初步賺到的錢，稱為毛利。",
+    "keyword_tag": "毛利"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 3,
+    "question": "有關成本控制概念,下列何者敘述錯誤?",
+    "options": [
+      "隨時關掉不用的電燈",
+      "為節省能源,營業時少開幾盞燈",
+      "能遵守每次調飲都能使用量酒器的規定",
+      "調飲時,依照公司規定的配方做"
+    ],
+    "answer": 2,
+    "knowledge_tag": "經營常識",
+    "explanation": "省錢要省對地方，如果為了省電把燈關掉，讓客人看不清楚路，反而會發生危險。",
+    "keyword_tag": "成本控制"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 4,
+    "question": "下列何者不是盤存的目的?",
+    "options": [
+      "防止失竊",
+      "確定存貨出入的流動率",
+      "了解常客的名字",
+      "查明銷售流量不高的材料以便處理"
+    ],
+    "answer": 3,
+    "knowledge_tag": "庫存管理",
+    "explanation": "清點東西是為了知道還剩多少材料，而不是為了去記住客人的名字。",
+    "keyword_tag": "盤存"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 5,
+    "question": "飲料之儲存應",
+    "options": [
+      "分類分開且採用不同溫度貯存",
+      "全部一起貯存",
+      "採用同一溫度",
+      "視營業情況而定"
+    ],
+    "answer": 1,
+    "knowledge_tag": "倉儲管理",
+    "explanation": "每種飲料都有它的脾氣，有的怕熱有的怕冷，要分類放在適合的溫度下保存。",
+    "keyword_tag": "儲存"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 6,
+    "question": "每月飲料盤存作業應由",
+    "options": [
+      "會計室人員執行",
+      "外場經理執行",
+      "吧檯人員執行",
+      "會計人員會同吧檯人員執行"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職責分工",
+    "explanation": "數東西時要兩個人一起看才不會算錯，通常是管錢的和在吧檯工作的人一起點。",
+    "keyword_tag": "盤存作業"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 7,
+    "question": "吧檯的營運成本控制循環應始於",
+    "options": [
+      "採購",
+      "驗收",
+      "貯存",
+      "銷售"
+    ],
+    "answer": 1,
+    "knowledge_tag": "管理循環",
+    "explanation": "要管理好成本，從一開始買材料進來的時候就要認真計帳和檢查。",
+    "keyword_tag": "採購"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 8,
+    "question": "飲料庫存記錄中的損耗記錄表,損耗指的是",
+    "options": [
+      "杯子破裂",
+      "飲料變質",
+      "客人跑單",
+      "員工偷喝飲料"
+    ],
+    "answer": 2,
+    "knowledge_tag": "耗損定義",
+    "explanation": "飲料如果放太久變質壞掉了，不能再賣給客人，這就是我們要記錄的損耗。",
+    "keyword_tag": "損耗"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 9,
+    "question": "飲務員以哪種方式執行每日電氣設備的清潔保養工作最恰當?",
+    "options": [
+      "按照清潔保養表進行",
+      "請工程技術人員幫忙",
+      "找清潔工處理",
+      "請原供應商處理"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備維護",
+    "explanation": "清理電器要照著表格一項一項檢查，就像按照聯絡簿完成作業一樣，才不會漏掉。",
+    "keyword_tag": "清潔保養"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 10,
+    "question": "瓶裝檸檬汁、萊姆汁、紅石榴糖漿等,打烊時沒用完應存放於下列何處?",
+    "options": [
+      "冷凍於冰箱",
+      "存放於製冰機內",
+      "放回倉庫內儲存",
+      "蓋上蓋子存放於快速架上"
+    ],
+    "answer": 4,
+    "knowledge_tag": "收納管理",
+    "explanation": "沒用完的果汁要蓋好放在常用的架子上，明天上班時就能馬上拿來使用。",
+    "keyword_tag": "快速架"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 11,
+    "question": "製冰機如沒按時清潔保養,製造出來的冰塊形狀,以下列何者居多?",
+    "options": [
+      "無法製造冰塊",
+      "冰塊變霧白色",
+      "空心冰塊",
+      "冰塊龜裂"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備常識",
+    "explanation": "製冰機如果沒有定時保養，做出來的冰塊就會空心的，容易碎掉不好用。",
+    "keyword_tag": "製冰機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 12,
+    "question": "吧檯補充飲料(領貨)的最佳時段為",
+    "options": [
+      "早上",
+      "下午",
+      "上班前",
+      "下班後"
+    ],
+    "answer": 3,
+    "knowledge_tag": "工作流程",
+    "explanation": "趁著還沒開門、客人還沒來之前把貨補齊，這樣正式工作時才不會手忙腳亂。",
+    "keyword_tag": "領貨"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 13,
+    "question": "下列的文件,何者是每一位飲務員都要先熟記的?",
+    "options": [
+      "吧檯營運記錄報告",
+      "成本控制表",
+      "營業日報表",
+      "標準配方表"
+    ],
+    "answer": 4,
+    "knowledge_tag": "調製準則",
+    "explanation": "配方表就像是食譜祕笈，背熟了才能保證每一杯做出來的味道都一樣好喝。",
+    "keyword_tag": "標準配方"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 14,
+    "question": "快速酒架(Speed Rack)多久清潔擦拭一次?",
+    "options": [
+      "每次使用均擦拭",
+      "每日擦拭一次",
+      "每月擦拭一次",
+      "不必要清潔擦拭"
+    ],
+    "answer": 2,
+    "knowledge_tag": "衛生習慣",
+    "explanation": "放酒的架子每天都會弄髒，所以每天下班前都要把它擦乾淨，保持衛生。",
+    "keyword_tag": "快速酒架"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 15,
+    "question": "破損的杯皿處理方式為",
+    "options": [
+      "直接丟入垃圾桶",
+      "放入破損箱",
+      "打碎丟入垃圾桶",
+      "繼續使用"
+    ],
+    "answer": 1,
+    "knowledge_tag": "安全處理",
+    "explanation": "裂掉的杯子絕對不能再給人用，會割傷嘴巴或手，要趕快直接丟進垃圾桶。",
+    "keyword_tag": "破損杯皿"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 16,
+    "question": "營業績效接近目標成本但略為高出正常成本時,應促銷何種商品?",
+    "options": [
+      "高成本低利潤商品",
+      "低成本高利潤商品",
+      "低成本低利潤商品",
+      "促銷呆滯物料"
+    ],
+    "answer": 1,
+    "knowledge_tag": "經營管理",
+    "explanation": "如果東西太貴又賺不多，就要趕快想辦法賣掉，才不會虧本喔。",
+    "keyword_tag": "商品促銷"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 17,
+    "question": "以下何者通常不屬於飲料單上陳列的項目?",
+    "options": [
+      "配方",
+      "價目",
+      "飲料名稱",
+      "品名代號"
+    ],
+    "answer": 2,
+    "knowledge_tag": "菜單內容",
+    "explanation": "飲料單主要是介紹好喝的飲料，像名字和介紹，不會只放價目表。",
+    "keyword_tag": "飲料單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 18,
+    "question": "以下何者通常不屬於打烊後的公共安全檢查工作?",
+    "options": [
+      "盤存作業",
+      "關閉電燈",
+      "關閉水源",
+      "關冷氣"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工作安全",
+    "explanation": "下班要檢查火跟門鎖好沒，關燈是平常的事，不算是特別的安全檢查。",
+    "keyword_tag": "打烊檢查"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 19,
+    "question": "安全庫存的設定依據是",
+    "options": [
+      "座位使用周轉率",
+      "營業面積使用率",
+      "物料使用周轉率",
+      "銷售營業額"
+    ],
+    "answer": 3,
+    "knowledge_tag": "倉庫管理",
+    "explanation": "就像家裡要留幾捲衛生紙，看你平常用多快，來決定要存多少。",
+    "keyword_tag": "安全庫存"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 20,
+    "question": "請問下列何者不會直接影響營業成本?",
+    "options": [
+      "銷售商品結構",
+      "營業額",
+      "營業目標額",
+      "破損率"
+    ],
+    "answer": 3,
+    "knowledge_tag": "成本概念",
+    "explanation": "心裡想著要賺多少錢，並不會讓買鮮奶的材料費變便宜喔。",
+    "keyword_tag": "營業目標"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 21,
+    "question": "成本率的計算公式為",
+    "options": [
+      "售價÷成本",
+      "售價×成本",
+      "成本÷售價",
+      "成本+售價"
+    ],
+    "answer": 3,
+    "knowledge_tag": "數學計算",
+    "explanation": "把買材料的錢除以賣出去的價錢，就是算成本率的方法。",
+    "keyword_tag": "成本率"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 22,
+    "question": "營業額的計算基礎,是以下列何種單據為憑據?",
+    "options": [
+      "單杯銷售報表",
+      "內部轉帳單",
+      "盤存表",
+      "點菜(酒)單"
+    ],
+    "answer": 4,
+    "knowledge_tag": "帳務處理",
+    "explanation": "看客人點了幾杯飲料的單子，就知道今天一共賺了多少錢。",
+    "keyword_tag": "點菜單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 23,
+    "question": "以下哪一種報表不屬於銷售報表?",
+    "options": [
+      "點菜(酒)單",
+      "單杯銷售報表",
+      "盤存表",
+      "破損單"
+    ],
+    "answer": 4,
+    "knowledge_tag": "表單辨識",
+    "explanation": "賣出去的才叫銷售，打破碗盤要填的是破損單，不是銷售報表。",
+    "keyword_tag": "破損單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 24,
+    "question": "吧檯打烊前的飲料盤點工作是由何人負責?",
+    "options": [
+      "飲務員",
+      "出納",
+      "吧檯服務員",
+      "吧檯領班"
+    ],
+    "answer": 1,
+    "knowledge_tag": "職責區分",
+    "explanation": "在吧檯負責調飲料的人，下班時也要負責把剩下的飲料數清楚。",
+    "keyword_tag": "飲務員"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 25,
+    "question": "玻璃杯洗杯機應維持衛生、清潔,每天必須清理一次,清理時間是",
+    "options": [
+      "營業前",
+      "營業中",
+      "營業後",
+      "不定時"
+    ],
+    "answer": 3,
+    "knowledge_tag": "器具清潔",
+    "explanation": "每天忙完準備回家前，要把洗杯機清乾淨，明天才有乾淨杯子用。",
+    "keyword_tag": "洗杯機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 26,
+    "question": "下列那些調味品使用後,必須放置冰箱保存?",
+    "options": [
+      "荳蔻粉",
+      "胡椒粉",
+      "奶水",
+      "苦精"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食材保存",
+    "explanation": "奶製品跟鮮奶一樣，開過後不冰進冰箱會壞掉臭掉喔。",
+    "keyword_tag": "奶水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 27,
+    "question": "飲料的調配成本應如何控制?",
+    "options": [
+      "按標準配方調製",
+      "依定價調配",
+      "依經理指示調配",
+      "依自己方式調配"
+    ],
+    "answer": 1,
+    "knowledge_tag": "成本控制",
+    "explanation": "照著規定的分量來做飲料，就不會浪費材料，也能省下錢。",
+    "keyword_tag": "標準配方"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 28,
+    "question": "每天打烊後,清理清潔用具、杯皿和器具後如何處理?",
+    "options": [
+      "等待下一班處理",
+      "歸位",
+      "清洗後放置托盤即可",
+      "晾乾即可"
+    ],
+    "answer": 2,
+    "knowledge_tag": "整理整頓",
+    "explanation": "東西洗乾淨後要放回原位，就像玩具玩完要收好，下次才找得到。",
+    "keyword_tag": "歸位"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 29,
+    "question": "下列何者不影響酒類、飲料的直接成本?",
+    "options": [
+      "價格標準化",
+      "建立標準配方",
+      "杯類大小容量標準化",
+      "服務流程標準化"
+    ],
+    "answer": 4,
+    "knowledge_tag": "成本概念",
+    "explanation": "有禮貌的端飲料是服務，但這不會影響買酒水材料的價錢。",
+    "keyword_tag": "服務流程"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 30,
+    "question": "一般於飯店吧檯之酒水轉帳到別的單位,開立之內部轉帳單,其英文為下列何者?",
+    "options": [
+      "Food Store Requisition Form",
+      "External Form",
+      "Internal Transfer Form",
+      "House Use Slip"
+    ],
+    "answer": 3,
+    "knowledge_tag": "英文術語",
+    "explanation": "飯店裡的東西要搬到另一個部門用，要填這張「Internal Transfer」單。",
+    "keyword_tag": "內部轉帳"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 31,
+    "question": "通常於飯店之吧檯酒水量不足時,會填寫“飲料倉庫領料單”領貨,其英文為下列何者?",
+    "options": [
+      "Petty Cash Voucher Form",
+      "Trouble Report",
+      "Food Store Requisition Form",
+      "Beverage Store Requisition Form"
+    ],
+    "answer": 4,
+    "knowledge_tag": "英文術語",
+    "explanation": "飲料沒了去倉庫領貨，要填寫「Beverage Store Requisition」單。",
+    "keyword_tag": "領料單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 32,
+    "question": "剩餘之「罐裝產品」未使用完時,得妥善處理後置於冰箱,下列何者不適合隔日再使用?",
+    "options": [
+      "櫻桃",
+      "罐頭果汁",
+      "椰奶",
+      "罐裝汽水"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食品安全",
+    "explanation": "汽水開了沒喝完會沒氣，隔天喝起來像糖水，就不適合賣給客人了。",
+    "keyword_tag": "罐裝汽水"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 33,
+    "question": "電動攪拌機(Blender)之使用時應注意事項,下列何者為非?",
+    "options": [
+      "儘量使用大一點的冰塊",
+      "不要將有核之水果丟入",
+      "使用前後皆應清洗,且要定期保養",
+      "不可加入有氣之飲料"
+    ],
+    "answer": 1,
+    "knowledge_tag": "器具使用",
+    "explanation": "冰塊太大顆會把攪拌機的葉片弄壞，要用小碎冰才安全。",
+    "keyword_tag": "電動攪拌機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 34,
+    "question": "一般飯店、咖啡廳由於咖啡使用量大,皆會使用咖啡機來煮咖啡,有關咖啡機之保養、使用常識下列何者為非?",
+    "options": [
+      "一般開機後暫時無法使用,待「熱機」後即可使用",
+      "咖啡豆渣盒滿時要取出清洗",
+      "咖啡機故障時可請飲務員自行拆卸、修理",
+      "咖啡機須每日清洗保養"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備保養",
+    "explanation": "機器壞了要請專業的師傅來修，自己隨便拆開會弄壞或受傷喔。",
+    "keyword_tag": "咖啡機修理"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 35,
+    "question": "於營業結束盤存飲料,帳單上之存量與現場實際存量有異時,應再仔細檢查,下列何者錯誤?",
+    "options": [
+      "重新計算帳上及現場之實際存量,看是否有計算錯誤",
+      "檢查是否有漏開單或重複開單",
+      "檢查是否有材料轉入或轉出之情形",
+      "詢問服務人員是否有偷飲料"
+    ],
+    "answer": 4,
+    "knowledge_tag": "盤點作業",
+    "explanation": "發現飲料數量不對要先仔細檢查，不能隨便懷疑同事偷拿喔。",
+    "keyword_tag": "盤存差異"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 36,
+    "question": "降低破損是大家的責任,下列何者「非」減少破損應注意的事項?",
+    "options": [
+      "以正確方式拿托盤",
+      "保持地面乾燥",
+      "若桌面杯類太多,可分兩次收拾",
+      "儘量不去使用生財器皿"
+    ],
+    "answer": 4,
+    "knowledge_tag": "器皿維護",
+    "explanation": "杯子買來就是要用的，小心拿、小心放，就能減少打破的機會。",
+    "keyword_tag": "減少破損"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 37,
+    "question": "一般清洗酒杯的毛刷洗杯機,安置在何處?",
+    "options": [
+      "冰箱上",
+      "製冰機上",
+      "工作檯上",
+      "水槽內"
+    ],
+    "answer": 4,
+    "knowledge_tag": "工具位置",
+    "explanation": "刷杯子的機器要放在有水的水槽裡，刷洗的時候才會有水沖乾淨。",
+    "keyword_tag": "毛刷洗杯機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 38,
+    "question": "下列那一項不是吧檯之消耗品?",
+    "options": [
+      "杯墊(Coaster)",
+      "冰夾(Ice Tong)",
+      "吸管 (Straw)",
+      "櫻桃叉(Cherry Stick)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "物品分類",
+    "explanation": "夾冰塊的夾子可以用很久，不像紙巾或吸管用完就要丟掉。",
+    "keyword_tag": "冰夾"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 39,
+    "question": "通常吧檯使用之「飲料酒水日報表」中一定要有四大欄,下列何者不在此列?",
+    "options": [
+      "昨日結存",
+      "昨日進貨",
+      "今日銷售",
+      "今日結存"
+    ],
+    "answer": 2,
+    "knowledge_tag": "報表填寫",
+    "explanation": "日報表是記錄今天的事情，昨天的進貨不用記在今天的表格裡。",
+    "keyword_tag": "酒水日報表"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 40,
+    "question": "每次領貨,都須填寫哪一種單據,才可以從倉庫提領?",
+    "options": [
+      "出貨單",
+      "領料單",
+      "估價單",
+      "庫存表"
+    ],
+    "answer": 2,
+    "knowledge_tag": "倉庫管理",
+    "explanation": "想要從倉庫拿東西，要先寫好這張單子，老闆才准你拿貨。",
+    "keyword_tag": "領料單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 41,
+    "question": "每次調製飲料時,都能使用哪種器具,較能達到成本控制的目的?",
+    "options": [
+      "量酒器(Jigger)",
+      "隔冰器(Strainer)",
+      "公杯(Lipped Glass)",
+      "攪拌棒(Stirrer)"
+    ],
+    "answer": 1,
+    "knowledge_tag": "成本控制",
+    "explanation": "用量酒器量好每一杯的分量，味道才會一樣，也不會浪費。",
+    "keyword_tag": "量酒器"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 42,
+    "question": "有經驗的飲務員,通常在打烊後之後標準作業流程為下列何者,完成後才會離去?",
+    "options": [
+      "結帳→填寫日報表→開立領貨單→檢查水、火、電等之安全",
+      "檢查水、火、電等之安全→填寫日報表→開立領貨單→清點存貨",
+      "清點存貨→填寫日報表→檢查水、火、電等之安全→開立領貨單",
+      "清點存貨→填寫日報表→開立領貨單→檢查水、火、電等之安全"
+    ],
+    "answer": 4,
+    "knowledge_tag": "工作程序",
+    "explanation": "下班要先數東西、寫紀錄、再拿貨，最後一定要檢查水電安不安全。",
+    "keyword_tag": "打烊流程"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 43,
+    "question": "製作每日之酒水日報表時,扣除飲料用量,應以下列何者為基準?",
+    "options": [
+      "當日營業額",
+      "當日出貨單",
+      "當日飲料單上的量",
+      "當日客流量"
+    ],
+    "answer": 3,
+    "knowledge_tag": "數量計算",
+    "explanation": "算算看今天賣出幾杯飲料，就知道用掉了多少材料喔。",
+    "keyword_tag": "飲料用量"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 44,
+    "question": "一杯售價是40元的飲料之成本率為",
+    "options": [
+      "12%",
+      "10%",
+      "20%",
+      "25%"
+    ],
+    "answer": 3,
+    "knowledge_tag": "數學計算",
+    "explanation": "這是算做出一杯飲料要花多少材料錢的比例，是餐飲科的小算數。",
+    "keyword_tag": "成本率"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 45,
+    "question": "標準配方的內容不包含下列何者?",
+    "options": [
+      "調配方法",
+      "價錢",
+      "材料",
+      "容量"
+    ],
+    "answer": 2,
+    "knowledge_tag": "配方內容",
+    "explanation": "配方就像食譜，教你怎麼泡好喝的飲料，裡面不會寫賣多少錢。",
+    "keyword_tag": "標準配方"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 46,
+    "question": "調製飲料供給顧客飲用時,所產生的開銷是指",
+    "options": [
+      "飲料類毛利",
+      "庫存報表",
+      "飲料類材料",
+      "飲料類成本"
+    ],
+    "answer": 4,
+    "knowledge_tag": "成本觀念",
+    "explanation": "做飲料賣給客人要花的材料錢，就像我們去買東西付的錢，這叫作「成本」。",
+    "keyword_tag": "飲料成本"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 47,
+    "question": "飲務人員每天下班前,吧檯內的物品都必須盤點,下列何者「非」每日必盤的物品?",
+    "options": [
+      "垃圾桶",
+      "飲料",
+      "酒類",
+      "配料"
+    ],
+    "answer": 1,
+    "knowledge_tag": "物品整理",
+    "explanation": "下班前要數剩下的材料，但垃圾桶是裝垃圾的，不用天天數有幾個。",
+    "keyword_tag": "吧檯盤點"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 48,
+    "question": "一般營業單位會將飲料單與下列何者分開設計?",
+    "options": [
+      "報廢單",
+      "帳單",
+      "葡萄酒單",
+      "日報表"
+    ],
+    "answer": 3,
+    "knowledge_tag": "菜單設計",
+    "explanation": "就像學校課本跟聯絡簿分開放，貴貴的葡萄酒通常會自己單獨列一張單子。",
+    "keyword_tag": "葡萄酒單"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 49,
+    "question": "吧檯的清洗設備應設置三格水槽,下列何者為非?",
+    "options": [
+      "沖洗槽",
+      "光槽",
+      "消毒槽",
+      "洗刷槽"
+    ],
+    "answer": 2,
+    "knowledge_tag": "洗滌設備",
+    "explanation": "洗杯子的水槽有三個步驟，就像我們洗澡一樣，但沒有「光槽」這個東西。",
+    "keyword_tag": "三格水槽"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 50,
+    "question": "飲料吧材料的採購、儲存的多寡,必須以飲料吧所訂立的何者為根據?",
+    "options": [
+      "營業報表",
+      "日報表",
+      "成本",
+      "庫存量"
+    ],
+    "answer": 4,
+    "knowledge_tag": "採購管理",
+    "explanation": "就像看家裡冰箱還有幾顆蛋，來決定要不要去超市買新的一樣。",
+    "keyword_tag": "庫存量"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 51,
+    "question": "領貨單是依據下列何者來填寫需求數量?",
+    "options": [
+      "盤存表",
+      "報廢單",
+      "周轉率",
+      "日報表"
+    ],
+    "answer": 1,
+    "knowledge_tag": "物料領用",
+    "explanation": "先看櫃子裡還剩什麼，寫在盤存表上，才知道明天要跟公司領多少貨。",
+    "keyword_tag": "盤存表"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 52,
+    "question": "飲料成本的設定是根據下列何者計算而來?",
+    "options": [
+      "毛利",
+      "配方",
+      "酒庫",
+      "報表"
+    ],
+    "answer": 2,
+    "knowledge_tag": "成本計算",
+    "explanation": "一杯飲料要加多少糖跟奶，這些規定的「配方」會決定這杯茶要花多少錢。",
+    "keyword_tag": "飲料配方"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 53,
+    "question": "調製飲料時,若需加入120cc之柳橙汁,在配方上不會出現哪種標示方法?",
+    "options": [
+      "4oz",
+      "0.12L",
+      "12cl",
+      "120ml"
+    ],
+    "answer": 2,
+    "knowledge_tag": "單位換算",
+    "explanation": "在吧檯我們通常說「西西」或是「毫升」，很少說 0.12 公升，這樣很奇怪。",
+    "keyword_tag": "飲料單位"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 54,
+    "question": "一本好的飲料單目錄,在設計上除了精美印刷之外,還須具備哪些基本要件,下列何者為非?",
+    "options": [
+      "銷售成本",
+      "掌握潮流",
+      "市場調查分析",
+      "消費心理"
+    ],
+    "answer": 1,
+    "knowledge_tag": "菜單設計",
+    "explanation": "菜單要印得漂亮給客人看，但我們買貨的成本是秘密，不用印在上面。",
+    "keyword_tag": "飲料目錄"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 55,
+    "question": "物料的補充是根據倉庫的何種比率而定?",
+    "options": [
+      "餐廳周轉率",
+      "毛利率",
+      "安全庫存周轉率",
+      "成本率"
+    ],
+    "answer": 3,
+    "knowledge_tag": "物料補充",
+    "explanation": "就像家裡衛生紙不能用到最後一張才買，要看平常消耗多快來補貨。",
+    "keyword_tag": "庫存管理"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 56,
+    "question": "盤存表的記載是用來對比下列哪一表單?",
+    "options": [
+      "周轉率",
+      "成本",
+      "飲料單",
+      "帳目"
+    ],
+    "answer": 4,
+    "knowledge_tag": "帳目比對",
+    "explanation": "我們要數一下剩下的果汁跟電腦裡的紀錄一不一樣，這就是在「對帳」。",
+    "keyword_tag": "盤存表"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 57,
+    "question": "關於乳製品的儲存,以下何者為非?",
+    "options": [
+      "乳製品極易吸收氣味,冷藏時應將瓶蓋蓋好",
+      "乳製品不可暴露在陽光或燈光下,光線會破壞乳製品中的維生素",
+      "溫度過低對乳製品有不良影響,結冰的乳製品,營養成分會受破壞",
+      "保久乳、煉乳儲存於陰涼、乾燥,且日光直射的地方"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食品存放",
+    "explanation": "牛奶跟煉乳最怕曬太陽，一定要放在涼快乾爽的地方才不會壞掉喔。",
+    "keyword_tag": "乳製品"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 58,
+    "question": "咖啡豆包裝袋經常使用鋁箔材質,其功用敘述,以下何者為非?",
+    "options": [
+      "阻擋陽光",
+      "防止氧化",
+      "預防潮濕",
+      "只為美觀而已"
+    ],
+    "answer": 4,
+    "knowledge_tag": "材料保存",
+    "explanation": "鋁箔袋亮亮的不是為了好看，是為了幫咖啡豆遮太陽和擋住水氣。",
+    "keyword_tag": "咖啡豆包裝"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 59,
+    "question": "半自動義式咖啡機旁的研磨機粗細刻度,下列何者為最佳調整時機?",
+    "options": [
+      "更換豆子或每次清潔後皆需調整",
+      "一週一次即可",
+      "二週一次即可",
+      "每月調整一次即可"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備操作",
+    "explanation": "換了新豆子或剛洗完機器，就像換新鞋子要試穿，一定要重新調整一下。",
+    "keyword_tag": "磨豆機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 60,
+    "question": "一組全新的虹吸壺,最可能影響咖啡風味的部份是",
+    "options": [
+      "虹吸壺上座",
+      "吸壺下座",
+      "新濾布和新調棒",
+      "酒精燈型式"
+    ],
+    "answer": 3,
+    "knowledge_tag": "咖啡風味",
+    "explanation": "全新的布或攪拌棒可能會有怪味，用之前要先處理過，才不會讓咖啡變難喝。",
+    "keyword_tag": "虹吸壺"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 61,
+    "question": "義式咖啡機開啟加熱後,將兩邊蒸氣管開關開啟,進入等待加熱階段,此作法主要目的是為了",
+    "options": [
+      "提醒自己咖啡機可以用了",
+      "純粹是工作習慣動作",
+      "將咖啡機內水氣排擠出來,增加加熱效率",
+      "測試咖啡機溫度"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備啟動",
+    "explanation": "加熱時把裡面的舊水氣排掉，機器就像熱身好了，煮咖啡會更有效率。",
+    "keyword_tag": "義式咖啡機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 62,
+    "question": "一般義式咖啡機加熱至工作壓力區時,壓力表正常會上升到",
+    "options": [
+      "綠色區塊",
+      "紅色區塊",
+      "咖啡色區塊",
+      "紫色區塊"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備判讀",
+    "explanation": "看到指針指在「綠色」的地方，就代表機器準備好可以開工了。",
+    "keyword_tag": "壓力表"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 63,
+    "question": "每杯義式咖啡萃取量為30ml時,最適當的咖啡粉量為多少公克?",
+    "options": [
+      "6-8",
+      "10-14",
+      "15-19",
+      "20-25"
+    ],
+    "answer": 1,
+    "knowledge_tag": "萃取標準",
+    "explanation": "煮一杯咖啡大概要抓 6 到 8 公克的粉，這就像煮飯要量米一樣。",
+    "keyword_tag": "咖啡粉量"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 64,
+    "question": "加熱完牛奶或是巧克力後,清潔蒸氣管及噴頭的最佳時機為",
+    "options": [
+      "營業結束時一次清洗",
+      "每打一次後,即刻用濕抹布清潔",
+      "打完二到三杯時,再清潔以節省人力",
+      "有結乳垢時再清洗擦拭"
+    ],
+    "answer": 2,
+    "knowledge_tag": "設備清潔",
+    "explanation": "噴完熱牛奶要馬上拿濕布擦乾淨，不然牛奶乾掉會變硬，變得很難洗。",
+    "keyword_tag": "蒸氣管"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 65,
+    "question": "檢查義式咖啡機的水壓,最適當的幫浦壓力為",
+    "options": [
+      "4-5 Bar",
+      "6-7Bar",
+      "8-9Bar",
+      "10-11Bar"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備判讀",
+    "explanation": "煮咖啡時，幫浦推水的力氣要維持在 8 到 9 之間，咖啡才會香噴噴。",
+    "keyword_tag": "幫浦壓力"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 66,
+    "question": "檢查義式咖啡機的鍋爐內工作區壓力錶,理想值應為",
+    "options": [
+      "0.2-0.3Bar",
+      "0.4-0.5Bar",
+      "0.6-0.7Bar",
+      "0.8-1.2Bar"
+    ],
+    "answer": 4,
+    "knowledge_tag": "設備判讀",
+    "explanation": "咖啡機肚子裡的壓力要在 0.8 到 1.2 之間，這才是它最舒服工作的樣子。",
+    "keyword_tag": "鍋爐壓力"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 67,
+    "question": "義式咖啡機正在萃取咖啡時",
+    "options": [
+      "不可將萃取手把移開,以免被燙傷",
+      "發現萃取出的Crema 不理想時,可以抽出萃取手把",
+      "壓力不足時,萃取手把可以抽出或移開",
+      "當咖啡滴漏不出來時,可以將萃取手把左右轉動"
+    ],
+    "answer": 1,
+    "knowledge_tag": "安全操作",
+    "explanation": "機器在流咖啡時千萬不能把手把拆開，不然熱水噴出來會燙傷喔！",
+    "keyword_tag": "萃取手把"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 68,
+    "question": "清洗義式咖啡機時,以下敘述何者為正確?",
+    "options": [
+      "因為機器有防水保濕設計,可以直接用水沖洗",
+      "機器中的電子零件機板可能會短路,所以不可以用水直接沖洗",
+      "機器外表泛黃時,應該用去漬油擦拭",
+      "當電源開啟時,拆卸電子零件擦拭,才會知道機器運作是否正常"
+    ],
+    "answer": 2,
+    "knowledge_tag": "設備清潔",
+    "explanation": "咖啡機是有插電的電器，不能用水管直接沖，會讓機器短路壞掉。",
+    "keyword_tag": "電子零件"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 69,
+    "question": "打烊後,果汁機(Blender)的插頭應如何處理?",
+    "options": [
+      "馬上拔掉",
+      "明天處理",
+      "視情況而定",
+      "不用拔掉"
+    ],
+    "answer": 1,
+    "knowledge_tag": "設備保養",
+    "explanation": "收攤打烊了，果汁機不用就要趕快拔掉插頭，安全又省電。",
+    "keyword_tag": "果汁機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 70,
+    "question": "吧檯打烊時,哪一種電器設備不需拔掉插頭?",
+    "options": [
+      "果汁機",
+      "咖啡機",
+      "製冰機",
+      "磨豆機"
+    ],
+    "answer": 3,
+    "knowledge_tag": "設備維護",
+    "explanation": "製冰機要一直插著電才能一直做冰塊，所以下班不用拔掉它的插頭。",
+    "keyword_tag": "製冰機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 71,
+    "question": "吧檯打烊時,最後要處理的事務是",
+    "options": [
+      "清洗杯子",
+      "清洗地板",
+      "檢查電源",
+      "垃圾清理"
+    ],
+    "answer": 3,
+    "knowledge_tag": "安全守則",
+    "explanation": "回家前最後一件事，一定要檢查電有沒有關好，安全最重要。",
+    "keyword_tag": "打烊檢查"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 72,
+    "question": "吧檯打烊時,何種開罐後的物料不須放回冰箱?",
+    "options": [
+      "萊姆汁",
+      "蕃茄汁",
+      "柳橙汁",
+      "鳳梨汁"
+    ],
+    "answer": 1,
+    "knowledge_tag": "材料保存",
+    "explanation": "這種瓶裝的酸味果汁比較耐放，開了也不一定要冰，看標示放好就好。",
+    "keyword_tag": "萊姆汁"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 73,
+    "question": "雪克杯(Shaker)清洗完後,應該如何處理?",
+    "options": [
+      "倒立、濾乾妥善放置,使其陰乾之後再組裝",
+      "重新組裝後陰乾備用",
+      "烘乾後再備用",
+      "放置於陰涼乾燥的地方"
+    ],
+    "answer": 1,
+    "knowledge_tag": "洗滌收納",
+    "explanation": "搖搖杯洗好要倒過來讓水滴乾，等全乾了再蓋起來，才不會臭臭的。",
+    "keyword_tag": "雪克杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 04: 善後作業",
+    "id": 74,
+    "question": "清洗高飛球杯(Highball)要使用下列何者?",
+    "options": [
+      "清潔劑和菜瓜布",
+      "弱鹼性清潔劑及長柄海綿刷",
+      "長柄刷",
+      "長柄菜瓜布清洗並檢查杯子是否有破損"
+    ],
+    "answer": 2,
+    "knowledge_tag": "洗滌工具",
+    "explanation": "這種杯子長長的，手伸不進去，所以要用長柄的海綿刷才洗得到底。",
+    "keyword_tag": "高飛球杯"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 1,
+    "question": "如果你要請外國客人買單之說法,下列何者正確?",
+    "options": [
+      "Could you give me money?",
+      "Could I have your money?",
+      "Service is included",
+      "Could you settle up?"
+    ],
+    "answer": 4,
+    "knowledge_tag": "結帳用語",
+    "explanation": "跟外國客人說這句話，就是在客氣地請他付錢買單的意思。",
+    "keyword_tag": "職場英文"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 2,
+    "question": "如果你要請外國客人簽字應如何講才正確?",
+    "options": [
+      "May I have your signature?",
+      "Here is your change?",
+      "What is your name?",
+      "May I sign it?"
+    ],
+    "answer": 1,
+    "knowledge_tag": "基本英文",
+    "explanation": "請外國客人簽名要很有禮貌，說 'May I have your signature?' 就像在說『請給我您的簽名』。",
+    "keyword_tag": "簽名"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 3,
+    "question": "如果要請客人用“正楷”簽名,其“正楷”之英文為",
+    "options": [
+      "First Name",
+      "Family Name",
+      "Black Letter",
+      "Sign Please"
+    ],
+    "answer": 3,
+    "knowledge_tag": "英文單字",
+    "explanation": "寫英文名字要像寫作業一樣，一筆一畫寫工整，這在英文裡叫 Black Letter。",
+    "keyword_tag": "正楷"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 4,
+    "question": "有關於吧檯之服務,下列敘述何者錯誤?",
+    "options": [
+      "顧客光臨,要面帶微笑並向顧客問好",
+      "顧客起身離去,注意是否遺失物品",
+      "離打烊時間還有十分鐘,可以將吧檯現場之燈光打到最亮,音樂關掉,以提醒顧客該走了",
+      "隨時注意桌面及顧客需求,看是否須換煙灰缸或續杯…等"
+    ],
+    "answer": 3,
+    "knowledge_tag": "服務禮儀",
+    "explanation": "快關門時不能突然開大燈趕人，這會讓客人心情不好，要慢慢提醒才是有禮貌的店員。",
+    "keyword_tag": "打烊服務"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 5,
+    "question": "有關個人服裝儀容,下列敘述何者正確?",
+    "options": [
+      "指甲可留長,以方便工作",
+      "口紅可畫各種奇怪的顏色",
+      "制服首要整齊、清潔",
+      "鬍鬚可留長才性格"
+    ],
+    "answer": 3,
+    "knowledge_tag": "衛生習慣",
+    "explanation": "穿制服最重要就是乾乾淨淨、平平整整，這樣客人才會覺得你很專業、很愛乾淨。",
+    "keyword_tag": "制服"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 6,
+    "question": "於餐廳吧檯,服務人員要為三位同桌之外國人(房客)買單時,應注意的事項,下列何者錯誤?",
+    "options": [
+      "應問是否分開買或一起買",
+      "應問是刷卡、付現或入房客帳",
+      "檢查帳單是否正確",
+      "刷卡後不用核對顧客的簽字"
+    ],
+    "answer": 4,
+    "knowledge_tag": "結帳程序",
+    "explanation": "客人刷完卡簽名，我們一定要仔細對一下名字對不對，就像領包裹要看名字一樣重要。",
+    "keyword_tag": "核對簽名"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 7,
+    "question": "於晚上外國客人喝完酒要離開吧檯時,下列何者說法錯誤?",
+    "options": [
+      "Have a seat there",
+      "Have a nice evening",
+      "We hope to see you again",
+      "Thank you, goodbye"
+    ],
+    "answer": 1,
+    "knowledge_tag": "基本英文",
+    "explanation": "客人要離開時，不能再叫他『坐下來』，這很奇怪！應該說謝謝跟再見才對。",
+    "keyword_tag": "告別用語"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 8,
+    "question": "通常至吧檯喝酒之基本禮儀,下列何者正確?",
+    "options": [
+      "為節省花費,可自行攜帶飲料進入吧檯飲用",
+      "依自己的酒量,適量飲酒",
+      "可在吧檯吃檳榔,檳榔汁吐在煙灰缸即可",
+      "可在吧檯大聲划拳、嘻鬧"
+    ],
+    "answer": 2,
+    "knowledge_tag": "基本禮儀",
+    "explanation": "去吧檯喝酒要看自己的身體狀況，不要喝醉了，就像吃零食不能吃太撐一樣。",
+    "keyword_tag": "適量飲酒"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 9,
+    "question": "下列何者不是健全的服務心態?",
+    "options": [
+      "工作有榮譽感",
+      "隨時有熱忱及愉快的心",
+      "工作藝術化",
+      "以金錢目標為唯一激勵"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職場觀念",
+    "explanation": "工作不只是為了賺錢，讓客人開心、學到厲害的技術，也是很棒的事情喔。",
+    "keyword_tag": "服務心態"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 10,
+    "question": "當工作場所的機器設備有故障情形發生時,工作人員正確處理態度是",
+    "options": [
+      "裝作沒事",
+      "馬上逃離現場,當做不知道",
+      "主動通知維修單位及該單位主管",
+      "停止工作"
+    ],
+    "answer": 3,
+    "knowledge_tag": "工作安全",
+    "explanation": "看到機器壞了，要趕快跟老師或主管說，請專業的人來修理，千萬不能裝作沒看到。",
+    "keyword_tag": "維修通報"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 11,
+    "question": "下列行為何者是餐飲服務人員應有的品德與修養?",
+    "options": [
+      "代人打卡",
+      "對同仁斥吼",
+      "有蒜味",
+      "微笑待客"
+    ],
+    "answer": 4,
+    "knowledge_tag": "服務態度",
+    "explanation": "服務客人的時候，臉上帶著溫暖的笑容，就是送給客人最好的禮物。",
+    "keyword_tag": "微笑待客"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 12,
+    "question": "國際通用語言是飲務員必備的條件,現今是以那一種語言為主?",
+    "options": [
+      "英文",
+      "西班牙文",
+      "法文",
+      "日文"
+    ],
+    "answer": 1,
+    "knowledge_tag": "基本職能",
+    "explanation": "現在全世界很多客人都是講英文，所以學一點簡單的英文對找工作很有幫助喔。",
+    "keyword_tag": "英文"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 13,
+    "question": "以下何者不是顧客光臨吧檯的期望?",
+    "options": [
+      "可口安全的飲料",
+      "清潔舒適的環境",
+      "令人愉悅的服務",
+      "剝削式的高售價"
+    ],
+    "answer": 4,
+    "knowledge_tag": "經營觀念",
+    "explanation": "客人希望買到好喝又划算的飲料，如果賣得太貴像在騙人，客人下次就不會來了。",
+    "keyword_tag": "合理售價"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 14,
+    "question": "吧檯飲務員的工作表現,讓顧客最無法忍受的是什麼?",
+    "options": [
+      "酒量太少",
+      "調錯雞尾酒",
+      "服務態度不好",
+      "個人衛生不好"
+    ],
+    "answer": 3,
+    "knowledge_tag": "服務品質",
+    "explanation": "客人去店裡最不喜歡看到臉臭臭或沒禮貌的人，所以態度好是最重要的事情。",
+    "keyword_tag": "服務態度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 15,
+    "question": "吧檯的飲務員必須遵守道德規範,除個人忠於職守外還必須強調",
+    "options": [
+      "人際關係",
+      "業務規範",
+      "企業規範",
+      "廉潔和誠實"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職業道德",
+    "explanation": "做人要誠實，不能偷偷拿別人的東西，要當一個讓大家都能信任的好員工。",
+    "keyword_tag": "誠實廉潔"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 16,
+    "question": "飲務員(Bartender)在何種狀態下可以拒絕供酒服務?",
+    "options": [
+      "客人講話太大聲",
+      "客人已有醉意",
+      "客人年齡太高",
+      "客人尚未結帳"
+    ],
+    "answer": 2,
+    "knowledge_tag": "酒精知識",
+    "explanation": "看到客人已經喝醉、站不穩了，我們就不能再給他酒喝，這是在保護他的安全。",
+    "keyword_tag": "醉酒客人"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 17,
+    "question": "飲務員對裝飾物之補充,應如何處理?",
+    "options": [
+      "不一定檢查",
+      "應每天檢查",
+      "不必要檢查",
+      "聽上級指示處理"
+    ],
+    "answer": 2,
+    "knowledge_tag": "備料工作",
+    "explanation": "飲料旁邊漂亮的水果或雨傘，每天都要檢查新不新鮮，客人吃了才不會生病。",
+    "keyword_tag": "裝飾物"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 18,
+    "question": "修飾並打理個人儀容,對飲務員而言是",
+    "options": [
+      "浪費時間",
+      "可做可不做的事情",
+      "必要的職責",
+      "不必要的工作"
+    ],
+    "answer": 3,
+    "knowledge_tag": "職場常規",
+    "explanation": "把自己整理乾淨是工作的基本功，就像我們每天早上出門前要刷牙洗臉一樣。",
+    "keyword_tag": "打理儀容"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 19,
+    "question": "職業道德最重要的是",
+    "options": [
+      "敬業精神",
+      "溝通協調",
+      "滿足員工需要",
+      "供應美酒咖啡"
+    ],
+    "answer": 1,
+    "knowledge_tag": "職業道德",
+    "explanation": "認真對待自己的工作，該做什麼就做好，這就是最棒的工作態度。",
+    "keyword_tag": "敬業精神"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 20,
+    "question": "如有研發新的調飲配方頗受歡迎,飲務員的心態應",
+    "options": [
+      "藉機要求加薪",
+      "能以餐廳或吧檯提昇業績為榮",
+      "當做秘方,不可告訴別人",
+      "待價而沽"
+    ],
+    "answer": 2,
+    "knowledge_tag": "職場觀念",
+    "explanation": "如果你研發出好喝的飲料讓店裡生意變好，要覺得很光榮，大家一起分享這份喜悅。",
+    "keyword_tag": "團隊榮譽"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 21,
+    "question": "下列何者不是一位優秀的吧檯從業人員應具備的條件?",
+    "options": [
+      "良好的工作態度",
+      "溝通技巧熟練",
+      "重視職業道德",
+      "英雄主義"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職場素養",
+    "explanation": "工作要大家一起幫忙，不能只想著當小英雄，就像打球要全隊合作才會贏。",
+    "keyword_tag": "團隊合作"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 22,
+    "question": "下列何者不屬於服務業的特性?",
+    "options": [
+      "工作時間長",
+      "高低起伏的需求",
+      "朝九晚五的單一上班制",
+      "生產與消費不可分離"
+    ],
+    "answer": 3,
+    "knowledge_tag": "行業認識",
+    "explanation": "做餐廳服務的人，上班時間通常不是固定的，可能大家在休息時我們還在忙喔。",
+    "keyword_tag": "輪班制"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 23,
+    "question": "吧檯的滅火設備若有缺失導致火災,最大受害者是下列何者?",
+    "options": [
+      "老闆與股東",
+      "顧客與員工",
+      "設計師與水電工",
+      "建築師與酒商"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工作安全",
+    "explanation": "萬一發生火災，店裡所有人都有危險，所以滅火器一定要隨時檢查好才安全。",
+    "keyword_tag": "消防設備"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 24,
+    "question": "餐飲服務人員之服裝儀容,下列何者不被允許?",
+    "options": [
+      "指甲適當修剪",
+      "保持制服整潔",
+      "濃妝艷抹",
+      "綁髮髻"
+    ],
+    "answer": 3,
+    "knowledge_tag": "儀容標準",
+    "explanation": "上班時畫淡淡的妝就好，不要畫得太濃太誇張，乾乾淨淨的樣子最受歡迎。",
+    "keyword_tag": "妝容體面"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 25,
+    "question": "收拾顧客桌面之空杯皿時,下列作法何者正確?",
+    "options": [
+      "應順口禮貌的再問顧客是否還需要再點一瓶(杯)",
+      "等顧客召喚要求再詢問是否需要再點一瓶(杯)",
+      "不可以催促顧客繼續點一瓶",
+      "看顧客心情決定"
+    ],
+    "answer": 1,
+    "knowledge_tag": "服務技巧",
+    "explanation": "收走杯子時可以順口問：『還要再來一杯嗎？』這是在貼心地關心客人的需要。",
+    "keyword_tag": "收拾桌面"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 26,
+    "question": "調酒員為外國客人解說飲料的配方時,下列何者正確?",
+    "options": [
+      "This is a mocktail with some... and some..",
+      "It is one cup of..",
+      "I am serving one cup of beverage",
+      "It is one kind of soft drink"
+    ],
+    "answer": 1,
+    "knowledge_tag": "基本英文",
+    "explanation": "跟外國人介紹沒有酒的飲料叫 Mocktail，就像是在介紹好喝的新鮮果汁一樣。",
+    "keyword_tag": "無酒精"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 27,
+    "question": "服務進行的優先順序,是以下列何者為優先?",
+    "options": [
+      "男士",
+      "小朋友",
+      "年長者、女士",
+      "付錢請客的主人"
+    ],
+    "answer": 3,
+    "knowledge_tag": "服務禮儀",
+    "explanation": "服務要先從年紀大的長輩跟女生開始，這是有禮貌的表現，就像搭車要讓座一樣。",
+    "keyword_tag": "優先順序"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 28,
+    "question": "吧檯工作人員有特殊體味者,應如何處理?",
+    "options": [
+      "勤洗澡,並適當使用除味劑",
+      "工作權是公民的權利,所以沒關係",
+      "儘量不要錄用",
+      "藉故辭退"
+    ],
+    "answer": 1,
+    "knowledge_tag": "衛生管理",
+    "explanation": "流汗容易有味道，要記得多洗澡或使用噴霧，讓客人靠近你時感覺香香的很舒服。",
+    "keyword_tag": "個人衛生"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 29,
+    "question": "一位好的吧檯從業人員可以單獨作業",
+    "options": [
+      "全力表現出專業就好",
+      "不須要與別的同事協調工作",
+      "但是仍需與同事密切合作",
+      "只要討好主管即可"
+    ],
+    "answer": 3,
+    "knowledge_tag": "職場觀念",
+    "explanation": "雖然你自己可以把事情做好，但也要跟同事互相幫忙，大家分工合作速度才會快。",
+    "keyword_tag": "同事合作"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 30,
+    "question": "因為吧檯的工作很繁雜",
+    "options": [
+      "垃圾分類可以視實際情況來決定,以免浪費時間與資源",
+      "垃圾可以不必分類",
+      "垃圾仍必需分類",
+      "只要簡單把需回收的物件整理好即可"
+    ],
+    "answer": 3,
+    "knowledge_tag": "環境衛生",
+    "explanation": "工作雖然很忙，但垃圾還是要乖乖分類，紙箱、塑膠要分開放，一起保護地球。",
+    "keyword_tag": "垃圾分類"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 31,
+    "question": "為了個人飲食衛生,飲務員應有隨時做到下列何者的習慣?",
+    "options": [
+      "洗手",
+      "照鏡子",
+      "梳頭髮、清頭皮屑",
+      "喝水"
+    ],
+    "answer": 1,
+    "knowledge_tag": "個人衛生",
+    "explanation": "拿東西給客人吃之前一定要先把手洗乾淨，就像我們吃飯前要洗手一樣，才不會生病。",
+    "keyword_tag": "洗手"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 32,
+    "question": "保持專業的服裝儀容與外表是飲料調製員的基本義務,所以在工作時,一旦發現自己的儀容不整時,應該如何處理?",
+    "options": [
+      "立刻就地處理",
+      "請同事幫忙看看",
+      "不管它、把工作做好再說",
+      "儘快抽空到休息室或是洗手間整理"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職業形象",
+    "explanation": "發現衣服亂了，要去廁所或休息室整理好，給客人乾淨專業的感覺喔！",
+    "keyword_tag": "服裝儀容"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 33,
+    "question": "如果餐廳有最低消費的規定,應如何處理才算正確?",
+    "options": [
+      "事先告知顧客",
+      "結帳時才說",
+      "想到再說",
+      "直接加入帳單"
+    ],
+    "answer": 1,
+    "knowledge_tag": "服務溝通",
+    "explanation": "如果店裡規定每個人最少要花多少錢，要先跟客人講清楚，才不會有糾紛。",
+    "keyword_tag": "最低消費"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 34,
+    "question": "提供一個愉悅的餐飲環境是服務業的基本責任,有關音樂的播放,應該要注意些什麼原則?",
+    "options": [
+      "顧及服務品質所以應以服務人員的喜好為主",
+      "應以符合餐廳的主題與主要顧客族群訴求為主",
+      "當下流行音樂為主",
+      "古典音樂"
+    ],
+    "answer": 2,
+    "knowledge_tag": "環境營造",
+    "explanation": "音樂要選大家喜歡且符合餐廳感覺的，就像在運動中心播熱血的歌一樣。",
+    "keyword_tag": "背景音樂"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 35,
+    "question": "如果餐廳有收取開瓶費之規定時,應如何處理才算正確?",
+    "options": [
+      "事先告知顧客",
+      "結帳時才說",
+      "想到再說",
+      "直接加入帳單"
+    ],
+    "answer": 1,
+    "knowledge_tag": "服務溝通",
+    "explanation": "如果客人帶自己的飲料來喝要收費，一定要提早告知，這樣才是有禮貌的服務。",
+    "keyword_tag": "開瓶費"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 36,
+    "question": "當有顧客留下完全未食用的食物或飲料時,應該如何處理?",
+    "options": [
+      "一律丟棄、不可做其他使用",
+      "看看是否真的完全未食用,如果確定之後,飲料倒掉、食物留下",
+      "如果有客人 Order一樣的項目,正好可以遞補",
+      "問過主管之後,可以給員工食用"
+    ],
+    "answer": 1,
+    "knowledge_tag": "衛生安全",
+    "explanation": "客人沒吃完或沒動過的食物都要直接丟掉，絕對不能回收再給別人吃喔。",
+    "keyword_tag": "剩餘食物"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 05: 飲料調製服務特性",
+    "id": 37,
+    "question": "服務人員工作時,如有親友來消費時,下列行為何者正確?",
+    "options": [
+      "儘量讓他們坐在不醒目的位置,以便抽空與他們聊天,或是偷偷的贈送飲食物品",
+      "一視同仁,提供正確標準的服務為主,但是仍可適當的時刻與之寒暄,以示歡迎",
+      "看狀況而定,如果主管或是老闆不在現場,就可儘量提供優惠與便利",
+      "為了避免麻煩,拜託他們儘量別出示身份"
+    ],
+    "answer": 2,
+    "knowledge_tag": "工作態度",
+    "explanation": "朋友來找你工作的地方吃飯，還是要認真服務，打個招呼就好，不能一直聊天。",
+    "keyword_tag": "親友消費"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 1,
+    "question": "依據飲料類衛生標準規定,有容器或包裝之液態飲料當中之「茶」的咖啡因含量不得超過多少?",
+    "options": [
+      "30mg/100 mL (300 ppm)",
+      "40mg/100 mL (400 ppm)",
+      "50 mg/100 mL (500 ppm)",
+      "60 mg/100 mL (600 ppm)"
+    ],
+    "answer": 3,
+    "knowledge_tag": "食品衛生",
+    "explanation": "茶裡面的咖啡因不能太多，每100CC最多只能有50毫克，才不會傷身體。",
+    "keyword_tag": "茶葉咖啡因"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 2,
+    "question": "依據飲料類衛生標準規定,有容器或包裝之液態飲料,茶、咖啡及可可以外之飲料的咖啡因含量不得超過多少?",
+    "options": [
+      "28mg/100 mL (280 ppm)",
+      "32 mg/100 mL (320 ppm)",
+      "46 mg/100 mL (460 ppm)",
+      "54 mg/100 mL (540 ppm)"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食品衛生",
+    "explanation": "除了茶和咖啡，一般飲料的咖啡因要更少，每100CC最多只有32毫克喔。",
+    "keyword_tag": "一般飲料"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 3,
+    "question": "餐飲業發生之食物中毒,以何者最多?",
+    "options": [
+      "細菌性中毒",
+      "化學性中毒",
+      "天然毒素中毒",
+      "類過敏性中毒"
+    ],
+    "answer": 1,
+    "knowledge_tag": "食品安全",
+    "explanation": "餐廳最常發生的肚子痛都是因為「細菌」太多，所以手和食物都要洗乾淨。",
+    "keyword_tag": "細菌中毒"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 4,
+    "question": "於調製飲料時穿戴整潔衣帽,其主要目的為下列何者?",
+    "options": [
+      "好看",
+      "怕弄髒衣服",
+      "擦手方便",
+      "防止頭髮、頭屑及夾雜物落入飲料中"
+    ],
+    "answer": 4,
+    "knowledge_tag": "個人衛生",
+    "explanation": "工作時戴好帽子是為了不讓頭髮或頭皮屑掉進飲料裡，客人喝了才安心。",
+    "keyword_tag": "整潔衣帽"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 5,
+    "question": "若以保久乳調製木瓜牛奶,則保久乳每公克大腸桿菌群最正確數值應為",
+    "options": [
+      "陰性",
+      "10以下",
+      "50以下",
+      "100以下"
+    ],
+    "answer": 1,
+    "knowledge_tag": "食品標準",
+    "explanation": "保久乳是很乾淨的，裡面不應該有大腸桿菌，所以檢查結果要是「陰性」喔。",
+    "keyword_tag": "保久乳"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 6,
+    "question": "防腐劑不得使用於",
+    "options": [
+      "水果酒",
+      "濃糖果漿",
+      "含果汁之碳酸飲料",
+      "罐頭"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食品保存",
+    "explanation": "罐頭是用高溫殺菌來保存的，不需要也不可以再加防腐劑來防腐。",
+    "keyword_tag": "防腐劑"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 7,
+    "question": "製作蔬果汁時,使用壓榨法較使用果汁機合適,其原因為",
+    "options": [
+      "壓榨法較為藝術",
+      "壓榨法設備較便宜",
+      "壓榨法製作較迅速",
+      "壓榨法較不易混進氣體,因此維生素較不易氧化"
+    ],
+    "answer": 4,
+    "knowledge_tag": "製作技巧",
+    "explanation": "用壓的比較不會像果汁機一樣捲進空氣，果汁的營養比較不容易壞掉。",
+    "keyword_tag": "壓榨法"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 8,
+    "question": "工作人員清洗煙灰缸時,應該",
+    "options": [
+      "用口布加以擦拭",
+      "用刷子先行刷洗",
+      "用煮過的咖啡粉來墊底",
+      "要分開,不可與杯子一起清洗"
+    ],
+    "answer": 4,
+    "knowledge_tag": "清潔保養",
+    "explanation": "煙灰缸很髒且有味道，絕對不能跟我們喝水的杯子放在一起洗喔！",
+    "keyword_tag": "煙灰缸"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 9,
+    "question": "有關製冰機的使用原則,下列何者正確?",
+    "options": [
+      "只要是清理乾淨的食物都可以放置保鮮",
+      "乾淨的飲料用具都可以放進去",
+      "除了冰鏟外,不能存放食品及飲料才能保持冰塊新鮮與清潔",
+      "不得放任何器具、材料"
+    ],
+    "answer": 4,
+    "knowledge_tag": "器材管理",
+    "explanation": "冰塊是要吃進肚子裡的，所以製冰機裡不可以放抹布或材料，要保持乾淨。",
+    "keyword_tag": "製冰機"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 10,
+    "question": "飲料製作完成後,哪些裝飾物可直接利用手擺置杯上?",
+    "options": [
+      "小紙傘",
+      "櫻桃",
+      "小洋蔥",
+      "橄欖"
+    ],
+    "answer": 1,
+    "knowledge_tag": "衛生操作",
+    "explanation": "紙傘是用來裝飾的，可以用手拿，但如果是食物類裝飾就要用夾子夾。",
+    "keyword_tag": "小紙傘"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 11,
+    "question": "清洗杯子的最佳洗潔劑是",
+    "options": [
+      "肥皂粉",
+      "弱鹼性專用清潔劑",
+      "洗碗精",
+      "玻璃清潔劑"
+    ],
+    "answer": 2,
+    "knowledge_tag": "器具洗滌",
+    "explanation": "洗杯子要用專用的弱鹼性清潔劑，才能把油垢洗掉又不傷手。",
+    "keyword_tag": "清潔劑"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 12,
+    "question": "下列何者非吧檯內之易燃物品?",
+    "options": [
+      "瓦斯罐",
+      "杯墊",
+      "紙巾",
+      "吧叉匙"
+    ],
+    "answer": 4,
+    "knowledge_tag": "消防安全",
+    "explanation": "吧叉匙是金屬做的，不會著火，所以它不是容易燃燒的危險物品。",
+    "keyword_tag": "吧叉匙"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 13,
+    "question": "飲料食品從業人員在新進時,應該健康檢查合格,之後多久需再檢查?",
+    "options": [
+      "每月",
+      "每季",
+      "每半年",
+      "每年"
+    ],
+    "answer": 4,
+    "knowledge_tag": "職業衛生",
+    "explanation": "為了大家的安全，在餐飲業工作的人，每年都要去醫院做一次身體檢查。",
+    "keyword_tag": "健康檢查"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 14,
+    "question": "吧檯砧板消毒洗淨後,應以何種方式存放?",
+    "options": [
+      "平放",
+      "倒掛",
+      "側立",
+      "疊放"
+    ],
+    "answer": 3,
+    "knowledge_tag": "器具存放",
+    "explanation": "洗好的砧板要「站著」放，這樣水才乾得快，比較不會發霉變髒。",
+    "keyword_tag": "吧檯砧板"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 15,
+    "question": "購買回來之橄欖罐(Olives),應如何處理?",
+    "options": [
+      "擦拭乾淨後應立即冷藏",
+      "常溫保存即可",
+      "低溫冰存",
+      "恆溫保存"
+    ],
+    "answer": 2,
+    "knowledge_tag": "食材保存",
+    "explanation": "還沒開過的橄欖罐頭放在一般室溫環境就好，不用放進冰箱佔位子。",
+    "keyword_tag": "橄欖罐頭"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 16,
+    "question": "茶會結束後,如有剩餘冰塊應該如何處理?",
+    "options": [
+      "可做食品冷藏,下次使用時再清洗即可",
+      "任何冰塊都不可以重複使用",
+      "拿去放在冷藏室幫助降溫",
+      "可以拿來給員工餐廳使用"
+    ],
+    "answer": 2,
+    "knowledge_tag": "衛生安全",
+    "explanation": "活動剩下的冰塊可能已經髒了，絕對不能再給人用，要直接倒掉。",
+    "keyword_tag": "剩餘冰塊"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 17,
+    "question": "酒吧冷藏冰箱溫度,應設定在華氏幾度?",
+    "options": [
+      "10度",
+      "25~32度",
+      "33~39度",
+      "40~45度以下"
+    ],
+    "answer": 4,
+    "knowledge_tag": "食材保存",
+    "explanation": "冰箱要夠冷才能保鮮，溫度要保持在華氏40到45度以下才安全。",
+    "keyword_tag": "冷藏溫度"
+  },
+  {
+    "subject": "[丙級學科題庫] 飲料調製",
+    "category": "20600 飲料調製丙級工作項目 06: 飲料調製衛生事項",
+    "id": 18,
+    "question": "濺溢軌道(Spill Rail)是飲務員調製飲料的地方,多久清潔擦拭一次?",
+    "options": [
+      "每次使用均擦拭",
+      "每日擦拭一次",
+      "每月擦拭一次",
+      "不必要清潔擦拭"
+    ],
+    "answer": 1,
+    "knowledge_tag": "環境清潔",
+    "explanation": "這裡是調飲料的地方，只要弄髒了就要趕快擦，每次用完都要清乾淨。",
+    "keyword_tag": "濺溢軌道"
+  }
+]
