@@ -14,12 +14,13 @@ const state = {
     selectedSubject: '',
     config: {
         // 您的 Google Sheets CSV 連結
-        csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQGzXsic_Jtm8vzuBAUrUEtfVeXJ0aEHvDs0rn_9ptGEJFDNnn1vc8g0Nhr3eBJVuXe7VqByM80Fw-J/pub?output=csv',
+        csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTa1GXkHoKnZZG27fAhQ9E3qGzbTJtTbpR4uYDGH3pFuHS9fZWXx77HHpEwHEVBcEJ7OuaJm4BidLHe/pub?output=csv',
         subjectMap: {
             'chinese_pasta': '[丙級學科題庫] 中式麵食加工',
             'beverage': '[丙級學科題庫] 飲料調製',
             'technical': '[共同科目題庫] 技術士技能檢定',
-            'food_safety': '[共同科目題庫] 食品安全衛生及營養相關職類'
+            'food_safety': '[共同科目題庫] 食品安全衛生及營養相關職類',
+            'baking': '[丙級學科題庫] 烘焙食品'
         }
     }
 };
