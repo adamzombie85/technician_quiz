@@ -109,6 +109,10 @@ select:focus, input:focus {
     font-size: 1rem;
 }
 
+.btn:active {
+    transform: scale(0.96);
+}
+
 .btn-primary {
     background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
@@ -147,8 +151,17 @@ select:focus, input:focus {
     top: 1rem;
     right: 1rem;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
     gap: 0.5rem;
     z-index: 1000;
+    max-width: calc(100% - 2rem);
+}
+
+#user-status {
+    white-space: nowrap;
+    font-size: 0.9rem;
 }
 
 .control-btn {
@@ -162,6 +175,10 @@ select:focus, input:focus {
 }
 
 .control-btn:hover { background: var(--primary); }
+
+.control-btn:active {
+    transform: scale(0.95);
+}
 
 #app {
     margin: 0 auto;
@@ -376,6 +393,10 @@ tr:hover {
     width: 100%;
 }
 
+.option-btn:active {
+    transform: scale(0.98);
+}
+
 .option-btn:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.1);
     border-color: var(--primary);
@@ -440,6 +461,24 @@ tr:hover {
         grid-template-columns: 1fr 1fr;
     }
     .btn-gold { grid-column: span 2; }
+}
+
+@media (max-width: 480px) {
+    .top-controls {
+        position: relative;
+        top: 0;
+        right: 0;
+        margin-bottom: 1rem;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.2);
+        padding: 0.75rem;
+        border-radius: 1rem;
+        max-width: 100%;
+    }
+    
+    #app {
+        padding-top: 1rem;
+    }
 }
 
 /* Review UI */
@@ -509,8 +548,8 @@ tr:hover {
 }
 
 .a11y-font-dyslexia {
-    font-family: 'Comic Sans MS', sans-serif !important;
-    letter-spacing: 0.1em;
-    word-spacing: 0.2em;
-    line-height: 2;
+    font-family: 'Comic Sans MS', "Noto Sans TC", "Microsoft JhengHei", "Heiti TC", sans-serif !important;
+    letter-spacing: 0.05em;
+    word-spacing: 0.1em;
+    line-height: 1.8;
 }
