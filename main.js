@@ -14,11 +14,11 @@ const state = {
     selectedSubject: '',
     config: {
         // 您的 Google Sheets CSV 連結
-        csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTa1GXkHoKnZZG27fAhQ9E3qGzbTJtTbpR4uYDGH3pFuHS9fZWXx77HHpEwHEVBcEJ7OuaJm4BidLHe/pub?output=csv',
+        csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdAOK3sXExaA1Y4XiIvLBZavj3XsvTP07eu2jQV4w0Eimo2Jy5moHY57qOX63H35f6XSz4rwLKSi1-/pub?output=csv',
         subjectMap: {
             'chinese_pasta': '[丙級學科題庫] 中式麵食加工',
             'beverage': '[丙級學科題庫] 飲料調製',
-            'technical': '[共同科目題庫] 技術士技能檢定',
+            'technical': '[共同科目題庫] 職業安全衛生',
             'food_safety': '[共同科目題庫] 食品安全衛生及營養相關職類',
             'baking': '[丙級學科題庫] 烘焙食品'
         }
