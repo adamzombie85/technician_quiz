@@ -5,3 +5,10 @@ __pycache__/
 *_勘誤.txt
 remaining_text.txt
 missing_indices.json
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
