@@ -1,4 +1,4 @@
-import { auth, loginUser, registerUser, loginWithGoogle, logoutUser, savePracticeRecord, getUserHistory } from './firebase_app.js';
+import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory } from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
@@ -13,16 +13,16 @@ const state = {
     wrongQuestions: [],
     selectedSubject: '',
     config: {
-        // 您的 Google Sheets CSV 連結
-        csvUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQdAOK3sXExaA1Y4XiIvLBZavj3XsvTP07eu2jQV4w0Eimo2Jy5moHY57qOX63H35f6XSz4rwLKSi1-/pub?output=csv',
+        // 使用本地 JSON 檔案
         subjectMap: {
-            'chinese_pasta': '[丙級學科題庫] 中式麵食加工',
-            'beverage': '[丙級學科題庫] 飲料調製',
-            'technical': '[共同科目題庫] 職業安全衛生',
-            'food_safety': '[共同科目題庫] 食品安全衛生及營養相關職類',
-            'baking': '[丙級學科題庫] 烘焙食品'
+            'chinese_pasta': { name: '[丙級學科題庫] 中式麵食加工', file: '[丙級學科題庫] 中式麵食加工.json' },
+            'beverage': { name: '[丙級學科題庫] 飲料調製', file: '[丙級學科題庫] 飲料調製.json' },
+            'technical': { name: '[共同科目題庫] 職業安全衛生', file: '[共同科目題庫] 職業安全衛生.json' },
+            'food_safety': { name: '[共同科目題庫] 食品安全衛生及營養相關職類', file: '[共同科目題庫] 食品安全衛生及營養相關職類.json' },
+            'baking': { name: '[丙級學科題庫] 烘焙食品', file: '[丙級學科題庫] 烘焙食品.json' }
         }
-    }
+    },
+    cachedData: {} // subjectKey -> questions
 };
 
 // DOM Elements
@@ -71,7 +71,8 @@ const elements = {
     authTitle: document.getElementById('auth-title'),
     authGoogleBtn: document.getElementById('auth-google-btn'),
     leaderboardModal: document.getElementById('leaderboard-modal'),
-    leaderboardBody: document.getElementById('leaderboard-body')
+    leaderboardBody: document.getElementById('leaderboard-body'),
+    loadingOverlay: document.getElementById('loading-overlay')
 };
 
 let isLoginMode = true;
@@ -97,6 +98,18 @@ onAuthStateChanged(auth, (user) => {
         elements.authBtn.innerHTML = '<i class="fas fa-user"></i> 登入/註冊';
         reqElements.forEach(el => el.classList.add('hidden'));
     }
+});
+
+// Check for redirect result on load
+handleRedirectResult().then((result) => {
+    if (result) {
+        elements.authModal.classList.add('hidden');
+        console.log("Redirect login success:", result.user);
+    }
+}).catch((err) => {
+    console.error("Redirect login error:", err);
+    elements.authError.textContent = 'Google 登入失敗：' + err.message;
+    elements.authModal.classList.remove('hidden');
 });
 
 window.toggleAuthModal = () => {
@@ -144,12 +157,25 @@ elements.authSubmitBtn.addEventListener('click', async () => {
 
 elements.authGoogleBtn.addEventListener('click', async () => {
     try {
-        elements.authGoogleBtn.disabled = true;
-        await loginWithGoogle();
-        elements.authModal.classList.add('hidden');
-        elements.authError.textContent = '';
+        // Detect if we are in a mobile webview (LINE, FB, etc.)
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const isWebView = /Line|FBAN|FBAV|Instagram/i.test(ua);
+
+        if (isWebView) {
+            await loginWithGoogleRedirect();
+        } else {
+            // Note: Don't disable the button BEFORE the call to avoid popup blocking in some browsers
+            await loginWithGoogle();
+            elements.authModal.classList.add('hidden');
+            elements.authError.textContent = '';
+        }
     } catch (err) {
-        elements.authError.textContent = 'Google 登入失敗：' + err.message;
+        if (err.code === 'auth/popup-blocked') {
+            elements.authError.textContent = 'Google 登入失敗：瀏覽器攔截了彈窗，請點擊網址列右側允許彈窗，或更換瀏覽器。';
+        } else {
+            elements.authError.textContent = 'Google 登入失敗：' + err.message;
+        }
+        console.error(err);
     } finally {
         elements.authGoogleBtn.disabled = false;
     }
@@ -187,50 +213,82 @@ async function handleSubjectChange() {
     }
 
     state.selectedSubject = val;
-    const targetSubjectName = state.config.subjectMap[val];
+    const subjectConfig = state.config.subjectMap[val];
 
     try {
-        elements.startBtn.disabled = true;
-        elements.startBtn.textContent = '載入題庫中...';
-
-        const response = await fetch(state.config.csvUrl);
-        const csvText = await response.text();
-
-        // Parse CSV text to objects
-        const lines = csvText.split(/\r?\n/);
-        const headers = parseCSVLine(lines[0]);
-
-        const rawData = lines.slice(1).filter(l => l.trim()).map(line => {
-            const values = parseCSVLine(line);
-            return {
-                subject: values[0],
-                category: values[1],
-                id: values[2],
-                question: values[3],
-                options: [values[4], values[5], values[6], values[7]],
-                answer: parseInt(values[8]),
-                knowledge_tag: values[9],
-                explanation: values[10],
-                keyword_tag: values[11]
-            };
-        });
-
-        // 過濾出選擇的領域題目
-        state.allQuestions = rawData.filter(q => q.subject === targetSubjectName);
-
-        if (state.allQuestions.length === 0) {
-            console.warn('找不到該領域題目，請檢查 Google Sheets 的 Subject 欄位是否正確。');
+        // 1. 檢查記憶體快取
+        if (state.cachedData[val]) {
+            state.allQuestions = state.cachedData[val];
+            finishLoadingSubject();
+            return;
         }
 
-        elements.subOptions.classList.remove('hidden');
-        elements.startBtn.disabled = false;
-        elements.startBtn.innerHTML = '<i class="fas fa-sword"></i> 開始練習';
-        updateFilterOptions();
+        // 2. 檢查 LocalStorage 持久化快取
+        const localCacheKey = `quiz_cache_${val}`;
+        const savedData = localStorage.getItem(localCacheKey);
+        if (savedData) {
+            try {
+                const parsed = JSON.parse(savedData);
+                state.cachedData[val] = parsed;
+                state.allQuestions = parsed;
+                finishLoadingSubject();
+                return;
+            } catch (e) {
+                console.warn("Local storage cache corrupted, refetching...");
+            }
+        }
+
+        // 3. 從網路下載 (分主題下載，減輕慢速網路負擔)
+        showLoadingOverlay(true);
+        elements.startBtn.disabled = true;
+        elements.startBtn.textContent = '勇者下載中...';
+
+        const response = await fetchWithRetry(encodeURIComponent(subjectConfig.file));
+        const data = await response.json();
+
+        // 存入記憶體與 LocalStorage
+        state.cachedData[val] = data;
+        state.allQuestions = data;
+        localStorage.setItem(localCacheKey, JSON.stringify(data));
+
+        finishLoadingSubject();
     } catch (err) {
         console.error('Failed to load questions:', err);
-        alert('載入雲端題庫失敗，請檢查網路連接或 CSV 連結。');
+        alert('載入題庫失敗，請檢查網路連接。');
         elements.startBtn.disabled = false;
         elements.startBtn.innerHTML = '<i class="fas fa-sword"></i> 開始練習';
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+function finishLoadingSubject() {
+    elements.subOptions.classList.remove('hidden');
+    elements.startBtn.disabled = false;
+    elements.startBtn.innerHTML = '<i class="fas fa-sword"></i> 開始練習';
+    updateFilterOptions();
+}
+
+// 支援重試機制的 Fetch (優化慢速網路)
+async function fetchWithRetry(url, retries = 3) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response;
+        } catch (e) {
+            if (i === retries - 1) throw e;
+            console.warn(`Fetch failed, retrying... (${i + 1}/${retries})`);
+            await new Promise(r => setTimeout(r, 1000 * (i + 1))); // 指數退避
+        }
+    }
+}
+
+function showLoadingOverlay(show) {
+    if (show) {
+        elements.loadingOverlay.classList.remove('hidden');
+    } else {
+        elements.loadingOverlay.classList.add('hidden');
     }
 }
 

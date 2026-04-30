@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import { getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -21,6 +21,8 @@ const googleProvider = new GoogleAuthProvider();
 export const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);
 export const registerUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
+export const loginWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
+export const handleRedirectResult = () => getRedirectResult(auth);
 export const logoutUser = () => signOut(auth);
 
 // Database helper functions
