@@ -5,3 +5,4 @@ __pycache__/
 *_勘誤.txt
 remaining_text.txt
 missing_indices.json
+.env

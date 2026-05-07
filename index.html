@@ -7,7 +7,7 @@
     <meta name="description" content="結合勇者鬥惡龍元素的丙級檢定練習網站，讓你一邊練習一邊打敗惡龍！">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/iansui@latest/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <!-- docx.js for Word export -->
@@ -17,14 +17,14 @@
 <body class="dark-theme">
     <!-- Top Controls (View, A11y & Auth) -->
     <div class="top-controls">
-        <span id="user-status" style="margin-right: 1rem; align-self: center; font-weight: bold; color: var(--gold);">未登入</span>
+        <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
+            <i class="fas fa-cat"></i>
+        </button>
         <button id="auth-btn" class="control-btn" onclick="toggleAuthModal()"><i class="fas fa-user"></i> 登入/註冊</button>
         <button onclick="toggleA11yModal()" class="control-btn"><i class="fas fa-universal-access"></i> 無障礙設定</button>
-        <button onclick="setViewMode('desktop')" class="control-btn"><i class="fas fa-desktop"></i> 電腦版</button>
-        <button onclick="setViewMode('mobile')" class="control-btn"><i class="fas fa-mobile-alt"></i> 手機版</button>
     </div>
 
-    <div id="app" class="mode-desktop">
+    <div id="app">
         <!-- Setup Screen -->
         <section id="setup-screen" class="screen active">
             <div class="glass-card main-card">
@@ -52,12 +52,20 @@
 
                 <div id="sub-options" class="hidden">
                     <div class="form-group">
-                        <label for="filter-type"><i class="fas fa-filter"></i> 練習模式</label>
+                        <label for="filter-type"><i class="fas fa-filter"></i> 選題範圍</label>
                         <select id="filter-type">
                             <option value="category">依工作項目 (官方大綱)</option>
                             <option value="knowledge">依知識類別 (統整概念)</option>
                             <option value="keyword">關鍵字搜尋 (精準打擊)</option>
                             <option value="random">隨機選題</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="practice-mode"><i class="fas fa-gamepad"></i> 練習模式</label>
+                        <select id="practice-mode">
+                            <option value="player">玩家模式 (最後看詳解)</option>
+                            <option value="novice">新手模式 (即時看詳解)</option>
                         </select>
                     </div>
 
@@ -129,6 +137,13 @@
                     <div id="options-container" class="options-grid">
                         <!-- Options will be injected here -->
                     </div>
+                    
+                    <div id="immediate-explanation-container" class="hidden" style="margin-top: 1rem;">
+                        <div class="explanation-box" id="immediate-explanation-text"></div>
+                        <button id="next-question-btn" class="btn btn-primary btn-large" style="margin-top: 1rem;">
+                            <i class="fas fa-arrow-right"></i> 下一題
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -176,18 +191,18 @@
         <div id="leaderboard-modal" class="modal hidden">
             <div class="glass-card modal-content">
                 <div class="modal-header">
-                    <h2><i class="fas fa-trophy"></i> 勇者排行榜 (前20名)</h2>
+                    <h2><i class="fas fa-globe"></i> 全服榮譽榜 (前20名)</h2>
                     <button class="close-modal" onclick="document.getElementById('leaderboard-modal').classList.add('hidden')">&times;</button>
                 </div>
                 <div class="table-wrapper">
                     <table id="leaderboard-table">
                         <thead>
                             <tr>
-                                <th>勇者 ID</th>
-                                <th>題庫</th>
-                                <th>模式</th>
-                                <th>題數</th>
-                                <th>正確率</th>
+                                <th>排名</th>
+                                <th>頭像</th>
+                                <th>勇者暱稱</th>
+                                <th>等級</th>
+                                <th>累積題數</th>
                             </tr>
                         </thead>
                         <tbody id="leaderboard-body"></tbody>
@@ -259,6 +274,97 @@
                 <div style="text-align: center; margin-top: 1rem; font-size: 0.875rem;">
                     <a href="#" id="auth-toggle-link" style="color: var(--primary);">還沒有帳號？點此註冊</a>
                 </div>
+            </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div id="profile-modal" class="modal hidden">
+            <div class="glass-card modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-address-card"></i> 勇者檔案</h2>
+                    <button class="close-modal" onclick="document.getElementById('profile-modal').classList.add('hidden')">&times;</button>
+                </div>
+                
+                <div class="profile-header">
+                    <div class="profile-avatar-large" id="profile-current-avatar">
+                        <i class="fas fa-cat"></i>
+                    </div>
+                    <div class="profile-info">
+                        <div class="form-group" style="margin-bottom: 0.5rem;">
+                            <input type="text" id="profile-nickname" placeholder="勇者暱稱" style="font-size: 1.25rem; font-weight: bold; width: 100%;">
+                        </div>
+                        <div class="level-badge" id="profile-level-badge">LV 1 新手勇者</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>更換化身</label>
+                    <div class="avatar-selector">
+                        <button class="avatar-option active" data-icon="fa-cat"><i class="fas fa-cat"></i></button>
+                        <button class="avatar-option" data-icon="fa-dog"><i class="fas fa-dog"></i></button>
+                        <button class="avatar-option" data-icon="fa-dragon"><i class="fas fa-dragon"></i></button>
+                        <button class="avatar-option" data-icon="fa-crow"><i class="fas fa-crow"></i></button>
+                        <button class="avatar-option" data-icon="fa-frog"><i class="fas fa-frog"></i></button>
+                        <button class="avatar-option" data-icon="fa-hippo"><i class="fas fa-hippo"></i></button>
+                    </div>
+                </div>
+
+                <div class="exp-container">
+                    <div class="exp-label">
+                        <span>經驗值 (題數)</span>
+                        <span id="profile-exp-text">0 / 50</span>
+                    </div>
+                    <div class="hp-bar" style="height: 1rem;">
+                        <div id="profile-exp-bar" class="hp-fill" style="background: linear-gradient(90deg, var(--gold), #f59e0b); width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="stats-grid" style="grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
+                    <div class="stat-item" style="padding: 1rem;">
+                        <div class="stat-label">累積題數</div>
+                        <div id="profile-total-questions" class="stat-value" style="font-size: 1.5rem;">0</div>
+                    </div>
+                    <div class="stat-item" style="padding: 1rem;">
+                        <div class="stat-label">累積時間</div>
+                        <div id="profile-total-time" class="stat-value" style="font-size: 1.5rem;">0m</div>
+                    </div>
+                </div>
+
+                <div class="treasures-container">
+                    <h3><i class="fas fa-gem"></i> 勇者寶物</h3>
+                    <div id="profile-treasures" class="treasures-grid">
+                        <!-- Treasures injected here -->
+                        <div style="color: var(--text-dim); grid-column: 1/-1; text-align: center;">尚未獲得寶物</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+                    <button id="save-profile-btn" class="btn btn-primary" style="flex: 1;"><i class="fas fa-save"></i> 儲存設定</button>
+                    <button id="profile-logout-btn" class="btn btn-outline" style="flex: 1; border-color: var(--danger); color: var(--danger);"><i class="fas fa-sign-out-alt"></i> 登出</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Up Modal -->
+        <div id="levelup-modal" class="modal hidden" style="z-index: 2500;">
+            <div class="glass-card modal-content" style="text-align: center; max-width: 400px; animation: levelUpPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+                <div class="levelup-glow">
+                    <i class="fas fa-star" style="color: var(--gold); font-size: 4rem; filter: drop-shadow(0 0 20px var(--gold));"></i>
+                </div>
+                <h2 style="font-size: 2.5rem; color: var(--gold); margin: 1rem 0;">LEVEL UP!</h2>
+                <div id="levelup-message" style="font-size: 1.25rem; margin-bottom: 1.5rem;">
+                    你已經達到 <span id="new-level-text" style="font-weight: bold; color: var(--success);">LV 2</span>
+                </div>
+                <div id="new-treasure-container" class="hidden">
+                    <div style="color: var(--text-dim); margin-bottom: 0.5rem;">獲得新寶物：</div>
+                    <div class="treasure-item" style="margin: 0 auto; width: 80px; height: 80px; font-size: 2.5rem;">
+                        <i id="new-treasure-icon" class="fas fa-sword"></i>
+                    </div>
+                    <div id="new-treasure-name" style="font-weight: bold; margin-top: 0.5rem; color: var(--gold);">王者之劍</div>
+                </div>
+                <button class="btn btn-primary btn-large" onclick="document.getElementById('levelup-modal').classList.add('hidden')" style="margin-top: 2rem;">
+                    繼續冒險
+                </button>
             </div>
         </div>
 

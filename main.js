@@ -1,4 +1,4 @@
-import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory } from './firebase_app.js';
+import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS } from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
@@ -22,7 +22,8 @@ const state = {
             'baking': { name: '[丙級學科題庫] 烘焙食品', file: '[丙級學科題庫] 烘焙食品.json' }
         }
     },
-    cachedData: {} // subjectKey -> questions
+    cachedData: {}, // subjectKey -> questions
+    userProfile: null
 };
 
 // DOM Elements
@@ -72,10 +73,22 @@ const elements = {
     authGoogleBtn: document.getElementById('auth-google-btn'),
     leaderboardModal: document.getElementById('leaderboard-modal'),
     leaderboardBody: document.getElementById('leaderboard-body'),
-    loadingOverlay: document.getElementById('loading-overlay')
+    loadingOverlay: document.getElementById('loading-overlay'),
+    userAvatarBtn: document.getElementById('user-avatar-btn'),
+    profileModal: document.getElementById('profile-modal'),
+    practiceMode: document.getElementById('practice-mode'),
+    immediateExpContainer: document.getElementById('immediate-explanation-container'),
+    immediateExpText: document.getElementById('immediate-explanation-text'),
+    nextQuestionBtn: document.getElementById('next-question-btn'),
+    levelupModal: document.getElementById('levelup-modal'),
+    newLevelText: document.getElementById('new-level-text'),
+    newTreasureContainer: document.getElementById('new-treasure-container'),
+    newTreasureIcon: document.getElementById('new-treasure-icon'),
+    newTreasureName: document.getElementById('new-treasure-name')
 };
 
 let isLoginMode = true;
+let selectedAvatarIcon = 'fa-cat';
 
 // Initialize
 elements.subjectSelect.addEventListener('change', handleSubjectChange);
@@ -84,18 +97,27 @@ elements.startBtn.addEventListener('click', startQuiz);
 elements.restartBtn.addEventListener('click', () => location.reload());
 elements.retryWrongBtn.addEventListener('click', retryWrongQuestions);
 elements.exportBtn.addEventListener('click', exportToText);
+elements.nextQuestionBtn.addEventListener('click', advanceToNextQuestion);
 
 // Auth Setup
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
     state.currentUser = user;
     const reqElements = document.querySelectorAll('.auth-required');
     if (user) {
-        elements.userStatus.textContent = `勇者：${user.email.split('@')[0]}`;
-        elements.authBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> 登出';
+        // Load user profile
+        try {
+            state.userProfile = await getUserProfile(user.uid, user.email);
+            renderProfileAvatar();
+            elements.userAvatarBtn.classList.remove('hidden');
+            elements.authBtn.classList.add('hidden');
+        } catch(e) {
+            console.error("Failed to load profile:", e);
+        }
         reqElements.forEach(el => el.classList.remove('hidden'));
     } else {
-        elements.userStatus.textContent = '未登入';
-        elements.authBtn.innerHTML = '<i class="fas fa-user"></i> 登入/註冊';
+        state.userProfile = null;
+        elements.userAvatarBtn.classList.add('hidden');
+        elements.authBtn.classList.remove('hidden');
         reqElements.forEach(el => el.classList.add('hidden'));
     }
 });
@@ -369,6 +391,7 @@ function showQuestion() {
     elements.progress.textContent = `題目 ${state.currentQuestionIndex + 1} / ${state.filteredQuestions.length}`;
     elements.questionText.textContent = q.question;
 
+    elements.immediateExpContainer.classList.add('hidden');
     elements.optionsContainer.innerHTML = '';
     q.options.forEach((opt, i) => {
         const btn = document.createElement('button');
@@ -449,14 +472,37 @@ function handleAnswer(choice, btn) {
     elements.dragonHp.style.width = `${hpPercent}%`;
     elements.dragonHpText.textContent = `${Math.round(hpPercent)}%`;
 
-    setTimeout(() => {
-        state.currentQuestionIndex++;
-        if (state.currentQuestionIndex < state.filteredQuestions.length) {
-            showQuestion();
-        } else {
-            endQuiz();
-        }
-    }, 1000);
+    const mode = elements.practiceMode.value;
+    
+    if (mode === 'novice' && !isCorrect) {
+        // Stop timer for this question in novice mode until they click next
+        clearInterval(state.timerInterval);
+        elements.immediateExpText.innerHTML = `
+            <strong><i class="fas fa-exclamation-circle"></i> 答錯了！</strong><br>
+            您的回答：<span style="color: var(--danger)">${q.options[choice - 1]}</span><br>
+            正確答案：<span style="color: var(--success)">${q.options[q.answer - 1]}</span><br>
+            <div style="margin-top:0.5rem; font-size:0.9rem;">${q.explanation || '暫無詳解'}</div>
+        `;
+        elements.immediateExpContainer.classList.remove('hidden');
+    } else {
+        setTimeout(() => {
+            advanceToNextQuestion();
+        }, 1000);
+    }
+}
+
+function advanceToNextQuestion() {
+    // Resume timer if it was stopped
+    if (elements.practiceMode.value === 'novice' && !elements.immediateExpContainer.classList.contains('hidden')) {
+        state.timerInterval = setInterval(updateTimer, 1000);
+    }
+    
+    state.currentQuestionIndex++;
+    if (state.currentQuestionIndex < state.filteredQuestions.length) {
+        showQuestion();
+    } else {
+        endQuiz();
+    }
 }
 
 function triggerHitEffect() {
@@ -488,9 +534,32 @@ async function endQuiz() {
                 score: scorePercent,
                 timeElapsed: elapsed
             });
-            alert('成績已成功記錄到雲端！請點擊查看歷史紀錄。');
+            
+            // Sync user stats (level, exp)
+            const statsResult = await syncUserStats(state.currentUser.uid, state.filteredQuestions.length, elapsed);
+            if (statsResult) {
+                // Update local profile state
+                state.userProfile.totalQuestions = statsResult.totalQuestions;
+                state.userProfile.totalTime = statsResult.totalTime;
+                state.userProfile.level = statsResult.newLevel;
+                state.userProfile.treasures = statsResult.treasures;
+                
+                // Show level up modal if leveled up
+                if (statsResult.leveledUp) {
+                    elements.newLevelText.textContent = `LV ${statsResult.newLevel}`;
+                    if (statsResult.newTreasures && statsResult.newTreasures.length > 0) {
+                        const newT = statsResult.newTreasures[0]; // show the first one
+                        elements.newTreasureIcon.className = `fas ${newT.icon}`;
+                        elements.newTreasureName.textContent = newT.name;
+                        elements.newTreasureContainer.classList.remove('hidden');
+                    } else {
+                        elements.newTreasureContainer.classList.add('hidden');
+                    }
+                    elements.levelupModal.classList.remove('hidden');
+                }
+            }
         } catch (e) {
-            alert('成績寫入失敗，請確認資料庫權限設定！錯誤訊息：' + e.message);
+            console.error('成績寫入失敗:', e);
         }
     }
 
@@ -621,28 +690,24 @@ window.readQuestionAloud = () => {
 };
 
 window.showLeaderboard = async () => {
-    if (!state.currentUser) {
-        alert('請先登入！');
-        return;
-    }
     try {
-        const records = await getUserHistory(state.currentUser.uid);
-        if (records.length === 0) {
-            elements.leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有練習紀錄</td></tr>';
+        const topUsers = await getGlobalLeaderboard();
+        if (topUsers.length === 0) {
+            elements.leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
         } else {
-            elements.leaderboardBody.innerHTML = records.map(r => `
+            elements.leaderboardBody.innerHTML = topUsers.map((u, idx) => `
                 <tr>
-                    <td>${r.email.split('@')[0]}</td>
-                    <td>${r.subject.split('] ')[1]}</td>
-                    <td>${r.mode.split(' (')[0]}</td>
-                    <td>${r.count}</td>
-                    <td style="color: var(--gold)">${r.score}%</td>
+                    <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
+                    <td><i class="fas ${u.avatar || 'fa-cat'}" style="font-size:1.5rem; color:var(--primary);"></i></td>
+                    <td>${u.nickname || u.email.split('@')[0]}</td>
+                    <td>LV ${u.level || 1}</td>
+                    <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
                 </tr>
             `).join('');
         }
         elements.leaderboardModal.classList.remove('hidden');
     } catch (e) {
-        alert('讀取歷史紀錄失敗: ' + e.message);
+        alert('讀取榮譽榜失敗: ' + e.message);
         console.error(e);
     }
 };
@@ -650,6 +715,103 @@ window.showLeaderboard = async () => {
 document.getElementById('show-leaderboard-btn').addEventListener('click', window.showLeaderboard);
 document.getElementById('show-leaderboard-result-btn').addEventListener('click', window.showLeaderboard);
 
-window.setViewMode = (mode) => {
-    document.getElementById('app').className = `mode-${mode}`;
+// --- Profile Modal Logic ---
+
+window.toggleProfileModal = () => {
+    if (!state.userProfile) return;
+    
+    // Setup modal UI
+    document.getElementById('profile-nickname').value = state.userProfile.nickname || state.userProfile.email.split('@')[0];
+    selectedAvatarIcon = state.userProfile.avatar || 'fa-cat';
+    
+    // Setup Avatar selector
+    document.querySelectorAll('.avatar-option').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.icon === selectedAvatarIcon);
+    });
+    
+    // Setup Exp Bar
+    const currentQ = state.userProfile.totalQuestions || 0;
+    const curLevelInfo = LEVEL_THRESHOLDS.find(t => t.level === state.userProfile.level) || LEVEL_THRESHOLDS[0];
+    const nextLevelInfo = LEVEL_THRESHOLDS.find(t => t.level === state.userProfile.level + 1);
+    
+    let expPercent = 100;
+    let expText = `${currentQ} (MAX)`;
+    
+    if (nextLevelInfo) {
+        const req = nextLevelInfo.req;
+        const prevReq = curLevelInfo.req;
+        const progress = currentQ - prevReq;
+        const totalNeeded = req - prevReq;
+        expPercent = Math.min(100, Math.max(0, (progress / totalNeeded) * 100));
+        expText = `${currentQ} / ${req}`;
+    }
+    
+    document.getElementById('profile-level-badge').textContent = `LV ${state.userProfile.level || 1}`;
+    document.getElementById('profile-exp-bar').style.width = `${expPercent}%`;
+    document.getElementById('profile-exp-text').textContent = expText;
+    
+    document.getElementById('profile-total-questions').textContent = currentQ;
+    document.getElementById('profile-total-time').textContent = `${Math.floor((state.userProfile.totalTime || 0) / 60)}m`;
+    
+    // Treasures
+    const treasuresGrid = document.getElementById('profile-treasures');
+    const treasures = state.userProfile.treasures || [];
+    if (treasures.length === 0) {
+        treasuresGrid.innerHTML = '<div style="color: var(--text-dim); grid-column: 1/-1; text-align: center;">尚未獲得寶物</div>';
+    } else {
+        treasuresGrid.innerHTML = treasures.map(t => `
+            <div class="treasure-item" title="${t.name}">
+                <i class="fas ${t.icon}"></i>
+                <div class="name">${t.name}</div>
+            </div>
+        `).join('');
+    }
+    
+    renderProfileAvatar();
+    elements.profileModal.classList.remove('hidden');
 };
+
+document.querySelectorAll('.avatar-option').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.avatar-option').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedAvatarIcon = btn.dataset.icon;
+        document.getElementById('profile-current-avatar').innerHTML = `<i class="fas ${selectedAvatarIcon}"></i>`;
+    });
+});
+
+document.getElementById('save-profile-btn').addEventListener('click', async () => {
+    if (!state.currentUser) return;
+    const nickname = document.getElementById('profile-nickname').value.trim();
+    if (!nickname) {
+        alert('請輸入暱稱！');
+        return;
+    }
+    
+    try {
+        const newProfile = {
+            nickname: nickname,
+            avatar: selectedAvatarIcon
+        };
+        await updateUserProfile(state.currentUser.uid, newProfile);
+        state.userProfile.nickname = nickname;
+        state.userProfile.avatar = selectedAvatarIcon;
+        renderProfileAvatar();
+        elements.profileModal.classList.add('hidden');
+    } catch (e) {
+        alert('儲存失敗: ' + e.message);
+    }
+});
+
+document.getElementById('profile-logout-btn').addEventListener('click', () => {
+    logoutUser();
+    elements.profileModal.classList.add('hidden');
+});
+
+function renderProfileAvatar() {
+    if (!state.userProfile) return;
+    const icon = state.userProfile.avatar || 'fa-cat';
+    elements.userAvatarBtn.innerHTML = `<i class="fas ${icon}"></i>`;
+    const profileAvatar = document.getElementById('profile-current-avatar');
+    if (profileAvatar) profileAvatar.innerHTML = `<i class="fas ${icon}"></i>`;
+}

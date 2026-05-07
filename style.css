@@ -18,7 +18,7 @@
 }
 
 body {
-    font-family: 'Outfit', 'Inter', sans-serif;
+    font-family: 'Iansui', 'Outfit', 'Inter', sans-serif;
     background-color: var(--bg-dark);
     background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
     color: var(--text-light);
@@ -28,7 +28,8 @@ body {
 }
 
 #app {
-    max-width: 800px;
+    width: 100%;
+    max-width: 900px;
     margin: 0 auto;
     padding: 2rem 1rem;
 }
@@ -147,16 +148,15 @@ select:focus, input:focus {
 
 /* Top Controls (View Modes & A11y) */
 .top-controls {
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
     align-items: center;
-    gap: 0.5rem;
-    z-index: 1000;
-    max-width: calc(100% - 2rem);
+    gap: 1rem;
+    padding: 1rem 2rem;
+    width: 100%;
+    max-width: 900px;
+    margin: 1rem auto;
 }
 
 #user-status {
@@ -180,14 +180,7 @@ select:focus, input:focus {
     transform: scale(0.95);
 }
 
-#app {
-    margin: 0 auto;
-    padding: 4rem 1rem 2rem;
-    transition: max-width 0.5s ease-in-out;
-}
-
-.mode-desktop { width: 100%; max-width: 900px; }
-.mode-mobile { width: 100%; max-width: 400px; }
+/* Removed mode-desktop and mode-mobile */
 
 /* Battle Stage Layout */
 .battle-stage {
@@ -463,21 +456,15 @@ tr:hover {
     .btn-gold { grid-column: span 2; }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
     .top-controls {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin-bottom: 1rem;
         justify-content: center;
-        background: rgba(0, 0, 0, 0.2);
-        padding: 0.75rem;
-        border-radius: 1rem;
-        max-width: 100%;
+        padding: 1rem;
+        margin-bottom: 1rem;
     }
     
     #app {
-        padding-top: 1rem;
+        padding-top: 0;
     }
 }
 
@@ -548,7 +535,7 @@ tr:hover {
 }
 
 .a11y-font-dyslexia {
-    font-family: 'Comic Sans MS', "Noto Sans TC", "Microsoft JhengHei", "Heiti TC", sans-serif !important;
+    font-family: 'Iansui', 'Comic Sans MS', "Noto Sans TC", "Microsoft JhengHei", "Heiti TC", sans-serif !important;
     letter-spacing: 0.05em;
     word-spacing: 0.1em;
     line-height: 1.8;
@@ -591,4 +578,182 @@ tr:hover {
 @keyframes pulse-text {
     0%, 100% { opacity: 0.5; transform: scale(0.95); }
     50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* --- New Profile & Avatar Styles --- */
+.avatar-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+}
+
+.avatar-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--primary);
+    flex-shrink: 0;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.level-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: #000;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 900;
+    margin-top: 0.25rem;
+}
+
+.avatar-selector {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.avatar-option {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.avatar-option:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.avatar-option.active {
+    border-color: var(--gold);
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--gold);
+    transform: scale(1.1);
+}
+
+.exp-container {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-radius: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.exp-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--text-dim);
+}
+
+.treasures-container {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.treasures-container h3 {
+    margin-bottom: 1rem;
+    color: var(--gold);
+    font-size: 1.1rem;
+}
+
+.treasures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+    gap: 1rem;
+}
+
+.treasure-item {
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: 0.75rem;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gold);
+    font-size: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.treasure-item:hover {
+    transform: translateY(-3px) scale(1.05);
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(251, 191, 36, 0.4);
+}
+
+.treasure-item .name {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+    color: var(--text-light);
+}
+
+/* Level Up Animations */
+@keyframes levelUpPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    60% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.levelup-glow {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.levelup-glow::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 150%;
+    height: 150%;
+    background: radial-gradient(circle, rgba(251,191,36,0.4) 0%, rgba(251,191,36,0) 70%);
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    animation: pulse-glow 2s infinite alternate;
+}
+
+@keyframes pulse-glow {
+    from { transform: translate(-50%, -50%) scale(0.8); opacity: 0.5; }
+    to { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
 }
