@@ -46,6 +46,8 @@ const elements = {
     dragonHp: document.getElementById('dragon-hp'),
     dragonHpText: document.getElementById('dragon-hp-text'),
     dragonSprite: document.getElementById('dragon-sprite'),
+    heroSprite: document.getElementById('hero-sprite'),
+    slashEffect: document.getElementById('slash-effect'),
     finalTime: document.getElementById('final-time'),
     finalScore: document.getElementById('final-score'),
     victoryMessage: document.getElementById('victory-message'),
@@ -80,6 +82,7 @@ const elements = {
     immediateExpContainer: document.getElementById('immediate-explanation-container'),
     immediateExpText: document.getElementById('immediate-explanation-text'),
     nextQuestionBtn: document.getElementById('next-question-btn'),
+    giveUpBtn: document.getElementById('give-up-btn'),
     levelupModal: document.getElementById('levelup-modal'),
     newLevelText: document.getElementById('new-level-text'),
     newTreasureContainer: document.getElementById('new-treasure-container'),
@@ -93,11 +96,23 @@ let selectedAvatarIcon = 'fa-cat';
 // Initialize
 elements.subjectSelect.addEventListener('change', handleSubjectChange);
 elements.filterType.addEventListener('change', updateFilterOptions);
+elements.filterValue.addEventListener('change', updateQuestionCountDropdown);
+elements.keywordInput.addEventListener('input', updateQuestionCountDropdown);
 elements.startBtn.addEventListener('click', startQuiz);
 elements.restartBtn.addEventListener('click', () => location.reload());
 elements.retryWrongBtn.addEventListener('click', retryWrongQuestions);
 elements.exportBtn.addEventListener('click', exportToText);
 elements.nextQuestionBtn.addEventListener('click', advanceToNextQuestion);
+elements.giveUpBtn.addEventListener('click', () => {
+    if (confirm('確定要放棄並結算目前成績嗎？返回首頁後將會記錄您剛才練習的題數。')) {
+        endQuiz(true);
+    }
+});
+document.getElementById('site-title').addEventListener('click', () => {
+    if (confirm('確定要回到首頁嗎？如果您正在測驗中，未結算的進度將會遺失。')) {
+        location.reload();
+    }
+});
 
 // Auth Setup
 onAuthStateChanged(auth, async (user) => {
@@ -341,11 +356,41 @@ function updateFilterOptions() {
 
     elements.filterValue.innerHTML = options.join('');
     elements.filterValueContainer.classList.remove('hidden');
+    updateQuestionCountDropdown();
+}
+
+function updateQuestionCountDropdown() {
+    let poolSize = state.allQuestions.length;
+    const type = elements.filterType.value;
+    
+    if (type === 'keyword') {
+        const kw = elements.keywordInput.value.trim().toLowerCase();
+        if (kw) {
+            poolSize = state.allQuestions.filter(q => (q.keyword_tag && q.keyword_tag.toLowerCase().includes(kw)) || q.question.toLowerCase().includes(kw)).length;
+        }
+    } else if (type !== 'random') {
+        const val = elements.filterValue.value;
+        const key = type === 'category' ? 'category' : 'knowledge_tag';
+        poolSize = state.allQuestions.filter(q => q[key] === val).length;
+    }
+
+    elements.questionCount.innerHTML = '';
+    for (let i = 20; i <= poolSize; i += 20) {
+        elements.questionCount.innerHTML += `<option value="${i}">${i} 題</option>`;
+    }
+    elements.questionCount.innerHTML += `<option value="all">所有題目 (${poolSize} 題)</option>`;
+    
+    if (poolSize === 0) {
+        elements.questionCount.innerHTML = `<option value="0">無相關題目</option>`;
+        elements.startBtn.disabled = true;
+    } else {
+        elements.startBtn.disabled = false;
+    }
 }
 
 function startQuiz() {
     const type = elements.filterType.value;
-    const count = parseInt(elements.questionCount.value) || 20;
+    const countStr = elements.questionCount.value;
 
     let pool = [...state.allQuestions];
     if (type === 'keyword') {
@@ -357,6 +402,8 @@ function startQuiz() {
         const key = type === 'category' ? 'category' : 'knowledge_tag';
         pool = pool.filter(q => q[key] === val);
     }
+
+    const count = countStr === 'all' ? pool.length : parseInt(countStr) || 20;
 
     // Shuffle and pick
     state.filteredQuestions = pool.sort(() => Math.random() - 0.5).slice(0, count);
@@ -506,22 +553,49 @@ function advanceToNextQuestion() {
 }
 
 function triggerHitEffect() {
-    elements.dragonSprite.classList.remove('dragon-idle');
-    elements.dragonSprite.classList.add('dragon-hit');
+    // 勇者攻擊動畫
+    elements.heroSprite.classList.add('hero-attack');
+    
+    // 延遲播放惡龍受擊與劍光 (配合揮劍的時機點)
     setTimeout(() => {
-        elements.dragonSprite.classList.remove('dragon-hit');
-        elements.dragonSprite.classList.add('dragon-idle');
-    }, 400);
+        elements.dragonSprite.classList.remove('dragon-idle');
+        elements.dragonSprite.classList.add('dragon-hit');
+        
+        elements.slashEffect.classList.remove('hidden');
+        elements.slashEffect.classList.add('slash-animate');
+        
+        setTimeout(() => {
+            elements.dragonSprite.classList.remove('dragon-hit');
+            elements.dragonSprite.classList.add('dragon-idle');
+            elements.slashEffect.classList.remove('slash-animate');
+            elements.slashEffect.classList.add('hidden');
+        }, 300);
+    }, 200);
+    
+    // 移除勇者攻擊動畫 class
+    setTimeout(() => {
+        elements.heroSprite.classList.remove('hero-attack');
+    }, 500);
 }
 
-async function endQuiz() {
+async function endQuiz(isGiveUp = false) {
     clearInterval(state.timerInterval);
     const elapsedSecs = Math.floor((Date.now() - state.startTime) / 1000);
     const m = Math.floor(elapsedSecs / 60).toString().padStart(2, '0');
     const s = (elapsedSecs % 60).toString().padStart(2, '0');
     const elapsed = `${m}:${s}`;
     
-    const scorePercent = Math.round((state.score / state.filteredQuestions.length) * 100);
+    const questionsAnswered = state.currentQuestionIndex;
+    
+    if (isGiveUp && questionsAnswered === 0) {
+        alert('尚未作答任何題目，返回首頁。');
+        elements.quizScreen.classList.add('hidden');
+        elements.setupScreen.classList.remove('hidden');
+        return;
+    }
+
+    const totalToGrade = isGiveUp ? questionsAnswered : state.filteredQuestions.length;
+    const scorePercent = Math.round((state.score / totalToGrade) * 100) || 0;
 
     if (state.currentUser) {
         try {
@@ -529,14 +603,14 @@ async function endQuiz() {
                 uid: state.currentUser.uid,
                 email: state.currentUser.email,
                 subject: state.config.subjectMap[state.selectedSubject] || '綜合練習',
-                mode: elements.filterType.options[elements.filterType.selectedIndex].text,
-                count: state.filteredQuestions.length,
+                mode: elements.filterType.options[elements.filterType.selectedIndex].text + (isGiveUp ? ' (中途放棄)' : ''),
+                count: totalToGrade,
                 score: scorePercent,
                 timeElapsed: elapsed
             });
             
             // Sync user stats (level, exp)
-            const statsResult = await syncUserStats(state.currentUser.uid, state.filteredQuestions.length, elapsed);
+            const statsResult = await syncUserStats(state.currentUser.uid, totalToGrade, elapsed);
             if (statsResult) {
                 // Update local profile state
                 state.userProfile.totalQuestions = statsResult.totalQuestions;
@@ -564,19 +638,42 @@ async function endQuiz() {
     }
 
     elements.quizScreen.classList.add('hidden');
-    elements.resultScreen.classList.remove('hidden');
 
-    elements.finalTime.textContent = elapsed;
-    elements.finalScore.textContent = `${scorePercent}%`;
-
-    if (scorePercent >= 80) {
-        elements.victoryMessage.innerHTML = `<span style="color: var(--success)">恭喜勇者！你成功討伐了惡龍！</span>`;
-        elements.dragonSprite.classList.add('dragon-die');
+    if (isGiveUp) {
+        alert(`已放棄本次測驗。\n本次作答 ${totalToGrade} 題，花費時間 ${elapsed}，正確率 ${scorePercent}%。\n紀錄已儲存，返回首頁。`);
+        elements.setupScreen.classList.remove('hidden');
+        
+        // Reset dragon
+        elements.dragonSprite.classList.remove('dragon-die');
+        elements.dragonSprite.classList.add('dragon-idle');
+        elements.dragonHp.style.width = '100%';
+        elements.dragonHpText.textContent = '100%';
     } else {
-        elements.victoryMessage.innerHTML = `<span style="color: var(--danger)">戰敗了... 惡龍的力量太強，再修煉一下吧！</span>`;
-    }
+        elements.resultScreen.classList.remove('hidden');
 
-    renderReview();
+        elements.finalTime.textContent = elapsed;
+        elements.finalScore.textContent = `${scorePercent}%`;
+
+        const resultAnimContainer = document.getElementById('result-animation-container');
+        const resultAnimImg = document.getElementById('result-animation');
+
+        if (scorePercent >= 80) {
+            elements.victoryMessage.innerHTML = `<span style="color: var(--success)">恭喜勇者！你成功討伐了惡龍！</span>`;
+            elements.dragonSprite.classList.add('dragon-die');
+            if (resultAnimContainer && resultAnimImg) {
+                resultAnimImg.src = 'motion/win.webp';
+                resultAnimContainer.classList.remove('hidden');
+            }
+        } else {
+            elements.victoryMessage.innerHTML = `<span style="color: var(--danger)">戰敗了... 惡龍的力量太強，再修煉一下吧！</span>`;
+            if (resultAnimContainer && resultAnimImg) {
+                resultAnimImg.src = 'motion/lose.webp';
+                resultAnimContainer.classList.remove('hidden');
+            }
+        }
+
+        renderReview();
+    }
 }
 
 function renderReview() {
@@ -616,6 +713,13 @@ function retryWrongQuestions() {
     state.startTime = Date.now();
 
     elements.resultScreen.classList.add('hidden');
+    
+    // Hide animation
+    const resultAnimContainer = document.getElementById('result-animation-container');
+    if (resultAnimContainer) {
+        resultAnimContainer.classList.add('hidden');
+    }
+
     elements.quizScreen.classList.remove('hidden');
     elements.dragonSprite.classList.remove('dragon-die');
     elements.dragonSprite.classList.add('dragon-idle');

@@ -16,12 +16,17 @@
 </head>
 <body class="dark-theme">
     <!-- Top Controls (View, A11y & Auth) -->
-    <div class="top-controls">
-        <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
-            <i class="fas fa-cat"></i>
-        </button>
-        <button id="auth-btn" class="control-btn" onclick="toggleAuthModal()"><i class="fas fa-user"></i> 登入/註冊</button>
-        <button onclick="toggleA11yModal()" class="control-btn"><i class="fas fa-universal-access"></i> 無障礙設定</button>
+    <div class="top-controls" style="justify-content: space-between;">
+        <div id="site-title" class="site-title" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: bold; color: var(--gold);">
+            <i class="fas fa-dragon"></i> 勇者題庫
+        </div>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+            <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
+                <i class="fas fa-cat"></i>
+            </button>
+            <button id="auth-btn" class="control-btn" onclick="toggleAuthModal()"><i class="fas fa-user"></i> 登入/註冊</button>
+            <button onclick="toggleA11yModal()" class="control-btn"><i class="fas fa-universal-access"></i> 無障礙設定</button>
+        </div>
     </div>
 
     <div id="app">
@@ -80,8 +85,11 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="question-count"><i class="fas fa-list-ol"></i> 練習題數 (10-50)</label>
-                        <input type="number" id="question-count" min="10" max="50" value="20">
+                        <label for="question-count"><i class="fas fa-list-ol"></i> 練習題數</label>
+                        <select id="question-count">
+                            <!-- populated dynamically based on total questions available in the selected filter -->
+                            <option value="20">20 題</option>
+                        </select>
                     </div>
 
                     <button id="start-btn" class="btn btn-primary btn-large">
@@ -100,6 +108,7 @@
             <div class="battle-container">
                 <!-- Battle Stage Area -->
                 <div class="battle-stage">
+                    <div id="slash-effect" class="slash-effect"><i class="fas fa-slash"></i></div>
                     <div class="hero-area">
                         <div id="hero-sprite" class="hero-idle">
                             <i class="fas fa-user-ninja"></i>
@@ -127,6 +136,7 @@
                     <div class="quiz-header">
                         <span id="timer"><i class="fas fa-clock"></i> 00:00</span>
                         <span id="progress">題目 1 / 20</span>
+                        <button id="give-up-btn" class="btn btn-outline" style="color: var(--danger); border-color: var(--danger); padding: 0.25rem 0.75rem; font-size: 0.875rem;"><i class="fas fa-flag"></i> 放棄</button>
                     </div>
                     
                     <div class="question-container">
@@ -161,6 +171,10 @@
                         <div class="stat-label">正確率</div>
                         <div id="final-score" class="stat-value">0%</div>
                     </div>
+                </div>
+
+                <div id="result-animation-container" class="result-animation hidden">
+                    <img id="result-animation" src="" alt="Battle Result Animation">
                 </div>
 
                 <div id="victory-message" class="message-box"></div>
