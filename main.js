@@ -23,7 +23,8 @@ const state = {
         }
     },
     cachedData: {}, // subjectKey -> questions
-    userProfile: null
+    userProfile: null,
+    practicedQuestionIds: []
 };
 
 // DOM Elements
@@ -219,7 +220,7 @@ handleRedirectResult().then((result) => {
 }).catch((err) => {
     console.error("Redirect login error:", err);
     elements.authError.textContent = 'Google 登入失敗：' + err.message;
-    elements.authModal.classList.remove('hidden');
+    elements.authModal.classList.add('hidden');
 });
 
 window.toggleAuthModal = () => {
@@ -478,8 +479,22 @@ function startQuiz() {
 
     const count = countStr === 'all' ? pool.length : parseInt(countStr) || 20;
 
-    // Shuffle and pick
-    state.filteredQuestions = pool.sort(() => Math.random() - 0.5).slice(0, count);
+    // Weighted Sort based on practice count
+    if (state.userProfile && state.userProfile.questionStats) {
+        const stats = state.userProfile.questionStats;
+        pool.sort((a, b) => {
+            const keyA = `${state.selectedSubject}_${a.id}`;
+            const keyB = `${state.selectedSubject}_${b.id}`;
+            const countA = stats[keyA] || 0;
+            const countB = stats[keyB] || 0;
+            if (countA !== countB) return countA - countB;
+            return Math.random() - 0.5;
+        });
+    } else {
+        pool.sort(() => Math.random() - 0.5);
+    }
+
+    state.filteredQuestions = pool.slice(0, count);
 
     if (state.filteredQuestions.length === 0) {
         alert('此類別下無題目！');
@@ -489,6 +504,7 @@ function startQuiz() {
     state.currentQuestionIndex = 0;
     state.score = 0;
     state.wrongQuestions = [];
+    state.practicedQuestionIds = [];
     state.startTime = Date.now();
 
     elements.setupScreen.classList.add('hidden');
@@ -508,6 +524,13 @@ function updateTimer() {
 
 function showQuestion() {
     const q = state.filteredQuestions[state.currentQuestionIndex];
+    
+    // Add to practiced list for stats
+    const qKey = `${state.selectedSubject}_${q.id}`;
+    if (!state.practicedQuestionIds.includes(qKey)) {
+        state.practicedQuestionIds.push(qKey);
+    }
+
     elements.progress.textContent = `題目 ${state.currentQuestionIndex + 1} / ${state.filteredQuestions.length}`;
     elements.questionText.textContent = q.question;
 
@@ -682,14 +705,26 @@ async function endQuiz(isGiveUp = false) {
                 timeElapsed: elapsed
             });
             
-            // Sync user stats (level, exp)
-            const statsResult = await syncUserStats(state.currentUser.uid, totalToGrade, elapsed);
+            // Sync user stats (level, exp, and question practice counts)
+            const statsResult = await syncUserStats(
+                state.currentUser.uid, 
+                percent, 
+                totalToGrade, 
+                elapsed, 
+                state.practicedQuestionIds
+            );
             if (statsResult) {
                 // Update local profile state
                 state.userProfile.totalQuestions = statsResult.totalQuestions;
                 state.userProfile.totalTime = statsResult.totalTime;
                 state.userProfile.level = statsResult.newLevel;
                 state.userProfile.puzzlePieces = statsResult.puzzlePieces;
+                
+                // Merge updated stats back to local profile
+                state.practicedQuestionIds.forEach(id => {
+                    if (!state.userProfile.questionStats) state.userProfile.questionStats = {};
+                    state.userProfile.questionStats[id] = (state.userProfile.questionStats[id] || 0) + 1;
+                });
                 
                 // Show level up modal if leveled up
                 if (statsResult.leveledUp) {
@@ -784,6 +819,7 @@ function retryWrongQuestions() {
     state.currentQuestionIndex = 0;
     state.score = 0;
     state.wrongQuestions = [];
+    state.practicedQuestionIds = [];
     state.startTime = Date.now();
 
     elements.resultScreen.classList.add('hidden');

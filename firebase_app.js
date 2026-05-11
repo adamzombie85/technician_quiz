@@ -145,32 +145,40 @@ export async function updateUserProfile(uid, data) {
   await updateDoc(userRef, data);
 }
 
-export async function syncUserStats(uid, addedQuestions, addedTimeStr) {
-  const [m, s] = addedTimeStr.split(':').map(Number);
-  const addedSeconds = m * 60 + s;
-
+export async function syncUserStats(uid, score, totalQuestions, totalTime, practicedQuestionIds = []) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
+  
   if (!userSnap.exists()) return null;
-
   const data = userSnap.data();
-  const newTotalQuestions = (data.totalQuestions || 0) + addedQuestions;
-  const newTotalTime = (data.totalTime || 0) + addedSeconds;
   
   const oldLevel = data.level || 1;
-  const newLevel = calculateLevel(newTotalQuestions);
+  const newTotalQuestions = (data.totalQuestions || 0) + totalQuestions;
+  const newTotalTime = (data.totalTime || 0) + totalTime;
   
-  const updates = {
+  let newLevel = 1;
+  for (const threshold of LEVEL_THRESHOLDS) {
+    if (newTotalQuestions >= threshold.req) {
+      newLevel = threshold.level;
+    }
+  }
+
+  const questionStats = data.questionStats || {};
+  practicedQuestionIds.forEach(id => {
+    questionStats[id] = (questionStats[id] || 0) + 1;
+  });
+
+  const updateData = {
     totalQuestions: newTotalQuestions,
     totalTime: newTotalTime,
-    level: newLevel
+    level: newLevel,
+    questionStats: questionStats
   };
 
   let newPieces = [];
-  const currentPieces = data.puzzlePieces || [];
+  const currentPieces = [...(data.puzzlePieces || [])];
   
   if (newLevel > oldLevel) {
-    // Award pieces for each level gained
     for (let l = oldLevel + 1; l <= newLevel; l++) {
       const threshold = LEVEL_THRESHOLDS.find(t => t.level === l);
       if (threshold && threshold.piecesAwarded > 0) {
@@ -185,18 +193,18 @@ export async function syncUserStats(uid, addedQuestions, addedTimeStr) {
         }
       }
     }
-    updates.puzzlePieces = currentPieces;
+    updateData.puzzlePieces = currentPieces;
   }
 
-  await updateDoc(userRef, updates);
+  await updateDoc(userRef, updateData);
 
   return {
     leveledUp: newLevel > oldLevel,
     newLevel,
-    newPieces, // Renamed from newTreasures
+    newPieces,
     totalQuestions: newTotalQuestions,
     totalTime: newTotalTime,
-    puzzlePieces: updates.puzzlePieces || data.puzzlePieces
+    puzzlePieces: updateData.puzzlePieces || data.puzzlePieces
   };
 }
 
