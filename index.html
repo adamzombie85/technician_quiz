@@ -413,6 +413,28 @@
                     </div>
                 </div>
 
+                <div class="settings-section">
+                    <h3><i class="fas fa-music"></i> 音樂設定</h3>
+                    <div class="form-group">
+                        <label for="music-track-select">選擇曲目</label>
+                        <select id="music-track-select" class="btn btn-outline" style="width: 100%;">
+                            <option value="sounds/Final_Palace_Ascent.mp3">Final Palace Ascent (磅礡)</option>
+                            <option value="sounds/Morning_Over_The_Valley.mp3">Morning Over The Valley (悠閒)</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="margin-top: 1rem;">
+                        <label for="music-volume-slider">音量控制 <span id="volume-value">50%</span></label>
+                        <input type="range" id="music-volume-slider" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: var(--gold);">
+                    </div>
+                    <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-top: 1rem;">
+                        <span>音樂開關</span>
+                        <label class="switch">
+                            <input type="checkbox" id="music-enabled-toggle" checked>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="treasures-container">
                     <h3><i class="fas fa-puzzle-piece"></i> 拼圖收藏</h3>
                     <div id="profile-treasures" class="treasures-grid">

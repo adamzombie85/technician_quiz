@@ -90,7 +90,11 @@ const elements = {
     newTreasureName: document.getElementById('new-treasure-name'),
     adminBtn: document.getElementById('admin-btn'),
     musicToggleBtn: document.getElementById('music-toggle-btn'),
-    bgMusic: document.getElementById('bg-music')
+    bgMusic: document.getElementById('bg-music'),
+    musicTrackSelect: document.getElementById('music-track-select'),
+    musicVolumeSlider: document.getElementById('music-volume-slider'),
+    musicEnabledToggle: document.getElementById('music-enabled-toggle'),
+    volumeValue: document.getElementById('volume-value')
 };
 
 let isLoginMode = true;
@@ -104,24 +108,60 @@ elements.keywordInput.addEventListener('input', updateQuestionCountDropdown);
 
 // Background Music Logic
 let isMusicMuted = localStorage.getItem('music_muted') === 'true';
+let musicVolume = parseFloat(localStorage.getItem('music_volume') || '0.5');
+let musicTrack = localStorage.getItem('music_track') || 'sounds/Final_Palace_Ascent.mp3';
 
-function updateMusicUI() {
+function updateMusicSettings() {
+    elements.bgMusic.src = musicTrack;
+    elements.bgMusic.volume = musicVolume;
+    
+    // Update UI elements
+    elements.musicTrackSelect.value = musicTrack;
+    elements.musicVolumeSlider.value = musicVolume;
+    elements.volumeValue.textContent = `${Math.round(musicVolume * 100)}%`;
+    elements.musicEnabledToggle.checked = !isMusicMuted;
+    
+    // Update quick toggle button
     elements.musicToggleBtn.innerHTML = isMusicMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-music"></i>';
     elements.musicToggleBtn.style.color = isMusicMuted ? 'var(--text-dim)' : 'var(--gold)';
 }
 
-function toggleMusic() {
-    isMusicMuted = !isMusicMuted;
+function toggleMusic(forceState) {
+    if (typeof forceState === 'boolean') {
+        isMusicMuted = !forceState;
+    } else {
+        isMusicMuted = !isMusicMuted;
+    }
+    
     localStorage.setItem('music_muted', isMusicMuted);
     if (isMusicMuted) {
         elements.bgMusic.pause();
     } else {
         elements.bgMusic.play().catch(e => console.log("Music play blocked:", e));
     }
-    updateMusicUI();
+    updateMusicSettings();
 }
 
-elements.musicToggleBtn.addEventListener('click', toggleMusic);
+// Listeners for music settings in Profile Modal
+elements.musicTrackSelect.addEventListener('change', (e) => {
+    musicTrack = e.target.value;
+    localStorage.setItem('music_track', musicTrack);
+    elements.bgMusic.src = musicTrack;
+    if (!isMusicMuted) elements.bgMusic.play().catch(e => console.log("Play failed:", e));
+});
+
+elements.musicVolumeSlider.addEventListener('input', (e) => {
+    musicVolume = parseFloat(e.target.value);
+    localStorage.setItem('music_volume', musicVolume);
+    elements.bgMusic.volume = musicVolume;
+    elements.volumeValue.textContent = `${Math.round(musicVolume * 100)}%`;
+});
+
+elements.musicEnabledToggle.addEventListener('change', (e) => {
+    toggleMusic(e.target.checked);
+});
+
+elements.musicToggleBtn.addEventListener('click', () => toggleMusic());
 
 // Handle Autoplay Policy
 document.body.addEventListener('click', () => {
@@ -130,7 +170,8 @@ document.body.addEventListener('click', () => {
     }
 }, { once: true });
 
-updateMusicUI();
+// Initial Load
+updateMusicSettings();
 if (!isMusicMuted) {
     elements.bgMusic.play().catch(e => console.log("Initial play blocked:", e));
 }
