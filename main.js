@@ -17,7 +17,7 @@ const state = {
         subjectMap: {
             'chinese_pasta': { name: '[丙級學科題庫] 中式麵食加工', file: '[丙級學科題庫] 中式麵食加工.json' },
             'beverage': { name: '[丙級學科題庫] 飲料調製', file: '[丙級學科題庫] 飲料調製.json' },
-            'technical': { name: '[共同科目題庫] 職業安全衛生', file: '[共同科目題庫] 職業安全衛生.json' },
+            'technical': { name: '技術士技能檢定學科測試共同題庫', file: '技術士技能檢定學科測試共同題庫.json' },
             'food_safety': { name: '[共同科目題庫] 食品安全衛生及營養相關職類', file: '[共同科目題庫] 食品安全衛生及營養相關職類.json' },
             'baking': { name: '[丙級學科題庫] 烘焙食品', file: '[丙級學科題庫] 烘焙食品.json' }
         }
