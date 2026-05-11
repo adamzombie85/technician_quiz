@@ -63,7 +63,6 @@ const elements = {
     a11yContrast: document.getElementById('a11y-contrast'),
     a11yFont: document.getElementById('a11y-font'),
     a11yTts: document.getElementById('a11y-tts'),
-    userStatus: document.getElementById('user-status'),
     authBtn: document.getElementById('auth-btn'),
     authModal: document.getElementById('auth-modal'),
     authEmail: document.getElementById('auth-email'),
@@ -135,7 +134,6 @@ if (!isMusicMuted) {
     elements.bgMusic.play().catch(e => console.log("Initial play blocked:", e));
 }
 elements.startBtn.addEventListener('click', startQuiz);
-elements.restartBtn.addEventListener('click', () => location.reload());
 elements.retryWrongBtn.addEventListener('click', retryWrongQuestions);
 elements.exportBtn.addEventListener('click', exportToText);
 elements.nextQuestionBtn.addEventListener('click', advanceToNextQuestion);
@@ -144,9 +142,39 @@ elements.giveUpBtn.addEventListener('click', () => {
         endQuiz(true);
     }
 });
+
+// Refactored Restart to keep music playing (No Page Reload)
+elements.restartBtn.addEventListener('click', () => {
+    state.allQuestions = [];
+    state.filteredQuestions = [];
+    state.currentQuestionIndex = 0;
+    state.score = 0;
+    state.startTime = null;
+    state.wrongQuestions = [];
+    
+    // UI Reset
+    elements.resultScreen.classList.add('hidden');
+    elements.setupScreen.classList.remove('hidden');
+    elements.subjectSelect.value = '';
+    elements.subOptions.classList.add('hidden');
+    
+    // Dragon Reset
+    elements.dragonSprite.classList.remove('dragon-die', 'dragon-hit');
+    elements.dragonSprite.classList.add('dragon-idle');
+    elements.dragonHp.style.width = '100%';
+    elements.dragonHpText.textContent = '100%';
+    
+    // Stop timers
+    if (state.timerInterval) clearInterval(state.timerInterval);
+});
+
 document.getElementById('site-title').addEventListener('click', () => {
     if (confirm('確定要回到首頁嗎？如果您正在測驗中，未結算的進度將會遺失。')) {
-        location.reload();
+        // Just reset screens instead of reloading to keep music
+        elements.quizScreen.classList.add('hidden');
+        elements.resultScreen.classList.add('hidden');
+        elements.setupScreen.classList.remove('hidden');
+        if (state.timerInterval) clearInterval(state.timerInterval);
     }
 });
 
@@ -1105,6 +1133,10 @@ async function showPrologue() {
     skipBtn.onclick = () => {
         modal.classList.add('hidden');
         localStorage.setItem('prologue_shown', 'true');
+        // Trigger music play here to ensure it bypasses browser autoplay block
+        if (!isMusicMuted && elements.bgMusic.paused) {
+            elements.bgMusic.play().catch(e => console.log("Music play blocked:", e));
+        }
     };
 }
 
