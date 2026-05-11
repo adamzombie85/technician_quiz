@@ -56,11 +56,21 @@ export async function getUserHistory(uid) {
 
 // User Profile & Leveling System
 export const LEVEL_THRESHOLDS = [
-  { level: 1, req: 0, treasure: null, icon: '' },
-  { level: 2, req: 50, treasure: '木劍', icon: 'fa-khanda' },
-  { level: 3, req: 150, treasure: '鐵盾', icon: 'fa-shield' },
-  { level: 4, req: 300, treasure: '魔法披風', icon: 'fa-hat-wizard' },
-  { level: 5, req: 500, treasure: '王者之劍', icon: 'fa-sword' }
+  { level: 1, req: 0, piecesAwarded: 0 },
+  { level: 2, req: 50, piecesAwarded: 2 },
+  { level: 3, req: 150, piecesAwarded: 2 },
+  { level: 4, req: 300, piecesAwarded: 2 },
+  { level: 5, req: 500, piecesAwarded: 3 }
+];
+
+export const PUZZLE_THEMES = [
+  {
+    id: 'mona_lisa',
+    name: '蒙娜麗莎',
+    imagePrefix: 'assets/puzzle_mona_lisa/piece_',
+    silhouette: 'assets/puzzle_mona_lisa/silhouette.png',
+    totalPieces: 9
+  }
 ];
 
 export function calculateLevel(totalQuestions) {
@@ -79,7 +89,37 @@ export async function getUserProfile(uid, email) {
   const userSnap = await getDoc(userRef);
   
   if (userSnap.exists()) {
-    return userSnap.data();
+    let data = userSnap.data();
+    
+    // Migration: Convert old treasures to puzzle pieces if they haven't been migrated yet
+    if (data.treasures && data.treasures.length > 0 && (!data.puzzlePieces || data.puzzlePieces.length === 0)) {
+      console.log("Migrating old treasures to puzzle pieces for user:", uid);
+      const level = data.level || 1;
+      let pieces = [];
+      let pieceCount = 0;
+      for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
+        if (LEVEL_THRESHOLDS[i].level <= level) {
+          pieceCount += (LEVEL_THRESHOLDS[i].piecesAwarded || 0);
+        }
+      }
+      for (let i = 0; i < pieceCount && i < 9; i++) {
+        pieces.push(i);
+      }
+      
+      data.puzzlePieces = pieces;
+      data.currentPuzzleId = 'mona_lisa';
+      // Keep treasures for safety but prioritize puzzlePieces in UI
+      await updateDoc(userRef, { 
+        puzzlePieces: data.puzzlePieces,
+        currentPuzzleId: data.currentPuzzleId
+      });
+    }
+
+    // Ensure default puzzle fields
+    if (!data.puzzlePieces) data.puzzlePieces = [];
+    if (!data.currentPuzzleId) data.currentPuzzleId = 'mona_lisa';
+
+    return data;
   } else {
     // Create default profile
     const defaultProfile = {
@@ -90,7 +130,9 @@ export async function getUserProfile(uid, email) {
       totalQuestions: 0,
       totalTime: 0, // in seconds
       level: 1,
-      treasures: []
+      treasures: [],
+      puzzlePieces: [],
+      currentPuzzleId: 'mona_lisa'
     };
     await setDoc(userRef, defaultProfile);
     return defaultProfile;
@@ -123,18 +165,26 @@ export async function syncUserStats(uid, addedQuestions, addedTimeStr) {
     level: newLevel
   };
 
-  let newTreasures = [];
+  let newPieces = [];
+  const currentPieces = data.puzzlePieces || [];
+  
   if (newLevel > oldLevel) {
-    const currentTreasures = data.treasures || [];
-    for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
-       const t = LEVEL_THRESHOLDS[i];
-       if (t.level > oldLevel && t.level <= newLevel && t.treasure) {
-           const treasureObj = { name: t.treasure, icon: t.icon };
-           currentTreasures.push(treasureObj);
-           newTreasures.push(treasureObj);
-       }
+    // Award pieces for each level gained
+    for (let l = oldLevel + 1; l <= newLevel; l++) {
+      const threshold = LEVEL_THRESHOLDS.find(t => t.level === l);
+      if (threshold && threshold.piecesAwarded > 0) {
+        const startIdx = currentPieces.length;
+        const count = threshold.piecesAwarded;
+        for (let i = 0; i < count; i++) {
+          const pieceIdx = startIdx + i;
+          if (pieceIdx < 9 && !currentPieces.includes(pieceIdx)) {
+            currentPieces.push(pieceIdx);
+            newPieces.push(pieceIdx);
+          }
+        }
+      }
     }
-    updates.treasures = currentTreasures;
+    updates.puzzlePieces = currentPieces;
   }
 
   await updateDoc(userRef, updates);
@@ -142,10 +192,10 @@ export async function syncUserStats(uid, addedQuestions, addedTimeStr) {
   return {
     leveledUp: newLevel > oldLevel,
     newLevel,
-    newTreasures,
+    newPieces, // Renamed from newTreasures
     totalQuestions: newTotalQuestions,
     totalTime: newTotalTime,
-    treasures: updates.treasures || data.treasures
+    puzzlePieces: updates.puzzlePieces || data.puzzlePieces
   };
 }
 
@@ -155,6 +205,19 @@ export async function getGlobalLeaderboard() {
     orderBy("totalQuestions", "desc"),
     limit(20)
   );
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => doc.data());
+}
+
+// Admin only functions
+export async function getAllUsers() {
+  const q = query(collection(db, "users"), orderBy("totalQuestions", "desc"), limit(100));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => doc.data());
+}
+
+export async function getAllPracticeRecords(limitCount = 50) {
+  const q = query(collection(db, "practice_records"), orderBy("timestamp", "desc"), limit(limitCount));
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => doc.data());
 }

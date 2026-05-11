@@ -1,4 +1,4 @@
-import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS } from './firebase_app.js';
+import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, getAllUsers, getAllPracticeRecords } from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
@@ -87,7 +87,8 @@ const elements = {
     newLevelText: document.getElementById('new-level-text'),
     newTreasureContainer: document.getElementById('new-treasure-container'),
     newTreasureIcon: document.getElementById('new-treasure-icon'),
-    newTreasureName: document.getElementById('new-treasure-name')
+    newTreasureName: document.getElementById('new-treasure-name'),
+    adminBtn: document.getElementById('admin-btn')
 };
 
 let isLoginMode = true;
@@ -119,7 +120,7 @@ onAuthStateChanged(auth, async (user) => {
     state.currentUser = user;
     const reqElements = document.querySelectorAll('.auth-required');
     if (user) {
-        // Load user profile
+        state.currentUser = user;
         try {
             state.userProfile = await getUserProfile(user.uid, user.email);
             renderProfileAvatar();
@@ -128,11 +129,20 @@ onAuthStateChanged(auth, async (user) => {
         } catch(e) {
             console.error("Failed to load profile:", e);
         }
+        
+        // Check for Admin
+        if (user.email === 'adamzombie85@gmail.com') {
+            elements.adminBtn.classList.remove('hidden');
+        } else {
+            elements.adminBtn.classList.add('hidden');
+        }
+
         reqElements.forEach(el => el.classList.remove('hidden'));
     } else {
         state.userProfile = null;
         elements.userAvatarBtn.classList.add('hidden');
         elements.authBtn.classList.remove('hidden');
+        elements.adminBtn.classList.add('hidden');
         reqElements.forEach(el => el.classList.add('hidden'));
     }
 });
@@ -616,15 +626,16 @@ async function endQuiz(isGiveUp = false) {
                 state.userProfile.totalQuestions = statsResult.totalQuestions;
                 state.userProfile.totalTime = statsResult.totalTime;
                 state.userProfile.level = statsResult.newLevel;
-                state.userProfile.treasures = statsResult.treasures;
+                state.userProfile.puzzlePieces = statsResult.puzzlePieces;
                 
                 // Show level up modal if leveled up
                 if (statsResult.leveledUp) {
                     elements.newLevelText.textContent = `LV ${statsResult.newLevel}`;
-                    if (statsResult.newTreasures && statsResult.newTreasures.length > 0) {
-                        const newT = statsResult.newTreasures[0]; // show the first one
-                        elements.newTreasureIcon.className = `fas ${newT.icon}`;
-                        elements.newTreasureName.textContent = newT.name;
+                    if (statsResult.newPieces && statsResult.newPieces.length > 0) {
+                        const theme = PUZZLE_THEMES.find(t => t.id === state.userProfile.currentPuzzleId) || PUZZLE_THEMES[0];
+                        const pieceIdx = statsResult.newPieces[0];
+                        elements.newTreasureIcon.innerHTML = `<img src="${theme.imagePrefix}${pieceIdx}.png" style="width: 80px; height: 80px; border-radius: 8px; border: 2px solid var(--gold);">`;
+                        elements.newTreasureName.textContent = `獲得拼圖碎片 #${pieceIdx + 1}`;
                         elements.newTreasureContainer.classList.remove('hidden');
                     } else {
                         elements.newTreasureContainer.classList.add('hidden');
@@ -857,18 +868,27 @@ window.toggleProfileModal = () => {
     document.getElementById('profile-total-questions').textContent = currentQ;
     document.getElementById('profile-total-time').textContent = `${Math.floor((state.userProfile.totalTime || 0) / 60)}m`;
     
-    // Treasures
+    // Puzzles (replacing treasures)
     const treasuresGrid = document.getElementById('profile-treasures');
-    const treasures = state.userProfile.treasures || [];
-    if (treasures.length === 0) {
-        treasuresGrid.innerHTML = '<div style="color: var(--text-dim); grid-column: 1/-1; text-align: center;">尚未獲得寶物</div>';
-    } else {
-        treasuresGrid.innerHTML = treasures.map(t => `
-            <div class="treasure-item" title="${t.name}">
-                <i class="fas ${t.icon}"></i>
-                <div class="name">${t.name}</div>
-            </div>
-        `).join('');
+    const pieces = state.userProfile.puzzlePieces || [];
+    const theme = PUZZLE_THEMES.find(t => t.id === state.userProfile.currentPuzzleId) || PUZZLE_THEMES[0];
+    
+    // Change title if possible (optional, but good for UX)
+    const treasuresTitle = document.querySelector('#profile-modal h3 i.fa-gem')?.parentElement;
+    if (treasuresTitle) treasuresTitle.innerHTML = `<i class="fas fa-puzzle-piece"></i> 拼圖收藏：${theme.name}`;
+
+    treasuresGrid.className = 'puzzle-grid';
+    treasuresGrid.style.backgroundImage = `url(${theme.silhouette})`;
+    treasuresGrid.innerHTML = '';
+    
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'puzzle-cell';
+        if (pieces.includes(i)) {
+            cell.innerHTML = `<img src="${theme.imagePrefix}${i}.png" class="puzzle-piece-img animate-pop">`;
+            cell.classList.add('collected');
+        }
+        treasuresGrid.appendChild(cell);
     }
     
     renderProfileAvatar();
@@ -912,6 +932,66 @@ document.getElementById('profile-logout-btn').addEventListener('click', () => {
     elements.profileModal.classList.add('hidden');
 });
 
+// --- Admin Management Logic ---
+
+window.toggleAdminModal = async () => {
+    if (state.currentUser?.email !== 'adamzombie85@gmail.com') return;
+    
+    document.getElementById('admin-modal').classList.remove('hidden');
+    switchAdminTab('users');
+};
+
+window.switchAdminTab = async (tab) => {
+    const usersTab = document.getElementById('admin-tab-users');
+    const recordsTab = document.getElementById('admin-tab-records');
+    const usersBtn = document.getElementById('admin-tab-users-btn');
+    const recordsBtn = document.getElementById('admin-tab-records-btn');
+
+    usersTab.classList.add('hidden');
+    recordsTab.classList.add('hidden');
+    usersBtn.classList.remove('btn-primary');
+    recordsBtn.classList.remove('btn-primary');
+
+    if (tab === 'users') {
+        usersTab.classList.remove('hidden');
+        usersBtn.classList.add('btn-primary');
+        const users = await getAllUsers();
+        document.getElementById('admin-users-body').innerHTML = users.map(u => `
+            <tr>
+                <td>
+                    <div style="display:flex; align-items:center; gap:0.5rem;">
+                        <i class="fas ${u.avatar || 'fa-cat'}" style="color:var(--primary);"></i>
+                        <div>
+                            <div>${u.nickname || '未命名'}</div>
+                            <div style="font-size:0.75rem; color:var(--text-dim);">${u.email}</div>
+                        </div>
+                    </div>
+                </td>
+                <td>LV ${u.level || 1}</td>
+                <td>${u.totalQuestions || 0}</td>
+                <td>${Math.floor((u.totalTime || 0) / 60)}m</td>
+                <td>${u.uid.substring(0, 8)}...</td>
+            </tr>
+        `).join('');
+    } else {
+        recordsTab.classList.remove('hidden');
+        recordsBtn.classList.add('btn-primary');
+        const records = await getAllPracticeRecords();
+        document.getElementById('admin-records-body').innerHTML = records.map(r => {
+            const date = r.timestamp ? (r.timestamp.toDate ? r.timestamp.toDate() : new Date(r.timestamp)) : new Date();
+            return `
+                <tr>
+                    <td>${date.toLocaleString()}</td>
+                    <td>${r.email}</td>
+                    <td>${r.subject.name || r.subject}</td>
+                    <td>${r.count}</td>
+                    <td style="color:${r.score >= 80 ? 'var(--success)' : 'var(--danger)'}">${r.score}%</td>
+                </tr>
+            `;
+        }).join('');
+    }
+};
+
 function renderProfileAvatar() {
     if (!state.userProfile) return;
     const icon = state.userProfile.avatar || 'fa-cat';
@@ -919,3 +999,38 @@ function renderProfileAvatar() {
     const profileAvatar = document.getElementById('profile-current-avatar');
     if (profileAvatar) profileAvatar.innerHTML = `<i class="fas ${icon}"></i>`;
 }
+
+// --- Story Prologue Logic ---
+
+async function showPrologue() {
+    if (localStorage.getItem('prologue_shown')) return;
+    
+    const modal = document.getElementById('prologue-modal');
+    const textContainer = document.getElementById('prologue-text');
+    const skipBtn = document.getElementById('skip-prologue-btn');
+    const storyText = "古老的王國傳說著... 邪惡的惡龍奪走了世界上所有的珍貴名畫，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗惡龍，奪回失去的拼圖碎片，重現名畫的光輝！";
+    
+    modal.classList.remove('hidden');
+    
+    let i = 0;
+    function type() {
+        if (i < storyText.length) {
+            textContainer.innerHTML = storyText.substring(0, i + 1).replace(/\n/g, '<br>') + '<span class="typing-cursor"></span>';
+            i++;
+            setTimeout(type, 50);
+        } else {
+            textContainer.innerHTML = storyText.replace(/\n/g, '<br>');
+            skipBtn.classList.remove('hidden');
+        }
+    }
+    
+    setTimeout(type, 500);
+    
+    skipBtn.onclick = () => {
+        modal.classList.add('hidden');
+        localStorage.setItem('prologue_shown', 'true');
+    };
+}
+
+// Start the app
+showPrologue();

@@ -6,3 +6,6 @@ __pycache__/
 remaining_text.txt
 missing_indices.json
 .env
+git add .
+git commit -m "feat: complete UI/UX optimizations, dropdown, and add 8-bit animations"
+git push

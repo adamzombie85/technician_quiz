@@ -21,6 +21,9 @@
             <i class="fas fa-dragon"></i> 勇者題庫
         </div>
         <div style="display: flex; gap: 1rem; align-items: center;">
+            <button id="admin-btn" class="control-btn hidden" onclick="toggleAdminModal()" title="管理介面" style="border-color: var(--gold); color: var(--gold);">
+                <i class="fas fa-user-gear"></i> 管理
+            </button>
             <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
                 <i class="fas fa-cat"></i>
             </button>
@@ -201,6 +204,51 @@
             </div>
         </section>
 
+        <!-- Admin Management Modal -->
+        <div id="admin-modal" class="modal hidden">
+            <div class="glass-card modal-content" style="max-width: 900px;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-user-gear"></i> 系統管理員介面</h2>
+                    <button class="close-modal" onclick="document.getElementById('admin-modal').classList.add('hidden')">&times;</button>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-outline" onclick="switchAdminTab('users')" id="admin-tab-users-btn">勇者清單</button>
+                    <button class="btn btn-outline" onclick="switchAdminTab('records')" id="admin-tab-records-btn">練習紀錄</button>
+                </div>
+
+                <div id="admin-tab-users" class="table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>勇者</th>
+                                <th>等級</th>
+                                <th>總題數</th>
+                                <th>總時間</th>
+                                <th>最後活動</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-body"></tbody>
+                    </table>
+                </div>
+
+                <div id="admin-tab-records" class="table-wrapper hidden">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>勇者</th>
+                                <th>領域</th>
+                                <th>題數</th>
+                                <th>得分</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-records-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- Leaderboard Modal -->
         <div id="leaderboard-modal" class="modal hidden">
             <div class="glass-card modal-content">
@@ -345,7 +393,7 @@
                 </div>
 
                 <div class="treasures-container">
-                    <h3><i class="fas fa-gem"></i> 勇者寶物</h3>
+                    <h3><i class="fas fa-puzzle-piece"></i> 拼圖收藏</h3>
                     <div id="profile-treasures" class="treasures-grid">
                         <!-- Treasures injected here -->
                         <div style="color: var(--text-dim); grid-column: 1/-1; text-align: center;">尚未獲得寶物</div>
@@ -356,6 +404,22 @@
                     <button id="save-profile-btn" class="btn btn-primary" style="flex: 1;"><i class="fas fa-save"></i> 儲存設定</button>
                     <button id="profile-logout-btn" class="btn btn-outline" style="flex: 1; border-color: var(--danger); color: var(--danger);"><i class="fas fa-sign-out-alt"></i> 登出</button>
                 </div>
+            </div>
+        </div>
+
+        <!-- Story Prologue Modal -->
+        <div id="prologue-modal" class="modal hidden">
+            <div class="glass-card modal-content" style="max-width: 600px; text-align: center;">
+                <div class="prologue-icon">
+                    <i class="fas fa-dragon" style="color: var(--danger); font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.5));"></i>
+                </div>
+                <h2 class="glow-text" style="font-size: 1.5rem; margin-bottom: 2rem;">名畫奪還戰：勇者的使命</h2>
+                <div id="prologue-text" class="prologue-text">
+                    <!-- Text will be typed here -->
+                </div>
+                <button id="skip-prologue-btn" class="btn btn-primary btn-large hidden" style="margin-top: 2rem;">
+                    接受使命，開始修煉
+                </button>
             </div>
         </div>
 
@@ -370,9 +434,9 @@
                     你已經達到 <span id="new-level-text" style="font-weight: bold; color: var(--success);">LV 2</span>
                 </div>
                 <div id="new-treasure-container" class="hidden">
-                    <div style="color: var(--text-dim); margin-bottom: 0.5rem;">獲得新寶物：</div>
-                    <div class="treasure-item" style="margin: 0 auto; width: 80px; height: 80px; font-size: 2.5rem;">
-                        <i id="new-treasure-icon" class="fas fa-sword"></i>
+                    <div style="color: var(--text-dim); margin-bottom: 0.5rem;">獲得新碎片：</div>
+                    <div id="new-treasure-icon" class="treasure-item" style="margin: 0 auto; width: 80px; height: 80px; font-size: 2.5rem; overflow: hidden;">
+                        <i class="fas fa-puzzle-piece"></i>
                     </div>
                     <div id="new-treasure-name" style="font-weight: bold; margin-top: 0.5rem; color: var(--gold);">王者之劍</div>
                 </div>
@@ -393,6 +457,6 @@
         </div>
     </div>
 
-    <script type="module" src="main.js?v=2"></script>
+    <script type="module" src="main.js?v=3"></script>
 </body>
 </html>
