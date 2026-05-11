@@ -226,10 +226,14 @@ export async function getAllPracticeRecords(limitCount = 50) {
 export async function getUserPracticeRecords(uid, limitCount = 50) {
   const q = query(
     collection(db, "practice_records"), 
-    where("uid", "==", uid),
-    orderBy("timestamp", "desc"), 
-    limit(limitCount)
+    where("uid", "==", uid)
   );
   const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => doc.data());
+  const docs = querySnapshot.docs.map(doc => doc.data());
+  
+  // Sort locally to avoid needing a composite index in Firestore
+  const getTime = t => t ? (t.toMillis ? t.toMillis() : (t.getTime ? t.getTime() : 0)) : 0;
+  docs.sort((a, b) => getTime(b.timestamp) - getTime(a.timestamp));
+  
+  return docs.slice(0, limitCount);
 }
