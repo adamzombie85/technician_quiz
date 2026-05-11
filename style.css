@@ -183,6 +183,14 @@ select:focus, input:focus {
     transform: scale(0.95);
 }
 
+#music-toggle-btn {
+    transition: all 0.3s ease;
+}
+
+#music-toggle-btn i {
+    width: 20px;
+}
+
 /* Removed mode-desktop and mode-mobile */
 
 /* Battle Stage Layout */

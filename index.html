@@ -21,6 +21,9 @@
             <i class="fas fa-dragon"></i> 勇者題庫
         </div>
         <div style="display: flex; gap: 1rem; align-items: center;">
+            <button id="music-toggle-btn" class="control-btn" title="背景音樂開關">
+                <i class="fas fa-music"></i>
+            </button>
             <button id="admin-btn" class="control-btn hidden" onclick="toggleAdminModal()" title="管理介面" style="border-color: var(--gold); color: var(--gold);">
                 <i class="fas fa-user-gear"></i> 管理
             </button>
@@ -457,6 +460,7 @@
         </div>
     </div>
 
+    <audio id="bg-music" src="sounds/Final_Palace_Ascent.mp3" loop></audio>
     <script type="module" src="main.js?v=3"></script>
 </body>
 </html>

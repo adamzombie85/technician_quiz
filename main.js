@@ -88,7 +88,9 @@ const elements = {
     newTreasureContainer: document.getElementById('new-treasure-container'),
     newTreasureIcon: document.getElementById('new-treasure-icon'),
     newTreasureName: document.getElementById('new-treasure-name'),
-    adminBtn: document.getElementById('admin-btn')
+    adminBtn: document.getElementById('admin-btn'),
+    musicToggleBtn: document.getElementById('music-toggle-btn'),
+    bgMusic: document.getElementById('bg-music')
 };
 
 let isLoginMode = true;
@@ -99,6 +101,39 @@ elements.subjectSelect.addEventListener('change', handleSubjectChange);
 elements.filterType.addEventListener('change', updateFilterOptions);
 elements.filterValue.addEventListener('change', updateQuestionCountDropdown);
 elements.keywordInput.addEventListener('input', updateQuestionCountDropdown);
+
+// Background Music Logic
+let isMusicMuted = localStorage.getItem('music_muted') === 'true';
+
+function updateMusicUI() {
+    elements.musicToggleBtn.innerHTML = isMusicMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-music"></i>';
+    elements.musicToggleBtn.style.color = isMusicMuted ? 'var(--text-dim)' : 'var(--gold)';
+}
+
+function toggleMusic() {
+    isMusicMuted = !isMusicMuted;
+    localStorage.setItem('music_muted', isMusicMuted);
+    if (isMusicMuted) {
+        elements.bgMusic.pause();
+    } else {
+        elements.bgMusic.play().catch(e => console.log("Music play blocked:", e));
+    }
+    updateMusicUI();
+}
+
+elements.musicToggleBtn.addEventListener('click', toggleMusic);
+
+// Handle Autoplay Policy
+document.body.addEventListener('click', () => {
+    if (!isMusicMuted && elements.bgMusic.paused) {
+        elements.bgMusic.play().catch(e => console.log("Still blocked:", e));
+    }
+}, { once: true });
+
+updateMusicUI();
+if (!isMusicMuted) {
+    elements.bgMusic.play().catch(e => console.log("Initial play blocked:", e));
+}
 elements.startBtn.addEventListener('click', startQuiz);
 elements.restartBtn.addEventListener('click', () => location.reload());
 elements.retryWrongBtn.addEventListener('click', retryWrongQuestions);
