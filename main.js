@@ -735,7 +735,11 @@ async function endQuiz(isGiveUp = false) {
     const scorePercent = Math.round((state.score / totalToGrade) * 100) || 0;
 
     if (state.currentUser) {
+        // Show loading overlay while syncing
+        elements.loadingOverlay.classList.remove('hidden');
+        
         try {
+            // 1. Save historical record
             await savePracticeRecord({
                 uid: state.currentUser.uid,
                 email: state.currentUser.email,
@@ -745,8 +749,14 @@ async function endQuiz(isGiveUp = false) {
                 score: scorePercent,
                 timeElapsed: elapsed
             });
-            
-            // Sync user stats (level, exp, and question practice counts)
+            console.log("Practice record saved successfully.");
+        } catch (e) {
+            console.error('紀錄儲存失敗:', e);
+            alert('練習紀錄儲存失敗，請檢查網路連線。');
+        }
+
+        try {
+            // 2. Sync user global stats (level, exp, etc.)
             const statsResult = await syncUserStats(
                 state.currentUser.uid, 
                 scorePercent, 
@@ -754,19 +764,22 @@ async function endQuiz(isGiveUp = false) {
                 elapsedSecs, 
                 state.practicedQuestionIds
             );
+            
             if (statsResult) {
-                // Update local profile state
+                // Update local profile state immediately
                 state.userProfile.totalQuestions = statsResult.totalQuestions;
                 state.userProfile.totalTime = statsResult.totalTime;
                 state.userProfile.level = statsResult.newLevel;
                 state.userProfile.puzzlePieces = statsResult.puzzlePieces;
                 
-                // Merge updated stats back to local profile
+                // Merge question stats
                 state.practicedQuestionIds.forEach(id => {
                     if (!state.userProfile.questionStats) state.userProfile.questionStats = {};
                     state.userProfile.questionStats[id] = (state.userProfile.questionStats[id] || 0) + 1;
                 });
                 
+                console.log("User stats synced successfully:", statsResult);
+
                 // Show level up modal if leveled up
                 if (statsResult.leveledUp) {
                     elements.newLevelText.textContent = `LV ${statsResult.newLevel}`;
@@ -783,7 +796,10 @@ async function endQuiz(isGiveUp = false) {
                 }
             }
         } catch (e) {
-            console.error('成績寫入失敗:', e);
+            console.error('個人資料同步失敗:', e);
+            alert('個人資料同步失敗：' + e.message);
+        } finally {
+            elements.loadingOverlay.classList.add('hidden');
         }
     }
 
@@ -1219,3 +1235,12 @@ async function showPrologue() {
 
 // Start the app
 showPrologue();
+
+// Global Modal Background Click to Close
+window.addEventListener('click', (e) => {
+    if (e.target.classList.contains('modal')) {
+        // Don't close Auth Modal or Levelup Modal or Prologue by clicking background (to prevent accidental loss)
+        if (e.target.id === 'auth-modal' || e.target.id === 'levelup-modal' || e.target.id === 'prologue-modal') return;
+        e.target.classList.add('hidden');
+    }
+});
