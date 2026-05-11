@@ -708,9 +708,9 @@ async function endQuiz(isGiveUp = false) {
             // Sync user stats (level, exp, and question practice counts)
             const statsResult = await syncUserStats(
                 state.currentUser.uid, 
-                percent, 
+                scorePercent, 
                 totalToGrade, 
-                elapsed, 
+                elapsedSecs, 
                 state.practicedQuestionIds
             );
             if (statsResult) {
