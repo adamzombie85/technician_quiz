@@ -914,6 +914,7 @@ window.toggleProfileModal = () => {
 
     treasuresGrid.className = 'puzzle-grid';
     treasuresGrid.style.backgroundImage = `url(${theme.silhouette})`;
+    treasuresGrid.style.aspectRatio = theme.aspectRatio || '1 / 1';
     treasuresGrid.innerHTML = '';
     
     for (let i = 0; i < 9; i++) {

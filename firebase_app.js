@@ -69,7 +69,8 @@ export const PUZZLE_THEMES = [
     name: '蒙娜麗莎',
     imagePrefix: 'assets/puzzle_mona_lisa/piece_',
     silhouette: 'assets/puzzle_mona_lisa/silhouette.png',
-    totalPieces: 9
+    totalPieces: 9,
+    aspectRatio: '960 / 1431'
   }
 ];
 
