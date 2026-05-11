@@ -1,4 +1,4 @@
-import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, getAllUsers, getAllPracticeRecords } from './firebase_app.js';
+import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, getAllUsers, getAllPracticeRecords, getUserPracticeRecords } from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
@@ -979,11 +979,15 @@ window.toggleAdminModal = async () => {
 window.switchAdminTab = async (tab) => {
     const usersTab = document.getElementById('admin-tab-users');
     const recordsTab = document.getElementById('admin-tab-records');
+    const detailTab = document.getElementById('admin-tab-detail');
+    const tabsContainer = document.getElementById('admin-tabs-container');
     const usersBtn = document.getElementById('admin-tab-users-btn');
     const recordsBtn = document.getElementById('admin-tab-records-btn');
 
     usersTab.classList.add('hidden');
     recordsTab.classList.add('hidden');
+    detailTab.classList.add('hidden');
+    tabsContainer.classList.remove('hidden');
     usersBtn.classList.remove('btn-primary');
     recordsBtn.classList.remove('btn-primary');
 
@@ -992,12 +996,12 @@ window.switchAdminTab = async (tab) => {
         usersBtn.classList.add('btn-primary');
         const users = await getAllUsers();
         document.getElementById('admin-users-body').innerHTML = users.map(u => `
-            <tr>
+            <tr onclick="viewUserDetail('${u.uid}', '${u.nickname || u.email.split('@')[0]}')" style="cursor:pointer;">
                 <td>
                     <div style="display:flex; align-items:center; gap:0.5rem;">
                         <i class="fas ${u.avatar || 'fa-cat'}" style="color:var(--primary);"></i>
                         <div>
-                            <div>${u.nickname || '未命名'}</div>
+                            <div style="font-weight:bold; color:var(--gold); text-decoration:underline;">${u.nickname || '未命名'}</div>
                             <div style="font-size:0.75rem; color:var(--text-dim);">${u.email}</div>
                         </div>
                     </div>
@@ -1005,10 +1009,9 @@ window.switchAdminTab = async (tab) => {
                 <td>LV ${u.level || 1}</td>
                 <td>${u.totalQuestions || 0}</td>
                 <td>${Math.floor((u.totalTime || 0) / 60)}m</td>
-                <td>${u.uid.substring(0, 8)}...</td>
             </tr>
         `).join('');
-    } else {
+    } else if (tab === 'records') {
         recordsTab.classList.remove('hidden');
         recordsBtn.classList.add('btn-primary');
         const records = await getAllPracticeRecords();
@@ -1024,6 +1027,43 @@ window.switchAdminTab = async (tab) => {
                 </tr>
             `;
         }).join('');
+    }
+};
+
+window.viewUserDetail = async (uid, nickname) => {
+    const usersTab = document.getElementById('admin-tab-users');
+    const recordsTab = document.getElementById('admin-tab-records');
+    const detailTab = document.getElementById('admin-tab-detail');
+    const tabsContainer = document.getElementById('admin-tabs-container');
+
+    usersTab.classList.add('hidden');
+    recordsTab.classList.add('hidden');
+    tabsContainer.classList.add('hidden');
+    detailTab.classList.remove('hidden');
+
+    document.getElementById('admin-detail-name').textContent = `勇者詳情：${nickname}`;
+    document.getElementById('admin-detail-body').innerHTML = '<tr><td colspan="4" style="text-align:center;">載入紀錄中...</td></tr>';
+
+    try {
+        const records = await getUserPracticeRecords(uid);
+        if (records.length === 0) {
+            document.getElementById('admin-detail-body').innerHTML = '<tr><td colspan="4" style="text-align:center;">尚無練習紀錄</td></tr>';
+        } else {
+            document.getElementById('admin-detail-body').innerHTML = records.map(r => {
+                const date = r.timestamp ? (r.timestamp.toDate ? r.timestamp.toDate() : new Date(r.timestamp)) : new Date();
+                return `
+                    <tr>
+                        <td>${date.toLocaleString()}</td>
+                        <td>${r.subject.name || r.subject}</td>
+                        <td>${r.count}</td>
+                        <td style="color:${r.score >= 80 ? 'var(--success)' : 'var(--danger)'}">${r.score}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    } catch (e) {
+        console.error("Failed to load user records:", e);
+        document.getElementById('admin-detail-body').innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--danger);">載入失敗</td></tr>';
     }
 };
 

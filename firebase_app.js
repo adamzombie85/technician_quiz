@@ -221,3 +221,14 @@ export async function getAllPracticeRecords(limitCount = 50) {
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => doc.data());
 }
+
+export async function getUserPracticeRecords(uid, limitCount = 50) {
+  const q = query(
+    collection(db, "practice_records"), 
+    where("uid", "==", uid),
+    orderBy("timestamp", "desc"), 
+    limit(limitCount)
+  );
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => doc.data());
+}

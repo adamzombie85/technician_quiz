@@ -215,12 +215,13 @@
                     <button class="close-modal" onclick="document.getElementById('admin-modal').classList.add('hidden')">&times;</button>
                 </div>
                 
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                    <button class="btn btn-outline" onclick="switchAdminTab('users')" id="admin-tab-users-btn">勇者清單</button>
-                    <button class="btn btn-outline" onclick="switchAdminTab('records')" id="admin-tab-records-btn">練習紀錄</button>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;" id="admin-tabs-container">
+                    <button class="btn btn-outline btn-primary" onclick="switchAdminTab('users')" id="admin-tab-users-btn">勇者清單</button>
+                    <button class="btn btn-outline" onclick="switchAdminTab('records')" id="admin-tab-records-btn">全服練習紀錄</button>
                 </div>
 
                 <div id="admin-tab-users" class="table-wrapper">
+                    <div style="margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-dim);"><i class="fas fa-info-circle"></i> 點擊勇者名字可查看個人詳細紀錄</div>
                     <table class="admin-table">
                         <thead>
                             <tr>
@@ -228,10 +229,27 @@
                                 <th>等級</th>
                                 <th>總題數</th>
                                 <th>總時間</th>
-                                <th>最後活動</th>
                             </tr>
                         </thead>
                         <tbody id="admin-users-body"></tbody>
+                    </table>
+                </div>
+
+                <div id="admin-tab-detail" class="table-wrapper hidden">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        <h3 id="admin-detail-name" style="color: var(--gold); margin: 0;">勇者詳情</h3>
+                        <button class="btn btn-outline btn-small" onclick="switchAdminTab('users')"><i class="fas fa-arrow-left"></i> 返回列表</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>時間</th>
+                                <th>領域</th>
+                                <th>題數</th>
+                                <th>得分</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-detail-body"></tbody>
                     </table>
                 </div>
 
