@@ -743,6 +743,7 @@ async function endQuiz(isGiveUp = false) {
             await savePracticeRecord({
                 uid: state.currentUser.uid,
                 email: state.currentUser.email,
+                nickname: state.userProfile?.nickname || state.currentUser.email.split('@')[0],
                 subject: state.config.subjectMap[state.selectedSubject] || '綜合練習',
                 mode: elements.filterType.options[elements.filterType.selectedIndex].text + (isGiveUp ? ' (中途放棄)' : ''),
                 count: totalToGrade,
@@ -966,15 +967,17 @@ window.showLeaderboard = async () => {
         if (topUsers.length === 0) {
             elements.leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
         } else {
-            elements.leaderboardBody.innerHTML = topUsers.map((u, idx) => `
+            elements.leaderboardBody.innerHTML = topUsers.map((u, idx) => {
+                const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size:1.5rem; color:var(--primary);"></i>`;
+                return `
                 <tr>
                     <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
-                    <td><i class="fas ${u.avatar || 'fa-cat'}" style="font-size:1.5rem; color:var(--primary);"></i></td>
+                    <td>${avatarImg}</td>
                     <td>${u.nickname || u.email.split('@')[0]}</td>
                     <td>LV ${u.level || 1}</td>
                     <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
                 </tr>
-            `).join('');
+            `}).join('');
         }
         elements.leaderboardModal.classList.remove('hidden');
     } catch (e) {
@@ -1117,11 +1120,13 @@ window.switchAdminTab = async (tab) => {
         usersTab.classList.remove('hidden');
         usersBtn.classList.add('btn-primary');
         const users = await getAllUsers();
-        document.getElementById('admin-users-body').innerHTML = users.map(u => `
+        document.getElementById('admin-users-body').innerHTML = users.map(u => {
+            const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size: 1.5rem;"></i>`;
+            return `
             <tr onclick="viewUserDetail('${u.uid}', '${u.nickname || u.email.split('@')[0]}')" style="cursor:pointer;">
                 <td>
                     <div style="display:flex; align-items:center; gap:0.5rem;">
-                        <i class="fas ${u.avatar || 'fa-cat'}" style="color:var(--primary);"></i>
+                        ${avatarImg}
                         <div>
                             <div style="font-weight:bold; color:var(--gold); text-decoration:underline;">${u.nickname || '未命名'}</div>
                             <div style="font-size:0.75rem; color:var(--text-dim);">${u.email}</div>
@@ -1129,10 +1134,10 @@ window.switchAdminTab = async (tab) => {
                     </div>
                 </td>
                 <td>LV ${u.level || 1}</td>
-                <td>${u.totalQuestions || 0}</td>
+                <td style="color: var(--gold); font-weight: bold;">${u.totalQuestions || 0}</td>
                 <td>${Math.floor((u.totalTime || 0) / 60)}m</td>
             </tr>
-        `).join('');
+        `}).join('');
     } else if (tab === 'records') {
         recordsTab.classList.remove('hidden');
         recordsBtn.classList.add('btn-primary');
@@ -1191,17 +1196,20 @@ window.viewUserDetail = async (uid, nickname) => {
 
 function renderProfileAvatar() {
     if (!state.userProfile) return;
-    const icon = state.userProfile.avatar || 'fa-cat';
-    elements.userAvatarBtn.innerHTML = `<i class="fas ${icon}"></i>`;
+    const avatar = state.userProfile.avatar || 'male_1.png';
+    const avatarPath = `assets/avatars/${avatar}`;
+    
+    elements.userAvatarBtn.innerHTML = `<img src="${avatarPath}" style="width: 100%; height: 100%; border-radius: 50%;">`;
     const profileAvatar = document.getElementById('profile-current-avatar');
-    if (profileAvatar) profileAvatar.innerHTML = `<i class="fas ${icon}"></i>`;
+    if (profileAvatar) {
+        profileAvatar.innerHTML = `<img src="${avatarPath}" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold);">`;
+    }
 }
 
 // --- Story Prologue Logic ---
 
 async function showPrologue() {
-    if (localStorage.getItem('prologue_shown')) return;
-    
+    // Show prologue every time
     const modal = document.getElementById('prologue-modal');
     const textContainer = document.getElementById('prologue-text');
     const skipBtn = document.getElementById('skip-prologue-btn');
