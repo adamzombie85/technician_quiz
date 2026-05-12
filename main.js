@@ -2,6 +2,10 @@ import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
+if (window.location.protocol === 'file:') {
+    alert('偵測到您正以檔案模式 (file://) 開啟網頁。由於瀏覽器安全性限制，Firebase 與 ES 模組可能無法運作。建議使用 local server (如 VS Code Live Server) 開啟。');
+}
+
 const state = {
     currentUser: null,
     allQuestions: [],
@@ -58,7 +62,8 @@ const state = {
     currentMonster: null,
     heroHp: 100,
     isRetryMode: false,
-    goldPerQuestion: 0
+    goldPerQuestion: 0,
+    leaderboardCache: null // Memory cache for leaderboard
 };
 
 // DOM Elements
@@ -144,11 +149,14 @@ const elements = {
     territoryModal: document.getElementById('territory-modal'),
     territoryGrid: document.getElementById('territory-grid'),
     kitchenRecipes: document.getElementById('kitchen-recipes'),
-    pawnInventory: document.getElementById('pawn-inventory'), // Note: pawnInventory is already used, wait
+    territoryPawnInventory: document.getElementById('territory-pawn-inventory'),
     territoryGold: document.getElementById('territory-gold'),
     territoryEgg: document.getElementById('territory-egg'),
     territoryMilk: document.getElementById('territory-milk'),
-    territoryPudding: document.getElementById('territory-pudding')
+    territoryPudding: document.getElementById('territory-pudding'),
+    globalPreloader: document.getElementById('global-preloader'),
+    preloaderBar: document.getElementById('preloader-bar'),
+    preloaderStatus: document.getElementById('preloader-status')
 };
 
 let isLoginMode = true;
@@ -1418,41 +1426,67 @@ window.readQuestionAloud = () => {
 };
 
 async function renderHomepageLeaderboard() {
+    const body = document.getElementById('homepage-leaderboard-body');
+    if (!body) return;
+
+    // 1. Show Skeleton if no cache
+    if (!state.leaderboardCache) {
+        body.innerHTML = Array(5).fill(0).map(() => `
+            <tr class="skeleton-row">
+                <td><div class="skeleton-box" style="width: 20px;"></div></td>
+                <td><div class="skeleton-avatar"></div></td>
+                <td><div class="skeleton-box" style="width: 100px;"></div></td>
+                <td><div class="skeleton-box" style="width: 40px;"></div></td>
+                <td><div class="skeleton-box" style="width: 60px;"></div></td>
+            </tr>
+        `).join('');
+    } else {
+        // Immediate render from cache
+        renderLeaderboardRows(body, state.leaderboardCache);
+    }
+
     try {
         const topUsers = await getGlobalLeaderboard();
-        const body = document.getElementById('homepage-leaderboard-body');
-        if (!body) return;
-
-        if (topUsers.length === 0) {
-            body.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
-        } else {
-            body.innerHTML = topUsers.slice(0, 20).map((u, idx) => {
-                let avatarHtml = '';
-                if (u.avatar && u.avatar.includes('.png')) {
-                    avatarHtml = `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover;">`;
-                } else {
-                    avatarHtml = `<div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);"><i class="fas ${u.avatar || 'fa-user-ninja'}" style="font-size: 0.8rem; color: var(--gold);"></i></div>`;
-                }
-                
-                return `
-                <tr>
-                    <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
-                    <td>${avatarHtml}</td>
-                    <td>${u.nickname || '無名勇者'}</td>
-                    <td>LV ${u.level || 1}</td>
-                    <td style="color: var(--gold); font-weight:bold;">
-                        ${u.totalQuestions || 0}
-                        ${u.honorMessage ? `
-                        <div class="honor-marquee-container" style="margin-top: 4px;">
-                            <div class="honor-marquee-text">${u.honorMessage}</div>
-                        </div>` : ''}
-                    </td>
-                </tr>
-            `}).join('');
-        }
+        state.leaderboardCache = topUsers; // Update cache
+        renderLeaderboardRows(body, topUsers);
     } catch (e) {
         console.error("Leaderboard error:", e);
+        if (!state.leaderboardCache) {
+            body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger);">榮譽榜載入失敗，請稍後再試</td></tr>';
+        }
     }
+}
+
+function renderLeaderboardRows(container, users) {
+    if (users.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
+        return;
+    }
+
+    container.innerHTML = users.slice(0, 20).map((u, idx) => {
+        let avatarHtml = '';
+        if (u.avatar && typeof u.avatar === 'string' && u.avatar.includes('.png')) {
+            avatarHtml = `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover;">`;
+        } else {
+            avatarHtml = `<div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);"><i class="fas ${u.avatar || 'fa-user-ninja'}" style="font-size: 0.8rem; color: var(--gold);"></i></div>`;
+        }
+        
+        return `
+            <tr>
+                <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
+                <td>${avatarHtml}</td>
+                <td>${u.nickname || '無名勇者'}</td>
+                <td>LV ${u.level || 1}</td>
+                <td style="color: var(--gold); font-weight:bold;">
+                    ${u.totalQuestions || 0}
+                    ${u.honorMessage ? `
+                    <div class="honor-marquee-container" style="margin-top: 4px;">
+                        <div class="honor-marquee-text">${u.honorMessage}</div>
+                    </div>` : ''}
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
 // Initial render
@@ -1762,9 +1796,8 @@ async function showPrologue() {
     const skipBtn = document.getElementById('skip-prologue-btn');
     const storyText = "古老的王國傳說著... 邪惡的惡龍奪走了世界上所有的珍貴名畫，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗惡龍，奪回失去的拼圖碎片，重現名畫的光輝！";
     
-    // Background Preloading while typing
-    preloadAllQuizData();
-
+    // Preloading is now handled by initApp sequence before calling showPrologue
+    
     modal.classList.remove('hidden');
     
     let i = 0;
@@ -1772,14 +1805,14 @@ async function showPrologue() {
         if (i < storyText.length) {
             textContainer.innerHTML = storyText.substring(0, i + 1).replace(/\n/g, '<br>') + '<span class="typing-cursor"></span>';
             i++;
-            setTimeout(type, 50);
+            setTimeout(type, 30);
         } else {
             textContainer.innerHTML = storyText.replace(/\n/g, '<br>');
             skipBtn.classList.remove('hidden');
         }
     }
     
-    setTimeout(type, 500);
+    setTimeout(type, 300);
     
     skipBtn.onclick = () => {
         modal.classList.add('hidden');
@@ -1791,23 +1824,64 @@ async function showPrologue() {
 }
 
 async function preloadAllQuizData() {
-    console.log("開始預載入題庫資料...");
     const subjects = Object.keys(state.config.subjectMap);
-    for (const subKey of subjects) {
+    const total = subjects.length;
+    let loaded = 0;
+
+    console.log("開始並行預載入題庫資料...");
+    
+    // Update Progress
+    const updateProgress = () => {
+        const percent = Math.round((loaded / total) * 100);
+        if (elements.preloaderBar) elements.preloaderBar.style.width = `${percent}%`;
+        if (elements.preloaderStatus) elements.preloaderStatus.textContent = `正在獲取勇者卷軸 (${percent}%)`;
+    };
+
+    updateProgress();
+
+    // Use Promise.all for parallel fetching
+    const promises = subjects.map(async (subKey) => {
         try {
             if (!state.cachedData[subKey]) {
                 const response = await fetch(state.config.subjectMap[subKey].file);
                 state.cachedData[subKey] = await response.json();
                 console.log(`預載入成功: ${subKey}`);
             }
+            loaded++;
+            updateProgress();
         } catch (e) {
             console.warn(`預載入失敗: ${subKey}`, e);
+            loaded++;
+            updateProgress();
         }
+    });
+
+    await Promise.all(promises);
+    console.log("題庫預載入完成");
+}
+
+// Start the app sequence
+async function initApp() {
+    try {
+        // 1. Preload Data
+        await preloadAllQuizData();
+        
+        // 2. Small delay for smooth transition
+        setTimeout(() => {
+            if (elements.globalPreloader) {
+                elements.globalPreloader.classList.add('fade-out');
+            }
+            // 3. Show Prologue
+            showPrologue();
+        }, 800);
+    } catch (err) {
+        console.error("Initialization failed:", err);
+        if (elements.globalPreloader) elements.globalPreloader.classList.add('fade-out');
     }
 }
 
-// Start the app
-showPrologue();
+// Kick off initialization
+initApp();
 
 // Global Modal Background Click to Close
 window.addEventListener('click', (e) => {
@@ -1869,7 +1943,7 @@ window.switchTerritoryTab = (tab) => {
 
     if (tab === 'map') renderTerritoryMap();
     if (tab === 'kitchen') renderKitchen();
-    if (tab === 'pawn') renderPawnShop();
+    if (tab === 'pawn') renderTerritoryPawnShop();
 };
 
 function updateTerritoryAssets() {
@@ -2045,8 +2119,8 @@ async function synthesizeItem(recipeId) {
     }
 }
 
-function renderPawnShop() {
-    elements.pawnInventory.innerHTML = '';
+function renderTerritoryPawnShop() {
+    elements.territoryPawnInventory.innerHTML = '';
     const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
     const sellables = [
         { id: 'egg', name: '雞蛋', icon: 'fa-egg', color: '#fff176', price: TERRITORY_CONFIG.pawnShop.egg, count: inv.egg || 0 },
@@ -2069,11 +2143,11 @@ function renderPawnShop() {
             </div>
             <button class="btn btn-gold btn-sm" onclick="sellToPawnShop('${s.id}')">全部賣出</button>
         `;
-        elements.pawnInventory.appendChild(card);
+        elements.territoryPawnInventory.appendChild(card);
     });
     
-    if (elements.pawnInventory.innerHTML === '') {
-        elements.pawnInventory.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 2rem;">背包裡沒有可變現的物資。</p>';
+    if (elements.territoryPawnInventory.innerHTML === '') {
+        elements.territoryPawnInventory.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 2rem;">背包裡沒有可變現的物資。</p>';
     }
 }
 
@@ -2104,7 +2178,7 @@ async function sellToPawnShop(itemId) {
 
         alert(`交易成功！獲得了 ${totalGain} 金幣。`);
         updateTerritoryAssets();
-        renderPawnShop();
+        renderTerritoryPawnShop();
     } catch (e) {
         console.error(e);
         alert('交易失敗。');

@@ -16,6 +16,19 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body class="dark-theme">
+    <!-- Global Preloader -->
+    <div id="global-preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo"><i class="fas fa-dragon"></i></div>
+            <h2 class="glow-text" style="font-size: 1.5rem;">勇者集結中...</h2>
+            <div class="progress-container">
+                <div id="preloader-bar" class="progress-bar"></div>
+            </div>
+            <p id="preloader-status">正在載入世界觀資料 (0%)</p>
+            <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 1rem;">若卡住請嘗試按下 Ctrl+F5 強制重新整理</p>
+        </div>
+    </div>
+
     <!-- Top Controls (View, A11y & Auth) -->
     <div class="top-controls" style="justify-content: space-between;">
         <div id="site-title" class="site-title" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: bold; color: var(--gold);">
@@ -688,7 +701,7 @@
                         <h2 class="glow-text"><i class="fas fa-vault"></i> 皇家當舖</h2>
                         <p class="subtitle">將農場物資與料理兌換成冒險儲備金。</p>
                     </div>
-                    <div id="pawn-inventory" class="pawn-list">
+                    <div id="territory-pawn-inventory" class="pawn-list">
                         <!-- Inventory for sale will be injected here -->
                     </div>
                 </div>
