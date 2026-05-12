@@ -47,7 +47,16 @@ const state = {
         { name: '幸運護符', icon: '🧿', price: 150 },
         { name: '惡龍的鱗片', icon: '💎', price: 500 },
         { name: '古老的神像', icon: '🗿', price: 1000 }
-    ]
+    ],
+    monsterPool: [
+        { name: '邪惡巨龍', icon: 'fa-dragon', hp: 100, color: '#ef4444' },
+        { name: '劇毒史萊姆', icon: 'fa-disease', hp: 50, color: '#10b981' },
+        { name: '貪婪哥布林', icon: 'fa-hat-wizard', hp: 60, color: '#f59e0b' },
+        { name: '不死骷髏', icon: 'fa-skull', hp: 80, color: '#94a3b8' },
+        { name: '感染殭屍', icon: 'fa-biohazard', hp: 70, color: '#8b5cf6' }
+    ],
+    currentMonster: null,
+    heroHp: 100
 };
 
 // DOM Elements
@@ -125,7 +134,10 @@ const elements = {
     viewerTitle: document.getElementById('viewer-title'),
     viewerArtist: document.getElementById('viewer-artist'),
     battleResultModal: document.getElementById('battle-result-modal'),
-    battleResultContent: document.getElementById('battle-result-content')
+    battleResultContent: document.getElementById('battle-result-content'),
+    heroHpBar: document.getElementById('hero-hp'),
+    heroHpText: document.getElementById('hero-hp-text'),
+    monsterNameLabel: document.getElementById('monster-name-label')
 };
 
 let isLoginMode = true;
@@ -636,6 +648,21 @@ function startQuiz() {
     state.wrongQuestions = [];
     state.practicedQuestionIds = [];
     state.startTime = Date.now();
+    
+    // Pick random monster
+    state.currentMonster = { ...state.monsterPool[Math.floor(Math.random() * state.monsterPool.length)] };
+    state.heroHp = 100;
+
+    // Update Monster UI
+    elements.monsterNameLabel.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i> ${state.currentMonster.name}`;
+    elements.dragonSprite.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i>`;
+    elements.dragonSprite.style.color = state.currentMonster.color;
+    elements.dragonHp.style.width = '100%';
+    elements.dragonHpText.textContent = '100%';
+    
+    // Update Hero UI
+    elements.heroHpBar.style.width = '100%';
+    elements.heroHpText.textContent = '100%';
 
     elements.setupScreen.classList.add('hidden');
     elements.quizScreen.classList.remove('hidden');
@@ -727,6 +754,13 @@ function handleAnswer(choice, btn) {
         btn.classList.add('correct');
         playCorrectSound();
         triggerHitEffect();
+        
+        // Damage Monster - dealt proportionally to total questions
+        const damagePerCorrect = 100 / (state.filteredQuestions.length);
+        const currentMonsterHp = parseFloat(elements.dragonHp.style.width) || 100;
+        const newMonsterHp = Math.max(0, currentMonsterHp - damagePerCorrect);
+        elements.dragonHp.style.width = `${newMonsterHp}%`;
+        elements.dragonHpText.textContent = `${Math.round(newMonsterHp)}%`;
     } else {
         btn.classList.add('wrong');
         btns[q.answer - 1].classList.add('correct');
@@ -735,15 +769,24 @@ function handleAnswer(choice, btn) {
             ...q,
             userChoice: choice
         });
-    }
+        
+        // Damage Hero
+        state.heroHp = Math.max(0, state.heroHp - 20); // Hero takes 20% damage
+        elements.heroHpBar.style.width = `${state.heroHp}%`;
+        elements.heroHpText.textContent = `${state.heroHp}%`;
+        
+        // Hero hit animation
+        elements.heroSprite.classList.add('hero-hit-anim');
+        setTimeout(() => elements.heroSprite.classList.remove('hero-hit-anim'), 500);
 
-    // Update HP Bar - Dragon has 100% HP. Each correct answer deals damage.
-    // We expect passing score (e.g. 80%) to defeat the dragon. So answering 80% correctly deals 100% damage.
-    const damagePerCorrect = 100 / (state.filteredQuestions.length * 0.8);
-    const hpPercent = Math.max(0, 100 - (state.score * damagePerCorrect));
-    
-    elements.dragonHp.style.width = `${hpPercent}%`;
-    elements.dragonHpText.textContent = `${Math.round(hpPercent)}%`;
+        if (state.heroHp <= 0) {
+            setTimeout(() => {
+                alert(`勇者倒下了！體力耗盡，本次修煉在第 ${state.currentQuestionIndex + 1} 題提前結束。`);
+                endQuiz();
+            }, 600);
+            return;
+        }
+    }
 
     const mode = elements.practiceMode.value;
     
@@ -988,6 +1031,12 @@ async function awardRewards(scorePercent, questionCount) {
         resultHtml += `<div><i class="fas fa-redo" style="color: var(--text-dim);"></i> 獲得重複碎片，已轉化為 <span style="color: var(--gold);">50G</span></div>`;
     }
     resultHtml += `</div>`;
+    
+    if (scorePercent >= 80) {
+        resultHtml += `<div style="margin-top: 1rem; color: var(--success); font-weight: bold; border-top: 1px solid rgba(16, 185, 129, 0.2); padding-top: 0.5rem;"><i class="fas fa-trophy"></i> 成功擊敗了 ${state.currentMonster.name}！</div>`;
+    } else {
+        resultHtml += `<div style="margin-top: 1rem; color: var(--danger); font-weight: bold; border-top: 1px solid rgba(239, 68, 68, 0.2); padding-top: 0.5rem;"><i class="fas fa-skull-crossbones"></i> ${state.currentMonster.name} 依然肆虐... 再修煉一下吧！</div>`;
+    }
     
     // Check rank for Top 3 message
     let isTopThree = false;

@@ -148,13 +148,26 @@
                     </div>
                 </div>
 
-                <div class="hp-bar-container dragon-hp-container">
-                    <div class="hp-label-container">
-                        <span><i class="fas fa-heart"></i> 惡龍血條</span>
-                        <span id="dragon-hp-text">100%</span>
+                <div class="hp-bars-container" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 0.5rem; width: 100%;">
+                    <!-- Monster HP -->
+                    <div class="hp-bar-container dragon-hp-container" style="margin: 0;">
+                        <div class="hp-label-container">
+                            <span id="monster-name-label"><i class="fas fa-dragon"></i> 惡龍血條</span>
+                            <span id="dragon-hp-text">100%</span>
+                        </div>
+                        <div class="hp-bar">
+                            <div id="dragon-hp" class="hp-fill" style="width: 100%;"></div>
+                        </div>
                     </div>
-                    <div class="hp-bar">
-                        <div id="dragon-hp" class="hp-fill" style="width: 100%;"></div>
+                    <!-- Hero HP -->
+                    <div class="hp-bar-container hero-hp-container" style="margin: 0;">
+                        <div class="hp-label-container">
+                            <span style="color: var(--primary);"><i class="fas fa-shield-alt"></i> 勇者生命</span>
+                            <span id="hero-hp-text">100%</span>
+                        </div>
+                        <div class="hp-bar" style="border-color: rgba(59, 130, 246, 0.3);">
+                            <div id="hero-hp" class="hp-fill" style="width: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa);"></div>
+                        </div>
                     </div>
                 </div>
 
