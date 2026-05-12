@@ -240,8 +240,10 @@ function updateMusicSettings() {
     elements.musicEnabledToggle.checked = !isMusicMuted;
     
     // Update quick toggle button
-    elements.musicToggleBtn.innerHTML = isMusicMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-music"></i>';
-    elements.musicToggleBtn.style.color = isMusicMuted ? 'var(--text-dim)' : 'var(--gold)';
+    if (elements.musicToggleBtn) {
+        elements.musicToggleBtn.innerHTML = isMusicMuted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-music"></i>';
+        elements.musicToggleBtn.style.color = isMusicMuted ? 'var(--text-dim)' : 'var(--gold)';
+    }
 }
 
 function toggleMusic(forceState) {
@@ -279,7 +281,9 @@ elements.musicEnabledToggle.addEventListener('change', (e) => {
     toggleMusic(e.target.checked);
 });
 
-elements.musicToggleBtn.addEventListener('click', () => toggleMusic());
+if (elements.musicToggleBtn) {
+    elements.musicToggleBtn.addEventListener('click', () => toggleMusic());
+}
 
 // Handle Autoplay Policy
 document.body.addEventListener('click', () => {
