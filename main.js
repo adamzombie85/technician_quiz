@@ -1004,8 +1004,34 @@ async function renderHomepageLeaderboard() {
 // Initial render
 renderHomepageLeaderboard();
 
-document.getElementById('show-leaderboard-btn').addEventListener('click', window.showLeaderboard);
-document.getElementById('show-leaderboard-result-btn').addEventListener('click', window.showLeaderboard);
+window.showLeaderboard = async () => {
+    try {
+        const topUsers = await getGlobalLeaderboard();
+        if (!elements.leaderboardBody) return;
+        
+        if (topUsers.length === 0) {
+            elements.leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
+        } else {
+            elements.leaderboardBody.innerHTML = topUsers.map((u, idx) => {
+                const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size:1.5rem; color:var(--primary);"></i>`;
+                return `
+                <tr>
+                    <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
+                    <td>${avatarImg}</td>
+                    <td>${u.nickname || '無名勇者'}</td>
+                    <td>LV ${u.level || 1}</td>
+                    <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
+                </tr>
+            `}).join('');
+        }
+        elements.leaderboardModal.classList.remove('hidden');
+    } catch (e) {
+        alert('讀取榮譽榜失敗: ' + e.message);
+        console.error(e);
+    }
+};
+
+document.getElementById('show-leaderboard-result-btn')?.addEventListener('click', window.showLeaderboard);
 
 // --- Profile Modal Logic ---
 
