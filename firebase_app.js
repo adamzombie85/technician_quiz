@@ -56,11 +56,26 @@ export async function getUserHistory(uid) {
 
 // User Profile & Leveling System
 export const LEVEL_THRESHOLDS = [
-  { level: 1, req: 0, piecesAwarded: 0 },
-  { level: 2, req: 50, piecesAwarded: 2 },
-  { level: 3, req: 150, piecesAwarded: 2 },
-  { level: 4, req: 300, piecesAwarded: 2 },
-  { level: 5, req: 500, piecesAwarded: 3 }
+  { level: 1, name: '新手勇者', req: 0, piecesAwarded: 0 },
+  { level: 2, name: '見習戰士', req: 20, piecesAwarded: 1 },
+  { level: 3, name: '初級守護者', req: 60, piecesAwarded: 1 },
+  { level: 4, name: '精銳衛兵', req: 120, piecesAwarded: 1 },
+  { level: 5, name: '資深騎士', req: 200, piecesAwarded: 1 },
+  { level: 6, name: '名譽百夫長', req: 300, piecesAwarded: 1 },
+  { level: 7, name: '王國統領', req: 420, piecesAwarded: 1 },
+  { level: 8, name: '神聖將軍', req: 560, piecesAwarded: 1 },
+  { level: 9, name: '永恆之劍', req: 720, piecesAwarded: 1 },
+  { level: 10, name: '傳奇英雄', req: 900, piecesAwarded: 2 },
+  { level: 11, name: '聖域守望者', req: 1100, piecesAwarded: 1 },
+  { level: 12, name: '大魔導士', req: 1320, piecesAwarded: 1 },
+  { level: 13, name: '龍騎士', req: 1560, piecesAwarded: 1 },
+  { level: 14, name: '光輝大元帥', req: 1820, piecesAwarded: 1 },
+  { level: 15, name: '弒神者', req: 2100, piecesAwarded: 2 },
+  { level: 16, name: '真·勇者', req: 2400, piecesAwarded: 1 },
+  { level: 17, name: '位面旅者', req: 2720, piecesAwarded: 1 },
+  { level: 18, name: '創世神徒', req: 3060, piecesAwarded: 1 },
+  { level: 19, name: '無盡霸主', req: 3420, piecesAwarded: 1 },
+  { level: 20, name: '萬古至尊', req: 3800, piecesAwarded: 5 }
 ];
 
 export const PUZZLE_THEMES = [

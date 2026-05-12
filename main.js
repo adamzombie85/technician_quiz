@@ -657,6 +657,8 @@ function startQuiz() {
     elements.monsterNameLabel.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i> ${state.currentMonster.name}`;
     elements.dragonSprite.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i>`;
     elements.dragonSprite.style.color = state.currentMonster.color;
+    // Apply a custom colored glow matching the monster's color
+    elements.dragonSprite.style.filter = `drop-shadow(0 0 15px ${state.currentMonster.color}80)`; // 80 is 50% opacity in hex
     elements.dragonHp.style.width = '100%';
     elements.dragonHpText.textContent = '100%';
     
@@ -743,6 +745,11 @@ function playWrongSound() {
 }
 
 function handleAnswer(choice, btn) {
+    // 停止正在朗讀的語音
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+    }
+
     const q = state.filteredQuestions[state.currentQuestionIndex];
     const isCorrect = choice === q.answer;
     const btns = elements.optionsContainer.querySelectorAll('.option-btn');
@@ -1552,8 +1559,8 @@ window.switchAdminTab = async (tab) => {
         document.getElementById('admin-users-body').innerHTML = users.map(u => {
             const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size: 1.5rem;"></i>`;
             return `
-            <tr onclick="viewUserDetail('${u.uid}', '${u.nickname || u.email.split('@')[0]}')" style="cursor:pointer;">
-                <td>
+            <tr>
+                <td onclick="viewUserProfile('${u.uid}')" style="cursor:pointer;" title="點擊查看詳細資料">
                     <div style="display:flex; align-items:center; gap:0.5rem;">
                         ${avatarImg}
                         <div>
@@ -1565,6 +1572,9 @@ window.switchAdminTab = async (tab) => {
                 <td>LV ${u.level || 1}</td>
                 <td style="color: var(--gold); font-weight: bold;">${u.totalQuestions || 0}</td>
                 <td>${Math.floor((u.totalTime || 0) / 60)}m</td>
+                <td>
+                    <button class="btn btn-outline btn-small" onclick="viewUserDetail('${u.uid}', '${u.nickname || u.email.split('@')[0]}')">觀看紀錄</button>
+                </td>
             </tr>
         `}).join('');
     } else if (tab === 'records') {
@@ -1596,6 +1606,7 @@ window.viewUserDetail = async (uid, nickname) => {
     usersTab.classList.add('hidden');
     recordsTab.classList.add('hidden');
     tabsContainer.classList.add('hidden');
+    document.getElementById('admin-tab-userprofile').classList.add('hidden');
     detailTab.classList.remove('hidden');
 
     document.getElementById('admin-detail-name').textContent = `勇者詳情：${nickname}`;
@@ -1620,8 +1631,52 @@ window.viewUserDetail = async (uid, nickname) => {
             }).join('');
         }
     } catch (e) {
-        console.error("Failed to load user records:", e);
+        console.error(e);
         document.getElementById('admin-detail-body').innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--danger);">載入失敗</td></tr>';
+    }
+};
+
+window.viewUserProfile = async (uid) => {
+    const usersTab = document.getElementById('admin-tab-users');
+    const recordsTab = document.getElementById('admin-tab-records');
+    const detailTab = document.getElementById('admin-tab-detail');
+    const profileTab = document.getElementById('admin-tab-userprofile');
+    const tabsContainer = document.getElementById('admin-tabs-container');
+
+    usersTab.classList.add('hidden');
+    recordsTab.classList.add('hidden');
+    tabsContainer.classList.add('hidden');
+    detailTab.classList.add('hidden');
+    profileTab.classList.remove('hidden');
+
+    const contentDiv = document.getElementById('admin-userprofile-content');
+    contentDiv.innerHTML = '<div style="text-align:center;">載入中...</div>';
+
+    try {
+        const users = await getAllUsers();
+        const user = users.find(u => u.uid === uid);
+        if (!user) {
+            contentDiv.innerHTML = '<div style="color:var(--danger);">找不到該勇者資料。</div>';
+            return;
+        }
+
+        const roleText = user.role === 'teacher' ? '老師' : (user.role === 'student' ? '學生' : '未設定');
+        
+        contentDiv.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div><strong style="color:var(--gold);">勇者暱稱：</strong> ${user.nickname || '未設定'}</div>
+                <div><strong style="color:var(--gold);">帳號信箱：</strong> ${user.email}</div>
+                <div><strong style="color:var(--gold);">身份別：</strong> ${roleText}</div>
+                <div><strong style="color:var(--gold);">真實姓名：</strong> ${user.realName || '未填寫'}</div>
+                <div><strong style="color:var(--gold);">學校名稱：</strong> ${user.school || '未填寫'}</div>
+                <div><strong style="color:var(--gold);">任教科目：</strong> ${user.teacherSubject || '未填寫'}</div>
+                <div><strong style="color:var(--gold);">持有金幣：</strong> ${user.gold || 0} G</div>
+                <div><strong style="color:var(--gold);">上榜感言：</strong> ${user.honorMessage || '未設定'}</div>
+            </div>
+        `;
+    } catch (e) {
+        console.error(e);
+        contentDiv.innerHTML = '<div style="color:var(--danger);">載入失敗。</div>';
     }
 };
 
