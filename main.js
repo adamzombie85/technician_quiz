@@ -56,7 +56,9 @@ const state = {
         { name: '感染殭屍', icon: 'fa-biohazard', hp: 70, color: '#8b5cf6' }
     ],
     currentMonster: null,
-    heroHp: 100
+    heroHp: 100,
+    isRetryMode: false,
+    goldPerQuestion: 0
 };
 
 // DOM Elements
@@ -648,6 +650,8 @@ function startQuiz() {
     state.wrongQuestions = [];
     state.practicedQuestionIds = [];
     state.startTime = Date.now();
+    state.isRetryMode = false;
+    state.goldPerQuestion = 500 / state.filteredQuestions.length;
     
     // Pick random monster
     state.currentMonster = { ...state.monsterPool[Math.floor(Math.random() * state.monsterPool.length)] };
@@ -777,10 +781,11 @@ function handleAnswer(choice, btn) {
             userChoice: choice
         });
         
-        // Damage Hero
-        state.heroHp = Math.max(0, state.heroHp - 20); // Hero takes 20% damage
+        // Damage Hero - proportional to total questions in the current pool
+        const heroDamage = 100 / state.filteredQuestions.length;
+        state.heroHp = Math.max(0, state.heroHp - heroDamage);
         elements.heroHpBar.style.width = `${state.heroHp}%`;
-        elements.heroHpText.textContent = `${state.heroHp}%`;
+        elements.heroHpText.textContent = `${Math.round(state.heroHp)}%`;
         
         // Hero hit animation
         elements.heroSprite.classList.add('hero-hit-anim');
@@ -990,37 +995,40 @@ async function endQuiz(isGiveUp = false) {
 async function awardRewards(scorePercent, questionCount) {
     if (!state.userProfile) return;
     
-    // 1. Award Gold
-    const goldEarned = scorePercent >= 80 ? questionCount * 10 : questionCount * 2;
+    // 1. Award Gold (Based on proportional economy)
+    const goldEarned = Math.round(state.score * state.goldPerQuestion);
     state.userProfile.gold = (state.userProfile.gold || 0) + goldEarned;
     
     let loot = null;
     let newPiece = null;
 
-    // 2. Random Loot (50% chance if victory)
-    if (scorePercent >= 80 && Math.random() < 0.5) {
-        loot = state.lootPool[Math.floor(Math.random() * state.lootPool.length)];
-        state.userProfile.inventory = state.userProfile.inventory || [];
-        state.userProfile.inventory.push({ ...loot, id: Date.now() });
-    }
-    
-    // 3. Painting Fragment (30% chance if victory)
-    if (scorePercent >= 80 && Math.random() < 0.3) {
-        const paintingNames = Object.keys(state.paintings);
-        const paintingName = paintingNames[Math.floor(Math.random() * paintingNames.length)];
-        const fragIndex = Math.floor(Math.random() * 9);
-        
-        state.userProfile.paintings = state.userProfile.paintings || {};
-        if (!state.userProfile.paintings[paintingName]) {
-            state.userProfile.paintings[paintingName] = new Array(9).fill(false);
+    // Only allow loot/fragment drops in fresh quizzes (not retry mode) to prevent exploiting
+    if (!state.isRetryMode) {
+        // 2. Random Loot (50% chance if victory)
+        if (scorePercent >= 80 && Math.random() < 0.5) {
+            loot = state.lootPool[Math.floor(Math.random() * state.lootPool.length)];
+            state.userProfile.inventory = state.userProfile.inventory || [];
+            state.userProfile.inventory.push({ ...loot, id: Date.now() });
         }
         
-        if (!state.userProfile.paintings[paintingName][fragIndex]) {
-            state.userProfile.paintings[paintingName][fragIndex] = true;
-            newPiece = { name: paintingName, index: fragIndex };
-        } else {
-            state.userProfile.gold += 50;
-            newPiece = false; // Flag for duplicate
+        // 3. Painting Fragment (30% chance if victory)
+        if (scorePercent >= 80 && Math.random() < 0.3) {
+            const paintingNames = Object.keys(state.paintings);
+            const paintingName = paintingNames[Math.floor(Math.random() * paintingNames.length)];
+            const fragIndex = Math.floor(Math.random() * 9);
+            
+            state.userProfile.paintings = state.userProfile.paintings || {};
+            if (!state.userProfile.paintings[paintingName]) {
+                state.userProfile.paintings[paintingName] = new Array(9).fill(false);
+            }
+            
+            if (!state.userProfile.paintings[paintingName][fragIndex]) {
+                state.userProfile.paintings[paintingName][fragIndex] = true;
+                newPiece = { name: paintingName, index: fragIndex };
+            } else {
+                state.userProfile.gold += 50;
+                newPiece = false; // Flag for duplicate
+            }
         }
     }
     
@@ -1273,6 +1281,7 @@ function retryWrongQuestions() {
     state.wrongQuestions = [];
     state.practicedQuestionIds = [];
     state.startTime = Date.now();
+    state.isRetryMode = true;
 
     elements.resultScreen.classList.add('hidden');
     
@@ -1282,11 +1291,25 @@ function retryWrongQuestions() {
         resultAnimContainer.classList.add('hidden');
     }
 
-    elements.quizScreen.classList.remove('hidden');
-    elements.dragonSprite.classList.remove('dragon-die');
-    elements.dragonSprite.classList.add('dragon-idle');
+    // Pick random monster
+    state.currentMonster = { ...state.monsterPool[Math.floor(Math.random() * state.monsterPool.length)] };
+    state.heroHp = 100;
+
+    // Update Monster UI
+    elements.monsterNameLabel.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i> ${state.currentMonster.name}`;
+    elements.dragonSprite.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i>`;
+    elements.dragonSprite.style.color = state.currentMonster.color;
+    elements.dragonSprite.style.filter = `drop-shadow(0 0 15px ${state.currentMonster.color}80)`;
     elements.dragonHp.style.width = '100%';
     elements.dragonHpText.textContent = '100%';
+    elements.dragonSprite.classList.remove('dragon-die', 'dragon-hit');
+    elements.dragonSprite.classList.add('dragon-idle');
+    
+    // Update Hero UI
+    elements.heroHpBar.style.width = '100%';
+    elements.heroHpText.textContent = '100%';
+
+    elements.quizScreen.classList.remove('hidden');
 
     updateTimer();
     state.timerInterval = setInterval(updateTimer, 1000);
