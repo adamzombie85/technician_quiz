@@ -198,37 +198,39 @@ select:focus, input:focus {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 100px); /* Fill available height minus top controls */
-    max-height: 800px;
+    overflow: hidden;
+    padding: 0.5rem;
 }
 
 .battle-stage {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    height: 180px;
+    height: 120px; /* Reduced from 180px */
     padding: 0 2rem;
     position: relative;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Reduced from 1rem */
     background: radial-gradient(circle at bottom, rgba(59, 130, 246, 0.1), transparent 70%);
     border-radius: 2rem;
+    flex-shrink: 0;
 }
 
 .hero-area, .dragon-area {
-    width: 100px;
+    width: 80px; /* Reduced from 100px */
     text-align: center;
 }
 
 #hero-sprite {
-    font-size: 5rem;
+    font-size: 3.5rem; /* Reduced from 5rem */
     color: var(--primary);
-    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));
+    filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5));
     transition: transform 0.3s ease-out;
 }
 
 #dragon-sprite {
-    font-size: 7rem;
+    font-size: 4.5rem; /* Reduced from 7rem */
     color: var(--danger);
-    filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.4));
+    filter: drop-shadow(0 0 15px rgba(239, 68, 68, 0.4));
 }
 
 .hero-idle { animation: float-hero 2.5s ease-in-out infinite; }
@@ -301,7 +303,8 @@ select:focus, input:focus {
 }
 
 .dragon-hp-container {
-    margin: 0 1rem 2rem;
+    margin: 0 1rem 1rem;
+    flex-shrink: 0;
 }
 
 .hp-label-container {
@@ -315,7 +318,7 @@ select:focus, input:focus {
 
 .hp-bar {
     width: 100%;
-    height: 1.5rem;
+    height: 1.2rem; /* Reduced from 1.5rem */
     background: rgba(0, 0, 0, 0.5);
     border-radius: 1rem;
     overflow: hidden;
@@ -428,7 +431,7 @@ tr:hover {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem; /* Reduced from 2rem */
     gap: 1rem;
 }
 
