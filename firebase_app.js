@@ -218,8 +218,8 @@ export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTim
     leveledUp: newLevel > oldLevel,
     newLevel,
     newPieces,
-    totalQuestions: newTotalQuestions,
-    totalTime: newTotalTime,
+    totalQuestions: updateData.totalQuestions || data.totalQuestions,
+    totalTime: updateData.totalTime || data.totalTime,
     puzzlePieces: updateData.puzzlePieces || data.puzzlePieces
   };
 }
