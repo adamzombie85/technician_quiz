@@ -146,6 +146,40 @@ elements.openPawnBtn.addEventListener('click', () => {
     elements.pawnModal.classList.remove('hidden');
 });
 
+function migrateUserData() {
+    if (!state.userProfile) return;
+    
+    // 1. Migrate old puzzlePieces to new paintings object
+    if (state.userProfile.puzzlePieces && state.userProfile.puzzlePieces.length > 0) {
+        if (!state.userProfile.paintings) {
+            state.userProfile.paintings = {};
+        }
+        
+        // Map old themes to new names
+        const themeMap = {
+            'mona_lisa': '李奧納多·達文西「蒙娜麗莎」'
+        };
+        
+        const currentThemeId = state.userProfile.currentPuzzleId || 'mona_lisa';
+        const newName = themeMap[currentThemeId];
+        
+        if (newName && !state.userProfile.paintings[newName]) {
+            const fragments = new Array(9).fill(false);
+            state.userProfile.puzzlePieces.forEach(idx => {
+                if (idx >= 0 && idx < 9) fragments[idx] = true;
+            });
+            state.userProfile.paintings[newName] = fragments;
+            
+            console.log("已遷移名畫進度:", newName, state.userProfile.puzzlePieces);
+            
+            // Sync immediately after migration
+            syncUserStats(state.currentUser.uid, { 
+                paintings: state.userProfile.paintings 
+            });
+        }
+    }
+}
+
 // Background Music Logic
 let isMusicMuted = localStorage.getItem('music_muted') === 'true';
 let musicVolume = parseFloat(localStorage.getItem('music_volume') || '0.5');
@@ -267,6 +301,10 @@ onAuthStateChanged(auth, async (user) => {
     if (user) {
         try {
             state.userProfile = await getUserProfile(user.uid, user.email);
+            
+            // Migration for old puzzle data to new painting system
+            migrateUserData();
+            
             renderProfileAvatar();
             elements.userAvatarBtn.classList.remove('hidden');
             elements.authBtn.classList.add('hidden');
