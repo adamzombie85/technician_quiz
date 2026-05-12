@@ -28,6 +28,9 @@
             <button id="admin-btn" class="control-btn hidden" onclick="toggleAdminModal()" title="管理介面" style="border-color: var(--gold); color: var(--gold);">
                 <i class="fas fa-user-gear"></i> 管理
             </button>
+            <button id="territory-btn" class="control-btn hidden" onclick="toggleTerritoryModal()" title="我的領地" style="border-color: #10b981; color: #10b981;">
+                <i class="fas fa-map-marked-alt"></i> 領地
+            </button>
             <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
                 <i class="fas fa-cat"></i>
             </button>
@@ -644,6 +647,58 @@
                     <div id="viewer-info" style="margin-top: 1rem;">
                         <h2 id="viewer-title" style="color: var(--gold);"></h2>
                         <p id="viewer-artist" style="color: var(--text-dim);"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Territory Modal -->
+        <div id="territory-modal" class="modal hidden" style="z-index: 2500;">
+            <div class="glass-card modal-content territory-container" style="max-width: 900px; padding: 0;">
+                <button class="close-modal" onclick="toggleTerritoryModal()" style="z-index: 10;">&times;</button>
+                
+                <div class="territory-tabs">
+                    <button class="tab-btn active" onclick="switchTerritoryTab('map')"><i class="fas fa-map"></i> 我的領地</button>
+                    <button class="tab-btn" onclick="switchTerritoryTab('kitchen')"><i class="fas fa-utensils"></i> 皇家廚房</button>
+                    <button class="tab-btn" onclick="switchTerritoryTab('pawn')"><i class="fas fa-coins"></i> 皇家當舖</button>
+                </div>
+
+                <div id="territory-tab-map" class="territory-content">
+                    <div class="territory-header">
+                        <h2 class="glow-text"><i class="fas fa-seedling"></i> 勇者領地</h2>
+                        <p class="subtitle">累積正確題數解鎖更多土地，領取物資變現！</p>
+                    </div>
+                    <div id="territory-grid" class="territory-grid">
+                        <!-- Grid cells will be injected here -->
+                    </div>
+                </div>
+
+                <div id="territory-tab-kitchen" class="territory-content hidden">
+                    <div class="territory-header">
+                        <h2 class="glow-text"><i class="fas fa-fire-burner"></i> 皇家廚房</h2>
+                        <p class="subtitle">合成高級料理，賺取更高額的金幣回報！</p>
+                    </div>
+                    <div id="kitchen-recipes" class="recipe-list">
+                        <!-- Recipes will be injected here -->
+                    </div>
+                </div>
+
+                <div id="territory-tab-pawn" class="territory-content hidden">
+                    <div class="territory-header">
+                        <h2 class="glow-text"><i class="fas fa-vault"></i> 皇家當舖</h2>
+                        <p class="subtitle">將農場物資與料理兌換成冒險儲備金。</p>
+                    </div>
+                    <div id="pawn-inventory" class="pawn-list">
+                        <!-- Inventory for sale will be injected here -->
+                    </div>
+                </div>
+
+                <div class="territory-footer">
+                    <div class="user-assets-bar">
+                        <span><i class="fas fa-coins" style="color: var(--gold);"></i> <span id="territory-gold">0</span></span>
+                        <span><i class="fas fa-egg" style="color: #fff176;"></i> <span id="territory-egg">0</span></span>
+                        <span><i class="fas fa-prescription-bottle-medical" style="color: #e3f2fd;"></i> <span id="territory-milk">0</span></span>
+                        <span><i class="fas fa-cookie" style="color: #ffb74d;"></i> <span id="territory-pudding">0</span></span>
                     </div>
                 </div>
             </div>

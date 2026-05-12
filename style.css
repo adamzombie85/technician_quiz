@@ -1250,3 +1250,189 @@ input:checked + .slider:before {
     background: rgba(255,255,255,0.07);
     transform: translateX(10px);
 }
+
+/* --- Territory & Farm System Styles --- */
+.territory-container {
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    border: 2px solid #10b981;
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.2);
+}
+
+.territory-tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.4);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.territory-tabs .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 1.25rem;
+    color: var(--text-dim);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.territory-tabs .tab-btn.active {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.1);
+    box-shadow: inset 0 -3px 0 #10b981;
+}
+
+.territory-content {
+    padding: 2rem;
+    min-height: 400px;
+}
+
+.territory-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.territory-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.land-cell {
+    aspect-ratio: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border: 2px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.land-cell.farm {
+    background: linear-gradient(135deg, #14532d, #064e3b);
+    border: 2px solid #10b981;
+    border-style: solid;
+}
+
+.land-cell.locked {
+    cursor: not-allowed;
+    background: rgba(0,0,0,0.3);
+}
+
+.land-cell:hover:not(.locked) {
+    transform: translateY(-5px);
+    border-color: #10b981;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
+}
+
+.land-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.land-name {
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: #10b981;
+}
+
+.harvest-indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #fbbf24;
+    color: #000;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.territory-footer {
+    padding: 1rem 2rem;
+    background: rgba(0, 0, 0, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-assets-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.user-assets-bar span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.recipe-list, .pawn-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.item-card {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.item-icon-large {
+    font-size: 2.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+}
+
+.item-details h4 {
+    color: var(--gold);
+    margin-bottom: 0.25rem;
+}
+
+.item-details p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}

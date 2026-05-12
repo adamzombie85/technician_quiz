@@ -1,4 +1,4 @@
-import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, getAllUsers, getAllPracticeRecords, getUserPracticeRecords } from './firebase_app.js';
+import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, TERRITORY_CONFIG, getAllUsers, getAllPracticeRecords, getUserPracticeRecords } from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
@@ -139,7 +139,16 @@ const elements = {
     battleResultContent: document.getElementById('battle-result-content'),
     heroHpBar: document.getElementById('hero-hp'),
     heroHpText: document.getElementById('hero-hp-text'),
-    monsterNameLabel: document.getElementById('monster-name-label')
+    monsterNameLabel: document.getElementById('monster-name-label'),
+    territoryBtn: document.getElementById('territory-btn'),
+    territoryModal: document.getElementById('territory-modal'),
+    territoryGrid: document.getElementById('territory-grid'),
+    kitchenRecipes: document.getElementById('kitchen-recipes'),
+    pawnInventory: document.getElementById('pawn-inventory'), // Note: pawnInventory is already used, wait
+    territoryGold: document.getElementById('territory-gold'),
+    territoryEgg: document.getElementById('territory-egg'),
+    territoryMilk: document.getElementById('territory-milk'),
+    territoryPudding: document.getElementById('territory-pudding')
 };
 
 let isLoginMode = true;
@@ -371,6 +380,13 @@ onAuthStateChanged(auth, async (user) => {
             elements.adminBtn.classList.remove('hidden');
         } else {
             elements.adminBtn.classList.add('hidden');
+        }
+
+        // Check for Territory Unlock
+        if (state.userProfile.territory && state.userProfile.territory.isUnlocked) {
+            elements.territoryBtn.classList.remove('hidden');
+        } else {
+            elements.territoryBtn.classList.add('hidden');
         }
 
         reqElements.forEach(el => el.classList.remove('hidden'));
@@ -952,6 +968,17 @@ async function endQuiz(isGiveUp = false) {
                         elements.newTreasureContainer.classList.add('hidden');
                     }
                     elements.levelupModal.classList.remove('hidden');
+                }
+
+                // Show Territory Unlock Celebration
+                if (statsResult.territoryUnlocked) {
+                    alert('🎉 恭喜勇者！您已累積答對 100 題，領地系統已正式解鎖！第一座農場已贈送給您，快去「我的領地」收成吧！');
+                    elements.territoryBtn.classList.remove('hidden');
+                    // Initialize territory in local state
+                    state.userProfile.territory = {
+                        isUnlocked: true,
+                        lands: [{ id: 'L1', type: 'farm', level: 1, lastHarvest: new Date() }]
+                    };
                 }
             }
         } catch (e) {
@@ -1818,3 +1845,277 @@ async function handleIdleLogout() {
 
 // Initial start
 resetIdleTimer();
+
+// --- Territory & Farm System Logic ---
+window.toggleTerritoryModal = () => {
+    const isHidden = elements.territoryModal.classList.toggle('hidden');
+    if (!isHidden) {
+        switchTerritoryTab('map');
+        updateTerritoryAssets();
+    }
+};
+
+window.switchTerritoryTab = (tab) => {
+    // Update Tab Buttons
+    document.querySelectorAll('.territory-tabs .tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(tab));
+    });
+
+    // Update Tab Content
+    document.querySelectorAll('.territory-content').forEach(content => {
+        content.classList.add('hidden');
+    });
+    document.getElementById(`territory-tab-${tab}`).classList.remove('hidden');
+
+    if (tab === 'map') renderTerritoryMap();
+    if (tab === 'kitchen') renderKitchen();
+    if (tab === 'pawn') renderPawnShop();
+};
+
+function updateTerritoryAssets() {
+    if (!state.userProfile) return;
+    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    elements.territoryGold.textContent = state.userProfile.gold || 0;
+    elements.territoryEgg.textContent = inv.egg || 0;
+    elements.territoryMilk.textContent = inv.milk || 0;
+    elements.territoryPudding.textContent = inv.pudding || 0;
+}
+
+function renderTerritoryMap() {
+    elements.territoryGrid.innerHTML = '';
+    const lands = state.userProfile.territory ? state.userProfile.territory.lands : [];
+    
+    // Standard 3x3 Grid (9 slots)
+    for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'land-cell';
+        
+        const land = lands[i]; // For now, assume lands are stored in order
+        if (land) {
+            cell.classList.add('farm');
+            cell.innerHTML = `
+                <div class="land-icon"><i class="fas fa-tractor" style="color: #10b981;"></i></div>
+                <div class="land-name">等級 ${land.level} 農場</div>
+            `;
+            
+            // Calculate Harvest Status
+            const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
+            const now = Date.now();
+            const elapsed = now - lastHarvest;
+            const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
+            
+            if (Q > 0) {
+                cell.innerHTML += `<div class="harvest-indicator">${Q}</div>`;
+                cell.onclick = () => harvestLand(i);
+            } else {
+                cell.onclick = () => alert('物資生產中... 請耐心等待。');
+            }
+        } else {
+            cell.classList.add('locked');
+            cell.innerHTML = `
+                <div class="land-icon"><i class="fas fa-lock" style="color: rgba(255,255,255,0.2);"></i></div>
+                <div class="land-name">未開發</div>
+            `;
+            // First empty slot could be purchasable?
+            if (i === lands.length) {
+                cell.classList.remove('locked');
+                cell.classList.add('purchasable');
+                cell.innerHTML = `
+                    <div class="land-icon"><i class="fas fa-plus-circle" style="color: var(--gold);"></i></div>
+                    <div class="land-name">擴張領地</div>
+                `;
+                cell.onclick = () => alert('未來擴張功能即將開放！目前先專心經營現有農場吧。');
+            }
+        }
+        elements.territoryGrid.appendChild(cell);
+    }
+}
+
+async function harvestLand(landIndex) {
+    if (!state.userProfile || !state.currentUser) return;
+    
+    showLoadingOverlay(true);
+    try {
+        // Get trusted time from WorldTimeAPI
+        const timeResp = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+        const timeData = await timeResp.json();
+        const now = new Date(timeData.datetime).getTime();
+        
+        const land = state.userProfile.territory.lands[landIndex];
+        const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
+        const elapsed = now - lastHarvest;
+        const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
+        
+        if (Q <= 0) {
+            alert('還不到收穫時間喔！物資正在努力生長中。');
+            return;
+        }
+
+        const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+        const newInv = {
+            egg: (inv.egg || 0) + Q,
+            milk: (inv.milk || 0) + Q,
+            pudding: (inv.pudding || 0)
+        };
+        
+        // Update last harvest time (keep overflow)
+        const newHarvestTime = new Date(lastHarvest + (Q * TERRITORY_CONFIG.productionTime));
+        const newLands = [...state.userProfile.territory.lands];
+        newLands[landIndex].lastHarvest = newHarvestTime;
+
+        await updateUserProfile(state.currentUser.uid, {
+            inventory: newInv,
+            "territory.lands": newLands
+        });
+        
+        state.userProfile.inventory = newInv;
+        state.userProfile.territory.lands = newLands;
+        
+        alert(`收穫成功！獲得了 ${Q} 個雞蛋與 ${Q} 瓶牛奶。`);
+        updateTerritoryAssets();
+        renderTerritoryMap();
+    } catch (e) {
+        console.error("Harvest error:", e);
+        alert('收穫失敗（可能是網路問題或時間伺服器忙碌中），請稍後再試。');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+function renderKitchen() {
+    elements.kitchenRecipes.innerHTML = '';
+    const recipes = [
+        { id: 'pudding', name: '皇家布丁', icon: 'fa-cookie', desc: '由農場新鮮物資製成，價值連城。', cost: '1 蛋 + 1 奶 + 200 金幣', canMake: true }
+    ];
+
+    recipes.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.innerHTML = `
+            <div class="item-info">
+                <div class="item-icon-large"><i class="fas ${r.icon}" style="color: #ffb74d;"></i></div>
+                <div class="item-details">
+                    <h4>${r.name}</h4>
+                    <p>${r.desc}</p>
+                    <p style="color: var(--gold);">所需：${r.cost}</p>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="synthesizeItem('${r.id}')">製作</button>
+        `;
+        elements.kitchenRecipes.appendChild(card);
+    });
+}
+
+async function synthesizeItem(recipeId) {
+    if (!state.userProfile || !state.currentUser) return;
+    const config = TERRITORY_CONFIG.synthesis[recipeId];
+    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    const gold = state.userProfile.gold || 0;
+
+    if (gold < config.gold || (inv.egg || 0) < config.egg || (inv.milk || 0) < config.milk) {
+        alert('物資或金幣不足，無法製作！');
+        return;
+    }
+
+    showLoadingOverlay(true);
+    try {
+        const newInv = {
+            egg: (inv.egg || 0) - config.egg,
+            milk: (inv.milk || 0) - config.milk,
+            pudding: (inv.pudding || 0) + 1
+        };
+        const newGold = gold - config.gold;
+
+        await updateUserProfile(state.currentUser.uid, {
+            inventory: newInv,
+            gold: newGold
+        });
+
+        state.userProfile.inventory = newInv;
+        state.userProfile.gold = newGold;
+
+        alert('製作成功！皇家布丁已存入背包。');
+        updateTerritoryAssets();
+        renderKitchen();
+    } catch (e) {
+        console.error(e);
+        alert('製作失敗。');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+function renderPawnShop() {
+    elements.pawnInventory.innerHTML = '';
+    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    const sellables = [
+        { id: 'egg', name: '雞蛋', icon: 'fa-egg', color: '#fff176', price: TERRITORY_CONFIG.pawnShop.egg, count: inv.egg || 0 },
+        { id: 'milk', name: '牛奶', icon: 'fa-prescription-bottle-medical', color: '#e3f2fd', price: TERRITORY_CONFIG.pawnShop.milk, count: inv.milk || 0 },
+        { id: 'pudding', name: '皇家布丁', icon: 'fa-cookie', color: '#ffb74d', price: TERRITORY_CONFIG.pawnShop.pudding, count: inv.pudding || 0 }
+    ];
+
+    sellables.forEach(s => {
+        if (s.count <= 0) return;
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.innerHTML = `
+            <div class="item-info">
+                <div class="item-icon-large"><i class="fas ${s.icon}" style="color: ${s.color};"></i></div>
+                <div class="item-details">
+                    <h4>${s.name}</h4>
+                    <p>持有數量：${s.count}</p>
+                    <p style="color: var(--gold);">收購價：${s.price} 金幣 / 個</p>
+                </div>
+            </div>
+            <button class="btn btn-gold btn-sm" onclick="sellToPawnShop('${s.id}')">全部賣出</button>
+        `;
+        elements.pawnInventory.appendChild(card);
+    });
+    
+    if (elements.pawnInventory.innerHTML === '') {
+        elements.pawnInventory.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 2rem;">背包裡沒有可變現的物資。</p>';
+    }
+}
+
+async function sellToPawnShop(itemId) {
+    if (!state.userProfile || !state.currentUser) return;
+    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    const count = inv[itemId] || 0;
+    if (count <= 0) return;
+
+    const price = TERRITORY_CONFIG.pawnShop[itemId];
+    const totalGain = count * price;
+
+    if (!confirm(`確定要賣出所有 ${count} 個項目嗎？這將獲得 ${totalGain} 金幣。`)) return;
+
+    showLoadingOverlay(true);
+    try {
+        const newInv = { ...inv };
+        newInv[itemId] = 0;
+        const newGold = (state.userProfile.gold || 0) + totalGain;
+
+        await updateUserProfile(state.currentUser.uid, {
+            inventory: newInv,
+            gold: newGold
+        });
+
+        state.userProfile.inventory = newInv;
+        state.userProfile.gold = newGold;
+
+        alert(`交易成功！獲得了 ${totalGain} 金幣。`);
+        updateTerritoryAssets();
+        renderPawnShop();
+    } catch (e) {
+        console.error(e);
+        alert('交易失敗。');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+// Map window functions for global access (from HTML)
+window.harvestLand = harvestLand;
+window.synthesizeItem = synthesizeItem;
+window.sellToPawnShop = sellToPawnShop;
+window.toggleTerritoryModal = toggleTerritoryModal;
+window.switchTerritoryTab = switchTerritoryTab;

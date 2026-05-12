@@ -89,6 +89,20 @@ export const PUZZLE_THEMES = [
   }
 ];
 
+export const TERRITORY_CONFIG = {
+  unlockThreshold: 100, // Correct answers to unlock
+  productionTime: 48 * 60 * 60 * 1000, // 48 hours in milliseconds
+  synthesis: {
+    pudding: { egg: 1, milk: 1, gold: 200, reward: 2000 },
+    potion: { milk: 2, gold: 50, reward: 'heal_20' }
+  },
+  pawnShop: {
+    egg: 5,
+    milk: 5,
+    pudding: 2000
+  }
+};
+
 export function calculateLevel(totalQuestions) {
   let currentLevel = 1;
   for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
@@ -153,7 +167,13 @@ export async function getUserProfile(uid, email) {
       realName: '',
       school: '',
       teacherSubject: '',
-      studentDept: ''
+      studentDept: '',
+      gold: 0,
+      inventory: { egg: 0, milk: 0, pudding: 0 },
+      territory: {
+        isUnlocked: false,
+        lands: []
+      }
     };
     await setDoc(userRef, defaultProfile);
     return defaultProfile;
@@ -231,10 +251,27 @@ export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTim
     updateData.honorMessage = scoreOrUpdate.honorMessage.substring(0, 20);
   }
 
+  // Territory Unlock Logic
+  const currentTotalCorrect = updateData.totalQuestions || data.totalQuestions;
+  const isUnlocked = data.territory ? data.territory.isUnlocked : false;
+  
+  if (currentTotalCorrect >= TERRITORY_CONFIG.unlockThreshold && !isUnlocked) {
+    updateData.territory = {
+      isUnlocked: true,
+      lands: [
+        { id: 'L1', type: 'farm', level: 1, lastHarvest: new Date() }
+      ]
+    };
+  }
+
   await updateDoc(userRef, updateData);
 
+  const leveledUp = newLevel > oldLevel;
+  const territoryUnlocked = currentTotalCorrect >= TERRITORY_CONFIG.unlockThreshold && !isUnlocked;
+
   return {
-    leveledUp: newLevel > oldLevel,
+    leveledUp,
+    territoryUnlocked,
     newLevel,
     newPieces,
     totalQuestions: updateData.totalQuestions || data.totalQuestions,
