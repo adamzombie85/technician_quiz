@@ -566,7 +566,11 @@ function updateQuestionCountDropdown() {
     }
 
     elements.questionCount.innerHTML = '';
-    const options = [5, 20, 50, 100].filter(n => n <= poolSize);
+    const options = [5];
+    for (let i = 20; i <= poolSize; i += 20) {
+        options.push(i);
+    }
+    
     options.forEach(i => {
         const label = i === 5 ? `${i} 題 (測試用)` : `${i} 題`;
         elements.questionCount.innerHTML += `<option value="${i}">${label}</option>`;
