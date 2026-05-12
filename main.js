@@ -1510,17 +1510,14 @@ function renderProfileAvatar() {
 // --- Story Prologue Logic ---
 
 async function showPrologue() {
-    // Check if user has opted to skip
-    if (localStorage.getItem('skip_prologue') === 'true') {
-        return;
-    }
-
     const modal = document.getElementById('prologue-modal');
     const textContainer = document.getElementById('prologue-text');
     const skipBtn = document.getElementById('skip-prologue-btn');
-    const dontShowCheck = document.getElementById('dont-show-prologue');
     const storyText = "古老的王國傳說著... 邪惡的惡龍奪走了世界上所有的珍貴名畫，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗惡龍，奪回失去的拼圖碎片，重現名畫的光輝！";
     
+    // Background Preloading while typing
+    preloadAllQuizData();
+
     modal.classList.remove('hidden');
     
     let i = 0;
@@ -1538,16 +1535,28 @@ async function showPrologue() {
     setTimeout(type, 500);
     
     skipBtn.onclick = () => {
-        if (dontShowCheck && dontShowCheck.checked) {
-            localStorage.setItem('skip_prologue', 'true');
-        }
         modal.classList.add('hidden');
         localStorage.setItem('prologue_shown', 'true');
-        // Trigger music play here to ensure it bypasses browser autoplay block
         if (!isMusicMuted && elements.bgMusic.paused) {
             elements.bgMusic.play().catch(e => console.log("Music play blocked:", e));
         }
     };
+}
+
+async function preloadAllQuizData() {
+    console.log("開始預載入題庫資料...");
+    const subjects = Object.keys(state.config.subjectMap);
+    for (const subKey of subjects) {
+        try {
+            if (!state.cachedData[subKey]) {
+                const response = await fetch(state.config.subjectMap[subKey].file);
+                state.cachedData[subKey] = await response.json();
+                console.log(`預載入成功: ${subKey}`);
+            }
+        } catch (e) {
+            console.warn(`預載入失敗: ${subKey}`, e);
+        }
+    }
 }
 
 // Start the app
