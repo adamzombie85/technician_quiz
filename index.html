@@ -43,9 +43,9 @@
                 <h3 class="glow-text" style="text-align: center; margin-bottom: 1.5rem;">
                     <i class="fas fa-trophy"></i> 全服勇者榮譽榜
                 </h3>
-                <div class="table-container">
+                <div class="table-container" style="max-height: 250px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--gold) transparent;">
                     <table class="leaderboard-table">
-                        <thead>
+                        <thead style="position: sticky; top: 0; background: #111; z-index: 10; box-shadow: 0 2px 4px rgba(0,0,0,0.3);">
                             <tr>
                                 <th>排名</th>
                                 <th>化身</th>
@@ -535,6 +535,11 @@
                 <button id="skip-prologue-btn" class="btn btn-primary btn-large hidden" style="margin-top: 2rem;">
                     接受使命，開始修煉
                 </button>
+                <div style="margin-top: 1.5rem; color: var(--text-dim); font-size: 0.9rem;">
+                    <label style="cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <input type="checkbox" id="dont-show-prologue" style="width: 1.2rem; height: 1.2rem; cursor: pointer;"> 下次不再顯示故事開場
+                    </label>
+                </div>
             </div>
         </div>
 

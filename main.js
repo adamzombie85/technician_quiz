@@ -1198,7 +1198,7 @@ async function renderHomepageLeaderboard() {
         if (topUsers.length === 0) {
             body.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
         } else {
-            body.innerHTML = topUsers.map((u, idx) => {
+            body.innerHTML = topUsers.slice(0, 20).map((u, idx) => {
                 let avatarHtml = '';
                 if (u.avatar && u.avatar.includes('.png')) {
                     avatarHtml = `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover;">`;
@@ -1262,79 +1262,12 @@ document.getElementById('show-leaderboard-result-btn')?.addEventListener('click'
 // --- Profile Modal Logic ---
 
 window.toggleProfileModal = () => {
-    if (!state.userProfile) return;
-    
-    // Setup modal UI
-    document.getElementById('profile-nickname').value = state.userProfile.nickname || '';
-    document.getElementById('profile-role').value = state.userProfile.role || '';
-    
-    // Role fields
-    document.getElementById('profile-teacher-name').value = state.userProfile.realName || '';
-    document.getElementById('profile-teacher-school').value = state.userProfile.school || '';
-    document.getElementById('profile-teacher-subject').value = state.userProfile.teacherSubject || '';
-    
-    document.getElementById('profile-student-name').value = state.userProfile.realName || '';
-    document.getElementById('profile-student-school').value = state.userProfile.school || '';
-    document.getElementById('profile-student-dept').value = state.userProfile.studentDept || '';
-
-    updateRoleFields(state.userProfile.role);
-
-    selectedAvatarIcon = state.userProfile.avatar || 'male_1.png';
-    
-    // Setup Avatar selector
-    document.querySelectorAll('.avatar-option').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.icon === selectedAvatarIcon);
-    });
-    
-    // Setup Exp Bar
-    const currentQ = state.userProfile.totalQuestions || 0;
-    const curLevelInfo = LEVEL_THRESHOLDS.find(t => t.level === state.userProfile.level) || LEVEL_THRESHOLDS[0];
-    const nextLevelInfo = LEVEL_THRESHOLDS.find(t => t.level === state.userProfile.level + 1);
-    
-    let expPercent = 100;
-    let expText = `${currentQ} (MAX)`;
-    
-    if (nextLevelInfo) {
-        const req = nextLevelInfo.req;
-        const prevReq = curLevelInfo.req;
-        const progress = currentQ - prevReq;
-        const totalNeeded = req - prevReq;
-        expPercent = Math.min(100, Math.max(0, (progress / totalNeeded) * 100));
-        expText = `${currentQ} / ${req}`;
+    if (!state.currentUser) {
+        toggleAuthModal();
+        return;
     }
     
-    document.getElementById('profile-level-badge').textContent = `LV ${state.userProfile.level || 1}`;
-    document.getElementById('profile-exp-bar').style.width = `${expPercent}%`;
-    document.getElementById('profile-exp-text').textContent = expText;
-    
-    document.getElementById('profile-total-questions').textContent = currentQ;
-    document.getElementById('profile-total-time').textContent = `${Math.floor((state.userProfile.totalTime || 0) / 60)}m`;
-    
-    // Puzzles (replacing treasures)
-    const treasuresGrid = document.getElementById('profile-treasures');
-    const pieces = state.userProfile.puzzlePieces || [];
-    const theme = PUZZLE_THEMES.find(t => t.id === state.userProfile.currentPuzzleId) || PUZZLE_THEMES[0];
-    
-    // Change title if possible (optional, but good for UX)
-    const treasuresTitle = document.querySelector('#profile-modal h3 i.fa-gem')?.parentElement;
-    if (treasuresTitle) treasuresTitle.innerHTML = `<i class="fas fa-puzzle-piece"></i> 拼圖收藏：${theme.name}`;
-
-    treasuresGrid.className = 'puzzle-grid';
-    treasuresGrid.style.backgroundImage = `url(${theme.silhouette})`;
-    treasuresGrid.style.aspectRatio = theme.aspectRatio || '1 / 1';
-    treasuresGrid.innerHTML = '';
-    
-    for (let i = 0; i < 9; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'puzzle-cell';
-        if (pieces.includes(i)) {
-            cell.innerHTML = `<img src="${theme.imagePrefix}${i}.png" class="puzzle-piece-img animate-pop">`;
-            cell.classList.add('collected');
-        }
-        treasuresGrid.appendChild(cell);
-    }
-    
-    renderProfileAvatar();
+    updateUserProfileDisplay();
     elements.profileModal.classList.remove('hidden');
 };
 
@@ -1534,10 +1467,15 @@ function renderProfileAvatar() {
 // --- Story Prologue Logic ---
 
 async function showPrologue() {
-    // Show prologue every time
+    // Check if user has opted to skip
+    if (localStorage.getItem('skip_prologue') === 'true') {
+        return;
+    }
+
     const modal = document.getElementById('prologue-modal');
     const textContainer = document.getElementById('prologue-text');
     const skipBtn = document.getElementById('skip-prologue-btn');
+    const dontShowCheck = document.getElementById('dont-show-prologue');
     const storyText = "古老的王國傳說著... 邪惡的惡龍奪走了世界上所有的珍貴名畫，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗惡龍，奪回失去的拼圖碎片，重現名畫的光輝！";
     
     modal.classList.remove('hidden');
@@ -1557,6 +1495,9 @@ async function showPrologue() {
     setTimeout(type, 500);
     
     skipBtn.onclick = () => {
+        if (dontShowCheck && dontShowCheck.checked) {
+            localStorage.setItem('skip_prologue', 'true');
+        }
         modal.classList.add('hidden');
         localStorage.setItem('prologue_shown', 'true');
         // Trigger music play here to ensure it bypasses browser autoplay block
