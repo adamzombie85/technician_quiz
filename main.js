@@ -651,7 +651,8 @@ function startQuiz() {
     state.practicedQuestionIds = [];
     state.startTime = Date.now();
     state.isRetryMode = false;
-    state.goldPerQuestion = 500 / state.filteredQuestions.length;
+    const totalGoldPool = state.filteredQuestions.length === 5 ? 50 : 500;
+    state.goldPerQuestion = totalGoldPool / state.filteredQuestions.length;
     
     // Pick random monster
     state.currentMonster = { ...state.monsterPool[Math.floor(Math.random() * state.monsterPool.length)] };
