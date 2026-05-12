@@ -347,8 +347,9 @@ async function handleSubjectChange() {
             return;
         }
 
-        // 2. 檢查 LocalStorage 持久化快取
-        const localCacheKey = `quiz_cache_${val}`;
+        // 2. 檢查 LocalStorage 持久化快取 (加上版本號以強制更新)
+        const CACHE_VERSION = 'v4'; 
+        const localCacheKey = `quiz_cache_${val}_${CACHE_VERSION}`;
         const savedData = localStorage.getItem(localCacheKey);
         if (savedData) {
             try {
@@ -943,11 +944,17 @@ async function renderHomepageLeaderboard() {
             body.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
         } else {
             body.innerHTML = topUsers.map((u, idx) => {
-                const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size:1.5rem; color:var(--primary);"></i>`;
+                let avatarHtml = '';
+                if (u.avatar && u.avatar.includes('.png')) {
+                    avatarHtml = `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover;">`;
+                } else {
+                    avatarHtml = `<div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);"><i class="fas ${u.avatar || 'fa-user-ninja'}" style="font-size: 0.8rem; color: var(--gold);"></i></div>`;
+                }
+                
                 return `
                 <tr>
                     <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
-                    <td>${avatarImg}</td>
+                    <td>${avatarHtml}</td>
                     <td>${u.nickname || '無名勇者'}</td>
                     <td>LV ${u.level || 1}</td>
                     <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
@@ -971,11 +978,17 @@ window.showLeaderboard = async () => {
             elements.leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
         } else {
             elements.leaderboardBody.innerHTML = topUsers.map((u, idx) => {
-                const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size:1.5rem; color:var(--primary);"></i>`;
+                let avatarHtml = '';
+                if (u.avatar && u.avatar.includes('.png')) {
+                    avatarHtml = `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); object-fit: cover;">`;
+                } else {
+                    avatarHtml = `<div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);"><i class="fas ${u.avatar || 'fa-user-ninja'}" style="font-size: 0.8rem; color: var(--gold);"></i></div>`;
+                }
+
                 return `
                 <tr>
                     <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
-                    <td>${avatarImg}</td>
+                    <td>${avatarHtml}</td>
                     <td>${u.nickname || '無名勇者'}</td>
                     <td>LV ${u.level || 1}</td>
                     <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>

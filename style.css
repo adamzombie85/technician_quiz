@@ -1025,7 +1025,7 @@ input:checked + .slider:before {
 }
 /* Homepage Leaderboard */
 .leaderboard-homepage {
-    max-width: 800px;
+    width: 100%;
     margin-left: auto;
     margin-right: auto;
     padding: 2rem;
