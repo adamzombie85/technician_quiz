@@ -225,12 +225,24 @@ onAuthStateChanged(auth, async (user) => {
     state.currentUser = user;
     const reqElements = document.querySelectorAll('.auth-required');
     if (user) {
-        state.currentUser = user;
         try {
             state.userProfile = await getUserProfile(user.uid, user.email);
             renderProfileAvatar();
             elements.userAvatarBtn.classList.remove('hidden');
             elements.authBtn.classList.add('hidden');
+            
+            // Mandatory Profile Setup Check
+            if (!state.userProfile.profileCompleted) {
+                setTimeout(() => {
+                    window.toggleProfileModal();
+                    // Hide close button if profile is incomplete
+                    const closeBtn = document.getElementById('close-profile-modal');
+                    if (closeBtn) closeBtn.style.display = 'none';
+                }, 1000);
+            } else {
+                const closeBtn = document.getElementById('close-profile-modal');
+                if (closeBtn) closeBtn.style.display = 'block';
+            }
         } catch(e) {
             console.error("Failed to load profile:", e);
         }
@@ -250,6 +262,8 @@ onAuthStateChanged(auth, async (user) => {
         elements.adminBtn.classList.add('hidden');
         reqElements.forEach(el => el.classList.add('hidden'));
     }
+    // Always refresh leaderboard
+    renderHomepageLeaderboard();
 });
 
 // Check for redirect result on load
@@ -961,30 +975,34 @@ window.readQuestionAloud = () => {
     window.speechSynthesis.speak(utterance);
 };
 
-window.showLeaderboard = async () => {
+async function renderHomepageLeaderboard() {
     try {
         const topUsers = await getGlobalLeaderboard();
+        const body = document.getElementById('homepage-leaderboard-body');
+        if (!body) return;
+
         if (topUsers.length === 0) {
-            elements.leaderboardBody.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
+            body.innerHTML = '<tr><td colspan="5" style="text-align: center;">尚未有任何勇者紀錄</td></tr>';
         } else {
-            elements.leaderboardBody.innerHTML = topUsers.map((u, idx) => {
+            body.innerHTML = topUsers.map((u, idx) => {
                 const avatarImg = u.avatar ? `<img src="assets/avatars/${u.avatar}" style="width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--gold);">` : `<i class="fas fa-user-ninja" style="font-size:1.5rem; color:var(--primary);"></i>`;
                 return `
                 <tr>
                     <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
                     <td>${avatarImg}</td>
-                    <td>${u.nickname || u.email.split('@')[0]}</td>
+                    <td>${u.nickname || '無名勇者'}</td>
                     <td>LV ${u.level || 1}</td>
                     <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
                 </tr>
             `}).join('');
         }
-        elements.leaderboardModal.classList.remove('hidden');
     } catch (e) {
-        alert('讀取榮譽榜失敗: ' + e.message);
-        console.error(e);
+        console.error("Leaderboard error:", e);
     }
-};
+}
+
+// Initial render
+renderHomepageLeaderboard();
 
 document.getElementById('show-leaderboard-btn').addEventListener('click', window.showLeaderboard);
 document.getElementById('show-leaderboard-result-btn').addEventListener('click', window.showLeaderboard);
@@ -995,8 +1013,21 @@ window.toggleProfileModal = () => {
     if (!state.userProfile) return;
     
     // Setup modal UI
-    document.getElementById('profile-nickname').value = state.userProfile.nickname || state.userProfile.email.split('@')[0];
-    selectedAvatarIcon = state.userProfile.avatar || 'fa-cat';
+    document.getElementById('profile-nickname').value = state.userProfile.nickname || '';
+    document.getElementById('profile-role').value = state.userProfile.role || '';
+    
+    // Role fields
+    document.getElementById('profile-teacher-name').value = state.userProfile.realName || '';
+    document.getElementById('profile-teacher-school').value = state.userProfile.school || '';
+    document.getElementById('profile-teacher-subject').value = state.userProfile.teacherSubject || '';
+    
+    document.getElementById('profile-student-name').value = state.userProfile.realName || '';
+    document.getElementById('profile-student-school').value = state.userProfile.school || '';
+    document.getElementById('profile-student-dept').value = state.userProfile.studentDept || '';
+
+    updateRoleFields(state.userProfile.role);
+
+    selectedAvatarIcon = state.userProfile.avatar || 'male_1.png';
     
     // Setup Avatar selector
     document.querySelectorAll('.avatar-option').forEach(btn => {
@@ -1064,24 +1095,66 @@ document.querySelectorAll('.avatar-option').forEach(btn => {
     });
 });
 
+document.getElementById('profile-role').addEventListener('change', (e) => {
+    updateRoleFields(e.target.value);
+});
+
+function updateRoleFields(role) {
+    const tFields = document.getElementById('teacher-fields');
+    const sFields = document.getElementById('student-fields');
+    if (role === 'teacher') {
+        tFields.classList.remove('hidden');
+        sFields.classList.add('hidden');
+    } else if (role === 'student') {
+        sFields.classList.remove('hidden');
+        tFields.classList.add('hidden');
+    } else {
+        tFields.classList.add('hidden');
+        sFields.classList.add('hidden');
+    }
+}
+
 document.getElementById('save-profile-btn').addEventListener('click', async () => {
     if (!state.currentUser) return;
     const nickname = document.getElementById('profile-nickname').value.trim();
-    if (!nickname) {
-        alert('請輸入暱稱！');
+    const role = document.getElementById('profile-role').value;
+    
+    if (!nickname || !role) {
+        alert('請填寫完整基本資料（暱稱與身份別）！');
+        return;
+    }
+
+    let profileData = {
+        nickname: nickname,
+        role: role,
+        avatar: selectedAvatarIcon,
+        profileCompleted: true
+    };
+
+    if (role === 'teacher') {
+        profileData.realName = document.getElementById('profile-teacher-name').value.trim();
+        profileData.school = document.getElementById('profile-teacher-school').value.trim();
+        profileData.teacherSubject = document.getElementById('profile-teacher-subject').value.trim();
+    } else {
+        profileData.realName = document.getElementById('profile-student-name').value.trim();
+        profileData.school = document.getElementById('profile-student-school').value.trim();
+        profileData.studentDept = document.getElementById('profile-student-dept').value;
+    }
+
+    // Basic validation
+    if (!profileData.realName || !profileData.school) {
+        alert('請填寫真實姓名與學校！');
         return;
     }
     
     try {
-        const newProfile = {
-            nickname: nickname,
-            avatar: selectedAvatarIcon
-        };
-        await updateUserProfile(state.currentUser.uid, newProfile);
-        state.userProfile.nickname = nickname;
-        state.userProfile.avatar = selectedAvatarIcon;
+        await updateUserProfile(state.currentUser.uid, profileData);
+        Object.assign(state.userProfile, profileData);
         renderProfileAvatar();
         elements.profileModal.classList.add('hidden');
+        const closeBtn = document.getElementById('close-profile-modal');
+        if (closeBtn) closeBtn.style.display = 'block';
+        alert('資料已儲存！勇者冒險開始！');
     } catch (e) {
         alert('儲存失敗: ' + e.message);
     }

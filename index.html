@@ -103,9 +103,28 @@
                     </button>
                 </div>
 
-                <button id="show-leaderboard-btn" class="btn btn-outline auth-required hidden" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-trophy"></i> 查看我的歷史紀錄 (需登入)
-                </button>
+            <!-- Homepage Leaderboard Section -->
+            <div class="glass-card leaderboard-homepage" style="margin-top: 2rem;">
+                <h3 class="glow-text" style="text-align: center; margin-bottom: 1.5rem;">
+                    <i class="fas fa-trophy"></i> 全服勇者榮譽榜
+                </h3>
+                <div class="table-container">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>排名</th>
+                                <th>化身</th>
+                                <th>勇者暱稱</th>
+                                <th>等級</th>
+                                <th>累積題數</th>
+                            </tr>
+                        </thead>
+                        <tbody id="homepage-leaderboard-body">
+                            <!-- Leaderboard injected here -->
+                            <tr><td colspan="5" style="text-align: center;">載入中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -338,24 +357,17 @@
         <div id="auth-modal" class="modal hidden">
             <div class="glass-card modal-content" style="max-width: 400px;">
                 <div class="modal-header">
-                    <h2 id="auth-title"><i class="fas fa-user-circle"></i> 勇者登入</h2>
+                    <h2 id="auth-title" style="text-align: center; width: 100%;"><i class="fas fa-user-circle"></i> 勇者登入</h2>
                     <button class="close-modal" onclick="document.getElementById('auth-modal').classList.add('hidden')">&times;</button>
                 </div>
-                <div class="form-group">
-                    <label>電子郵件</label>
-                    <input type="email" id="auth-email" placeholder="hero@example.com">
+                <div style="text-align: center; margin: 1.5rem 0;">
+                    <p style="color: var(--text-dim); margin-bottom: 1.5rem;">目前僅開放使用 Google 帳號登入與註冊</p>
+                    <button id="auth-google-btn" class="btn btn-outline" style="width: 100%; border-color: #4285F4; color: #4285F4; padding: 1rem;">
+                        <i class="fab fa-google"></i> 使用 Google 帳號進行身分驗證
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label>密碼 (至少 6 碼)</label>
-                    <input type="password" id="auth-password" placeholder="******">
-                </div>
-                <div id="auth-error" style="color: var(--danger); margin-bottom: 1rem; font-size: 0.875rem;"></div>
-                <button id="auth-submit-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">登入</button>
-                <button id="auth-google-btn" class="btn btn-outline" style="width: 100%; border-color: #4285F4; color: #4285F4;">
-                    <i class="fab fa-google"></i> 使用 Google 帳號登入
-                </button>
-                <div style="text-align: center; margin-top: 1rem; font-size: 0.875rem;">
-                    <a href="#" id="auth-toggle-link" style="color: var(--primary);">還沒有帳號？點此註冊</a>
+                <div style="text-align: center; font-size: 0.75rem; color: var(--text-dim);">
+                    登入即表示同意本站的使用規則與資料存取
                 </div>
             </div>
         </div>
@@ -365,7 +377,7 @@
             <div class="glass-card modal-content" style="max-width: 500px;">
                 <div class="modal-header">
                     <h2><i class="fas fa-address-card"></i> 勇者檔案</h2>
-                    <button class="close-modal" onclick="document.getElementById('profile-modal').classList.add('hidden')">&times;</button>
+                    <button id="close-profile-modal" class="close-modal" onclick="document.getElementById('profile-modal').classList.add('hidden')">&times;</button>
                 </div>
                 
                 <div class="profile-header">
@@ -374,9 +386,63 @@
                     </div>
                     <div class="profile-info">
                         <div class="form-group" style="margin-bottom: 0.5rem;">
+                            <label style="font-size: 0.75rem;">勇者暱稱 (排行榜用)</label>
                             <input type="text" id="profile-nickname" placeholder="勇者暱稱" style="font-size: 1.25rem; font-weight: bold; width: 100%;">
                         </div>
                         <div class="level-badge" id="profile-level-badge">LV 1 新手勇者</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fas fa-users-cog"></i> 身份別</label>
+                    <select id="profile-role" class="btn btn-outline" style="width: 100%;">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="teacher">老師</option>
+                        <option value="student">學生</option>
+                    </select>
+                </div>
+
+                <!-- Teacher Only Fields -->
+                <div id="teacher-fields" class="hidden">
+                    <div class="form-group">
+                        <label>真實姓名</label>
+                        <input type="text" id="profile-teacher-name" placeholder="輸入真實姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>任教學校</label>
+                        <input type="text" id="profile-teacher-school" placeholder="例如：台北市立XX高中">
+                    </div>
+                    <div class="form-group">
+                        <label>任教科目</label>
+                        <input type="text" id="profile-teacher-subject" placeholder="例如：餐飲管理、電子科">
+                    </div>
+                </div>
+
+                <!-- Student Only Fields -->
+                <div id="student-fields" class="hidden">
+                    <div class="form-group">
+                        <label>真實姓名</label>
+                        <input type="text" id="profile-student-name" placeholder="輸入真實姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>就讀學校</label>
+                        <input type="text" id="profile-student-school" placeholder="例如：新北市立XX高中">
+                    </div>
+                    <div class="form-group">
+                        <label>所屬科別</label>
+                        <select id="profile-student-dept">
+                            <option value="">-- 請選擇科別 --</option>
+                            <option value="普通科">普通科</option>
+                            <option value="餐飲技術科">餐飲技術科</option>
+                            <option value="餐飲管理科">餐飲管理科</option>
+                            <option value="食品加工科">食品加工科</option>
+                            <option value="電子科">電子科</option>
+                            <option value="電機科">電機科</option>
+                            <option value="資料處理科">資料處理科</option>
+                            <option value="水電技術科">水電技術科</option>
+                            <option value="廣告設計科">廣告設計科</option>
+                            <option value="其他">其他</option>
+                        </select>
                     </div>
                 </div>
 

@@ -127,13 +127,18 @@ export async function getUserProfile(uid, email) {
       uid,
       email,
       nickname: email.split('@')[0],
-      avatar: 'fa-cat', // Default avatar
+      avatar: 'male_1.png', // New default avatar
       totalQuestions: 0,
       totalTime: 0, // in seconds
       level: 1,
-      treasures: [],
       puzzlePieces: [],
-      currentPuzzleId: 'mona_lisa'
+      currentPuzzleId: 'mona_lisa',
+      profileCompleted: false,
+      role: '', // teacher or student
+      realName: '',
+      school: '',
+      teacherSubject: '',
+      studentDept: ''
     };
     await setDoc(userRef, defaultProfile);
     return defaultProfile;
