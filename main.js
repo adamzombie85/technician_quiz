@@ -148,7 +148,14 @@ elements.openPawnBtn.addEventListener('click', () => {
     elements.pawnModal.classList.remove('hidden');
 });
 
-window.closeBattleResult = () => {
+window.closeBattleResult = async () => {
+    const honorInput = document.getElementById('honor-message-input');
+    if (honorInput && honorInput.value !== (state.userProfile.honorMessage || '')) {
+        try {
+            await syncUserStats(state.currentUser.uid, { honorMessage: honorInput.value });
+            state.userProfile.honorMessage = honorInput.value;
+        } catch (e) { console.error("Failed to save honor message", e); }
+    }
     elements.battleResultModal.classList.add('hidden');
 };
 
@@ -982,6 +989,25 @@ function awardRewards(scorePercent, questionCount) {
     }
     resultHtml += `</div>`;
     
+    // Check rank for Top 3 message
+    let isTopThree = false;
+    try {
+        const leaderboard = await getGlobalLeaderboard();
+        const userRank = leaderboard.findIndex(u => u.uid === state.currentUser.uid) + 1;
+        if (userRank > 0 && userRank <= 3) {
+            isTopThree = true;
+        }
+    } catch (e) { console.error("Rank check failed", e); }
+
+    const honorMessageContainer = document.getElementById('honor-message-container');
+    const honorMessageInput = document.getElementById('honor-message-input');
+    if (isTopThree && honorMessageContainer && honorMessageInput) {
+        honorMessageContainer.classList.remove('hidden');
+        honorMessageInput.value = state.userProfile.honorMessage || '';
+    } else if (honorMessageContainer) {
+        honorMessageContainer.classList.add('hidden');
+    }
+
     elements.battleResultContent.innerHTML = resultHtml;
     elements.battleResultModal.classList.remove('hidden');
 
@@ -1296,7 +1322,13 @@ async function renderHomepageLeaderboard() {
                     <td>${avatarHtml}</td>
                     <td>${u.nickname || '無名勇者'}</td>
                     <td>LV ${u.level || 1}</td>
-                    <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
+                    <td style="color: var(--gold); font-weight:bold;">
+                        ${u.totalQuestions || 0}
+                        ${u.honorMessage ? `
+                        <div class="honor-marquee-container" style="margin-top: 4px;">
+                            <div class="honor-marquee-text">${u.honorMessage}</div>
+                        </div>` : ''}
+                    </td>
                 </tr>
             `}).join('');
         }
@@ -1330,7 +1362,13 @@ window.showLeaderboard = async () => {
                     <td>${avatarHtml}</td>
                     <td>${u.nickname || '無名勇者'}</td>
                     <td>LV ${u.level || 1}</td>
-                    <td style="color: var(--gold); font-weight:bold;">${u.totalQuestions || 0}</td>
+                    <td style="color: var(--gold); font-weight:bold;">
+                        ${u.totalQuestions || 0}
+                        ${u.honorMessage ? `
+                        <div class="honor-marquee-container" style="margin-top: 4px;">
+                            <div class="honor-marquee-text">${u.honorMessage}</div>
+                        </div>` : ''}
+                    </td>
                 </tr>
             `}).join('');
         }

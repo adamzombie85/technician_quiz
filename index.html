@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/iansui@latest/index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23fbbf24' d='M504.1 35.1c-14.8-14.8-38.9-14.8-53.7 0L241.4 244.1 190.1 192.8c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L196.1 291 113.6 373.5c-4.4-1.2-8.9-1.9-13.6-1.9-24.3 0-44 19.7-44 44 0 4.7.7 9.2 1.9 13.6L7.1 480c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l50.8-50.8c4.4 1.2 8.9 1.9 13.6 1.9 24.3 0 44-19.7 44-44 0-4.7-.7-9.2-1.9-13.6l82.5-82.5 52.8 52.8c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-51.3-51.3L504.1 88.8c14.8-14.8 14.8-38.9 0-53.7z'/></svg>">
     <!-- docx.js for Word export -->
     <script src="https://unpkg.com/docx@8.2.2/build/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
@@ -600,6 +601,12 @@
                 <div id="battle-result-content" style="margin: 2rem 0; font-size: 1.1rem; line-height: 1.8;">
                     <!-- Dynamic content -->
                 </div>
+
+                <div id="honor-message-container" class="hidden" style="margin: 1rem 0; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 1rem; border: 1px dashed var(--gold);">
+                    <p style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;"><i class="fas fa-crown"></i> 榮登前三名！留下上榜感言：</p>
+                    <input type="text" id="honor-message-input" maxlength="20" placeholder="限20字以內..." style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
+                </div>
+
                 <button class="btn btn-primary" onclick="closeBattleResult()">確定</button>
             </div>
         </div>

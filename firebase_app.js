@@ -212,6 +212,10 @@ export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTim
     updateData.puzzlePieces = currentPieces;
   }
 
+  if (scoreOrUpdate && scoreOrUpdate.honorMessage !== undefined) {
+    updateData.honorMessage = scoreOrUpdate.honorMessage.substring(0, 20);
+  }
+
   await updateDoc(userRef, updateData);
 
   return {
