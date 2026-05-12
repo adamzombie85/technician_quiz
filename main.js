@@ -1060,7 +1060,7 @@ document.querySelectorAll('.avatar-option').forEach(btn => {
         document.querySelectorAll('.avatar-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         selectedAvatarIcon = btn.dataset.icon;
-        document.getElementById('profile-current-avatar').innerHTML = `<i class="fas ${selectedAvatarIcon}"></i>`;
+        document.getElementById('profile-current-avatar').innerHTML = `<img src="assets/avatars/${selectedAvatarIcon}" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; display: block;">`;
     });
 });
 
@@ -1199,10 +1199,10 @@ function renderProfileAvatar() {
     const avatar = state.userProfile.avatar || 'male_1.png';
     const avatarPath = `assets/avatars/${avatar}`;
     
-    elements.userAvatarBtn.innerHTML = `<img src="${avatarPath}" style="width: 100%; height: 100%; border-radius: 50%;">`;
+    elements.userAvatarBtn.innerHTML = `<img src="${avatarPath}" style="width: 100%; height: 100%; object-fit: cover; display: block;">`;
     const profileAvatar = document.getElementById('profile-current-avatar');
     if (profileAvatar) {
-        profileAvatar.innerHTML = `<img src="${avatarPath}" style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid var(--gold);">`;
+        profileAvatar.innerHTML = `<img src="${avatarPath}" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; display: block;">`;
     }
 }
 
