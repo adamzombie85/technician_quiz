@@ -103,7 +103,7 @@
     "options": [
       "冰夾(Ice Tong)",
       "冰鏟(Ice Scoop)",
-      "冰桶 (Ice Bucket)",
+      "冰桶(Ice Bucket)",
       "吧匙(Bar Spoon)"
     ],
     "answer": 2,
@@ -344,7 +344,7 @@
       "古典酒杯(Old Fashioned Glass)",
       "高飛球杯(Highball Glass)",
       "可林杯(Collins Glass)",
-      "公杯 (Lipped Glass)"
+      "公杯(Lipped Glass)"
     ],
     "answer": 4,
     "knowledge_tag": "器皿使用",
@@ -374,7 +374,7 @@
     "question": "為了讓吧檯工作檯面保持乾淨,應",
     "options": [
       "每做完一道飲料不需急著整理",
-      "Rush Hour 時先放著,等打烊再一起整理",
+      "Rush Hour時先放著,等打烊再一起整理",
       "做完一道飲料即刻將器皿清洗歸位,檯面要擦拭乾淨並處理殘渣",
       "飲務員不必親力親為,可請助手稍後再整理"
     ],
@@ -2069,7 +2069,7 @@
     "id": 8,
     "question": "吧檯調飲常用的糖,以下那一種最方便?",
     "options": [
-      "糖水 (Simple Syrup)",
+      "糖水(Simple Syrup)",
       "砂糖(Granulated Sugar)",
       "蜜糖(Honey)",
       "冰糖(Crystal Sugar)"
@@ -4181,7 +4181,7 @@
     "id": 140,
     "question": "下列有關飲料容積單位,何者錯誤?",
     "options": [
-      "ml為Milliliter 的簡寫",
+      "ml為Milliliter的簡寫",
       "cl為Centiliter",
       "10 g = 1cc",
       "10ml=1cl"
@@ -4903,7 +4903,7 @@
     "options": [
       "杯墊(Coaster)",
       "冰夾(Ice Tong)",
-      "吸管 (Straw)",
+      "吸管(Straw)",
       "櫻桃叉(Cherry Stick)"
     ],
     "answer": 2,
@@ -5366,7 +5366,7 @@
     "question": "義式咖啡機正在萃取咖啡時",
     "options": [
       "不可將萃取手把移開,以免被燙傷",
-      "發現萃取出的Crema 不理想時,可以抽出萃取手把",
+      "發現萃取出的Crema不理想時,可以抽出萃取手把",
       "壓力不足時,萃取手把可以抽出或移開",
       "當咖啡滴漏不出來時,可以將萃取手把左右轉動"
     ],
@@ -5893,8 +5893,8 @@
     "id": 26,
     "question": "調酒員為外國客人解說飲料的配方時,下列何者正確?",
     "options": [
-      "This is a mocktail with some... and some..",
-      "It is one cup of..",
+      "This is a mocktail with some... and some",
+      "It is one cup of",
       "I am serving one cup of beverage",
       "It is one kind of soft drink"
     ],
@@ -6055,7 +6055,7 @@
     "options": [
       "一律丟棄、不可做其他使用",
       "看看是否真的完全未食用,如果確定之後,飲料倒掉、食物留下",
-      "如果有客人 Order一樣的項目,正好可以遞補",
+      "如果有客人Order一樣的項目,正好可以遞補",
       "問過主管之後,可以給員工食用"
     ],
     "answer": 1,
