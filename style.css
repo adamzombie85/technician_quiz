@@ -360,6 +360,7 @@ select:focus, input:focus {
     max-width: 900px;
     max-height: 80vh;
     overflow-y: auto;
+    position: relative;
 }
 
 .unlock-hint-container {
@@ -417,11 +418,25 @@ select:focus, input:focus {
 }
 
 .close-modal {
-    background: none;
+    background: rgba(255, 255, 255, 0.1);
     border: none;
     color: white;
-    font-size: 2rem;
+    font-size: 1.5rem;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
+    transition: all 0.3s ease;
+    line-height: 1;
+}
+
+.close-modal:hover {
+    background: var(--danger);
+    color: white;
+    transform: rotate(90deg);
 }
 
 /* Table Styles */
@@ -1566,4 +1581,65 @@ input:checked + .slider:before {
 .btn-sm {
     padding: 0.5rem 1rem;
     font-size: 0.875rem;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast {
+    background: rgba(15, 23, 42, 0.95);
+    border-left: 4px solid var(--gold);
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 250px;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.toast.error { border-left-color: var(--danger); }
+.toast.success { border-left-color: var(--success); }
+
+/* Farm Production Progress Bar */
+.farm-progress-container {
+    width: 80%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.farm-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), #fbbf24);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.farm-progress-text {
+    font-size: 0.65rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 4px;
 }

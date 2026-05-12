@@ -35,19 +35,14 @@
             <i class="fas fa-dragon"></i> 勇者題庫
         </div>
         <div style="display: flex; gap: 1rem; align-items: center;">
-            <button id="music-toggle-btn" class="control-btn" title="背景音樂開關">
-                <i class="fas fa-music"></i>
-            </button>
             <button id="admin-btn" class="control-btn hidden" onclick="toggleAdminModal()" title="管理介面" style="border-color: var(--gold); color: var(--gold);">
                 <i class="fas fa-user-gear"></i> 管理
-            </button>
-            <button id="territory-btn" class="control-btn hidden" onclick="toggleTerritoryModal()" title="我的領地" style="border-color: #10b981; color: #10b981;">
-                <i class="fas fa-map-marked-alt"></i> 領地
             </button>
             <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
                 <i class="fas fa-cat"></i>
             </button>
             <button id="auth-btn" class="control-btn" onclick="toggleAuthModal()"><i class="fas fa-user"></i> 登入/註冊</button>
+
             <button onclick="toggleA11yModal()" class="control-btn"><i class="fas fa-universal-access"></i> 無障礙設定</button>
         </div>
     </div>
@@ -446,6 +441,10 @@
                     <div class="unlock-hint-text" id="territory-unlock-text">目前進度: 0 / 100</div>
                 </div>
 
+                <button id="territory-btn" class="btn btn-outline hidden" onclick="toggleTerritoryModal()" style="width: 100%; border-color: #10b981; color: #10b981; margin-bottom: 1rem; font-size: 1.1rem; padding: 0.8rem;">
+                    <i class="fas fa-map-marked-alt"></i> 進入我的領地
+                </button>
+
                 <div class="form-group">
                     <label><i class="fas fa-users-cog"></i> 身份別</label>
                     <select id="profile-role" class="btn btn-outline" style="width: 100%;">
@@ -679,7 +678,7 @@
         <!-- Territory Modal -->
         <div id="territory-modal" class="modal hidden" style="z-index: 2500;">
             <div class="glass-card modal-content territory-container" style="max-width: 900px; padding: 0;">
-                <button class="close-modal" onclick="toggleTerritoryModal()" style="z-index: 10;">&times;</button>
+                <button class="close-modal" onclick="toggleTerritoryModal()" style="position: absolute; right: 1rem; top: 1rem; z-index: 10;">&times;</button>
                 
                 <div class="territory-tabs">
                     <button class="tab-btn active" onclick="switchTerritoryTab('map')"><i class="fas fa-map"></i> 我的領地</button>

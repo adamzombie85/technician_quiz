@@ -1957,6 +1957,13 @@ resetIdleTimer();
 
 // --- Territory & Farm System Logic ---
 window.toggleTerritoryModal = () => {
+    if (!state.currentUser) return;
+    
+    // Close profile modal if open
+    if (elements.profileModal) {
+        elements.profileModal.classList.add('hidden');
+    }
+
     const isHidden = elements.territoryModal.classList.toggle('hidden');
     if (!isHidden) {
         switchTerritoryTab('map');
@@ -2017,7 +2024,14 @@ function renderTerritoryMap() {
                 cell.innerHTML += `<div class="harvest-indicator">${Q}</div>`;
                 cell.onclick = () => harvestLand(i);
             } else {
-                cell.onclick = () => alert('物資生產中... 請耐心等待。');
+                const progressPct = Math.min(100, (elapsed / TERRITORY_CONFIG.productionTime) * 100);
+                cell.innerHTML += `
+                    <div class="farm-progress-container">
+                        <div class="farm-progress-fill" style="width: ${progressPct}%"></div>
+                    </div>
+                    <div class="farm-progress-text">生產中 ${Math.floor(progressPct)}%</div>
+                `;
+                cell.onclick = () => showToast('物資生產中... 請耐心等待。');
             }
         } else {
             cell.classList.add('locked');
@@ -2033,7 +2047,7 @@ function renderTerritoryMap() {
                     <div class="land-icon"><i class="fas fa-plus-circle" style="color: var(--gold);"></i></div>
                     <div class="land-name">擴張領地</div>
                 `;
-                cell.onclick = () => alert('未來擴張功能即將開放！目前先專心經營現有農場吧。');
+                cell.onclick = () => showToast('未來擴張功能即將開放！目前先專心經營現有農場吧。');
             }
         }
         elements.territoryGrid.appendChild(cell);
@@ -2122,7 +2136,7 @@ async function synthesizeItem(recipeId) {
     const gold = state.userProfile.gold || 0;
 
     if (gold < config.gold || (inv.egg || 0) < config.egg || (inv.milk || 0) < config.milk) {
-        alert('物資或金幣不足，無法製作！');
+        showToast('物資或金幣不足，無法製作！', 'error');
         return;
     }
 
@@ -2143,12 +2157,12 @@ async function synthesizeItem(recipeId) {
         state.userProfile.inventory = newInv;
         state.userProfile.gold = newGold;
 
-        alert('製作成功！皇家布丁已存入背包。');
+        showToast('製作成功！皇家布丁已存入背包。', 'success');
         updateTerritoryAssets();
         renderKitchen();
     } catch (e) {
         console.error(e);
-        alert('製作失敗。');
+        showToast('製作失敗。', 'error');
     } finally {
         showLoadingOverlay(false);
     }
