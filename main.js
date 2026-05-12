@@ -66,11 +66,6 @@ const elements = {
     a11yTts: document.getElementById('a11y-tts'),
     authBtn: document.getElementById('auth-btn'),
     authModal: document.getElementById('auth-modal'),
-    authEmail: document.getElementById('auth-email'),
-    authPassword: document.getElementById('auth-password'),
-    authSubmitBtn: document.getElementById('auth-submit-btn'),
-    authToggleLink: document.getElementById('auth-toggle-link'),
-    authError: document.getElementById('auth-error'),
     authTitle: document.getElementById('auth-title'),
     authGoogleBtn: document.getElementById('auth-google-btn'),
     leaderboardModal: document.getElementById('leaderboard-modal'),
@@ -286,41 +281,6 @@ window.toggleAuthModal = () => {
     }
 };
 
-elements.authToggleLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    isLoginMode = !isLoginMode;
-    elements.authTitle.innerHTML = isLoginMode ? '<i class="fas fa-user-circle"></i> 勇者登入' : '<i class="fas fa-user-plus"></i> 勇者註冊';
-    elements.authSubmitBtn.textContent = isLoginMode ? '登入' : '註冊';
-    elements.authToggleLink.textContent = isLoginMode ? '還沒有帳號？點此註冊' : '已經有帳號了？點此登入';
-    elements.authError.textContent = '';
-});
-
-elements.authSubmitBtn.addEventListener('click', async () => {
-    const email = elements.authEmail.value.trim();
-    const password = elements.authPassword.value.trim();
-    if (!email || password.length < 6) {
-        elements.authError.textContent = '信箱格式錯誤或密碼太短(至少6碼)';
-        return;
-    }
-    
-    try {
-        elements.authSubmitBtn.disabled = true;
-        if (isLoginMode) {
-            await loginUser(email, password);
-        } else {
-            await registerUser(email, password);
-        }
-        elements.authModal.classList.add('hidden');
-        elements.authError.textContent = '';
-        elements.authEmail.value = '';
-        elements.authPassword.value = '';
-    } catch (err) {
-        elements.authError.textContent = '操作失敗：' + err.message;
-    } finally {
-        elements.authSubmitBtn.disabled = false;
-    }
-});
-
 elements.authGoogleBtn.addEventListener('click', async () => {
     try {
         // Detect if we are in a mobile webview (LINE, FB, etc.)
@@ -330,16 +290,14 @@ elements.authGoogleBtn.addEventListener('click', async () => {
         if (isWebView) {
             await loginWithGoogleRedirect();
         } else {
-            // Note: Don't disable the button BEFORE the call to avoid popup blocking in some browsers
             await loginWithGoogle();
             elements.authModal.classList.add('hidden');
-            elements.authError.textContent = '';
         }
     } catch (err) {
         if (err.code === 'auth/popup-blocked') {
-            elements.authError.textContent = 'Google 登入失敗：瀏覽器攔截了彈窗，請點擊網址列右側允許彈窗，或更換瀏覽器。';
+            alert('Google 登入失敗：瀏覽器攔截了彈窗，請點擊網址列右側允許彈窗，或更換瀏覽器。');
         } else {
-            elements.authError.textContent = 'Google 登入失敗：' + err.message;
+            alert('Google 登入失敗：' + err.message);
         }
         console.error(err);
     } finally {
