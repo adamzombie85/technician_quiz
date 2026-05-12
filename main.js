@@ -725,10 +725,23 @@ function showQuestion() {
     elements.immediateExpContainer.classList.add('hidden');
     elements.optionsContainer.innerHTML = '';
     
+    // Ensure we always have 4 options
+    let paddedOptions = [...q.options];
+    while (paddedOptions.length < 4) {
+        paddedOptions.push("(無文字選項)");
+    }
+    
     // Create an array mapping text to original indices (1-based)
-    const optionsWithIndices = q.options.map((opt, i) => ({ text: opt, originalIndex: i + 1 }));
-    // Shuffle the array
-    optionsWithIndices.sort(() => Math.random() - 0.5);
+    const optionsWithIndices = paddedOptions.map((opt, i) => ({ 
+        text: (opt === "無選項" || !opt) ? "(無文字選項)" : opt, 
+        originalIndex: i + 1 
+    }));
+    
+    // Fisher-Yates shuffle for true randomness
+    for (let i = optionsWithIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [optionsWithIndices[i], optionsWithIndices[j]] = [optionsWithIndices[j], optionsWithIndices[i]];
+    }
 
     optionsWithIndices.forEach((optObj, i) => {
         const btn = document.createElement('button');
