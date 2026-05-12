@@ -1303,6 +1303,28 @@ function updateUserProfileDisplay() {
             document.getElementById('profile-student-dept').value = state.userProfile.department || '';
         }
     }
+
+    // Territory Unlock Hint
+    const unlockHintContainer = document.getElementById('territory-unlock-hint');
+    const unlockTitle = document.getElementById('territory-unlock-title');
+    const unlockProgressBar = document.getElementById('territory-unlock-progress-fill');
+    const unlockText = document.getElementById('territory-unlock-text');
+    
+    if (unlockHintContainer && unlockTitle && unlockProgressBar && unlockText) {
+        unlockHintContainer.classList.remove('hidden');
+        const userTotalQ = state.userProfile.totalQuestions || 0;
+        if (userTotalQ >= 100) {
+            unlockTitle.innerHTML = '<span style="color: var(--success);"><i class="fas fa-unlock"></i> 已解鎖專屬領地與農場系統！</span>';
+            unlockProgressBar.style.width = '100%';
+            unlockProgressBar.style.backgroundColor = 'var(--success)';
+            unlockText.textContent = `目前進度: ${userTotalQ} / 100 (已達標)`;
+        } else {
+            unlockTitle.innerHTML = '<i class="fas fa-lock"></i> <span>解鎖專屬領地：累積練習 100 題</span>';
+            unlockProgressBar.style.width = `${Math.min(100, userTotalQ)}%`;
+            unlockProgressBar.style.backgroundColor = 'var(--gold)';
+            unlockText.textContent = `目前進度: ${userTotalQ} / 100`;
+        }
+    }
 }
 
 function renderReview() {
