@@ -1088,10 +1088,10 @@ function updateUserProfileDisplay() {
     }
 
     // Stats
-    const totalQ = document.getElementById('profile-total-questions');
-    const totalT = document.getElementById('profile-total-time');
-    if (totalQ) totalQ.textContent = state.userProfile.totalQuestions || 0;
-    if (totalT) totalT.textContent = `${Math.floor((state.userProfile.totalTime || 0) / 60)}m`;
+    const totalQElement = document.getElementById('profile-total-questions');
+    const totalTElement = document.getElementById('profile-total-time');
+    if (totalQElement) totalQElement.textContent = state.userProfile.totalQuestions || 0;
+    if (totalTElement) totalTElement.textContent = `${Math.floor((state.userProfile.totalTime || 0) / 60)}m`;
 
     // Role Fields
     const roleSelect = document.getElementById('profile-role');

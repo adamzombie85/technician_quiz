@@ -150,35 +150,43 @@ export async function updateUserProfile(uid, data) {
   await updateDoc(userRef, data);
 }
 
-export async function syncUserStats(uid, score, totalQuestions, totalTime, practicedQuestionIds = []) {
+export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTime, practicedQuestionIds = []) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
   
   if (!userSnap.exists()) return null;
   const data = userSnap.data();
   
-  const oldLevel = data.level || 1;
-  const newTotalQuestions = (data.totalQuestions || 0) + totalQuestions;
-  const newTotalTime = (data.totalTime || 0) + totalTime;
-  
-  let newLevel = 1;
-  for (const threshold of LEVEL_THRESHOLDS) {
-    if (newTotalQuestions >= threshold.req) {
-      newLevel = threshold.level;
+  let updateData = {};
+
+  if (typeof scoreOrUpdate === 'object' && scoreOrUpdate !== null && !Array.isArray(scoreOrUpdate)) {
+    updateData = { ...scoreOrUpdate };
+  } else {
+    const qCount = Number(totalQuestions) || 0;
+    const tTime = Number(totalTime) || 0;
+    
+    updateData.totalQuestions = (Number(data.totalQuestions) || 0) + qCount;
+    updateData.totalTime = (Number(data.totalTime) || 0) + tTime;
+    
+    const questionStats = data.questionStats || {};
+    if (Array.isArray(practicedQuestionIds)) {
+        practicedQuestionIds.forEach(id => {
+            questionStats[id] = (questionStats[id] || 0) + 1;
+        });
     }
+    updateData.questionStats = questionStats;
   }
 
-  const questionStats = data.questionStats || {};
-  practicedQuestionIds.forEach(id => {
-    questionStats[id] = (questionStats[id] || 0) + 1;
-  });
-
-  const updateData = {
-    totalQuestions: newTotalQuestions,
-    totalTime: newTotalTime,
-    level: newLevel,
-    questionStats: questionStats
-  };
+  // Auto-recalculate level if questions updated
+  if (updateData.totalQuestions !== undefined) {
+    let newLevel = 1;
+    for (const threshold of LEVEL_THRESHOLDS) {
+      if (updateData.totalQuestions >= threshold.req) {
+        newLevel = threshold.level;
+      }
+    }
+    updateData.level = newLevel;
+  }
 
   let newPieces = [];
   const currentPieces = [...(data.puzzlePieces || [])];
