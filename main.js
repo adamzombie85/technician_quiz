@@ -836,6 +836,7 @@ async function endQuiz(isGiveUp = false) {
                 subject: state.config.subjectMap[state.selectedSubject] || '綜合練習',
                 mode: elements.filterType.options[elements.filterType.selectedIndex].text + (isGiveUp ? ' (中途放棄)' : ''),
                 count: totalToGrade,
+                correctCount: state.score,
                 score: scorePercent,
                 timeElapsed: elapsed
             });
@@ -850,7 +851,7 @@ async function endQuiz(isGiveUp = false) {
             const statsResult = await syncUserStats(
                 state.currentUser.uid, 
                 scorePercent, 
-                totalToGrade, 
+                state.score, // Correct answers only
                 elapsedSecs, 
                 state.practicedQuestionIds
             );
@@ -932,25 +933,25 @@ async function endQuiz(isGiveUp = false) {
         renderReview();
         
         // RPG Rewards
-        awardRewards(scorePercent, state.filteredQuestions.length);
+        await awardRewards(scorePercent, state.filteredQuestions.length);
     }
 }
 
-function awardRewards(scorePercent, questionCount) {
+async function awardRewards(scorePercent, questionCount) {
     if (!state.userProfile) return;
     
     // 1. Award Gold
     const goldEarned = scorePercent >= 80 ? questionCount * 10 : questionCount * 2;
     state.userProfile.gold = (state.userProfile.gold || 0) + goldEarned;
     
-    let rewardMessage = `獲得金幣: ${goldEarned}`;
-    
+    let loot = null;
+    let newPiece = null;
+
     // 2. Random Loot (50% chance if victory)
     if (scorePercent >= 80 && Math.random() < 0.5) {
-        const loot = state.lootPool[Math.floor(Math.random() * state.lootPool.length)];
+        loot = state.lootPool[Math.floor(Math.random() * state.lootPool.length)];
         state.userProfile.inventory = state.userProfile.inventory || [];
         state.userProfile.inventory.push({ ...loot, id: Date.now() });
-        rewardMessage += `\n獲得寶物: ${loot.icon} ${loot.name}`;
     }
     
     // 3. Painting Fragment (30% chance if victory)
@@ -966,24 +967,23 @@ function awardRewards(scorePercent, questionCount) {
         
         if (!state.userProfile.paintings[paintingName][fragIndex]) {
             state.userProfile.paintings[paintingName][fragIndex] = true;
-            rewardMessage += `\n獲得名畫碎片: ${paintingName} (碎片 ${fragIndex + 1})`;
+            newPiece = { name: paintingName, index: fragIndex };
         } else {
-            rewardMessage += `\n獲得重複的名畫碎片，已轉化為 50 金幣`;
             state.userProfile.gold += 50;
+            newPiece = false; // Flag for duplicate
         }
     }
     
-    // Show custom modal instead of alert
+    // Show custom modal
     let resultHtml = `<div style="text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(251, 191, 36, 0.2);">`;
-    resultHtml += `<div><i class="fas fa-coins" style="color: var(--gold);"></i> 獲得金幣: <span style="color: var(--gold); font-weight: bold;">${goldAwarded}</span></div>`;
+    resultHtml += `<div><i class="fas fa-coins" style="color: var(--gold);"></i> 獲得金幣: <span style="color: var(--gold); font-weight: bold;">${goldEarned}</span></div>`;
     
     if (loot) {
         resultHtml += `<div><i class="fas fa-box-open" style="color: #60a5fa;"></i> 獲得寶物: <span style="color: #60a5fa;">${loot.icon} ${loot.name}</span></div>`;
     }
     
     if (newPiece) {
-        const pName = Object.keys(state.paintings).find(k => state.paintings[k].file === newPiece.file);
-        resultHtml += `<div><i class="fas fa-puzzle-piece" style="color: var(--success);"></i> 獲得名畫碎片: <span style="color: var(--success);">${pName} (碎片 ${newPiece.index + 1})</span></div>`;
+        resultHtml += `<div><i class="fas fa-puzzle-piece" style="color: var(--success);"></i> 獲得名畫碎片: <span style="color: var(--success);">${newPiece.name} (碎片 ${newPiece.index + 1})</span></div>`;
     } else if (newPiece === false) {
         resultHtml += `<div><i class="fas fa-redo" style="color: var(--text-dim);"></i> 獲得重複碎片，已轉化為 <span style="color: var(--gold);">50G</span></div>`;
     }
@@ -1524,12 +1524,13 @@ window.switchAdminTab = async (tab) => {
         const records = await getAllPracticeRecords();
         document.getElementById('admin-records-body').innerHTML = records.map(r => {
             const date = r.timestamp ? (r.timestamp.toDate ? r.timestamp.toDate() : new Date(r.timestamp)) : new Date();
+            const countDisplay = r.correctCount !== undefined ? `${r.correctCount}/${r.count}` : r.count;
             return `
                 <tr>
                     <td>${date.toLocaleString()}</td>
                     <td>${r.email}</td>
                     <td>${r.subject.name || r.subject}</td>
-                    <td>${r.count}</td>
+                    <td>${countDisplay}</td>
                     <td style="color:${r.score >= 80 ? 'var(--success)' : 'var(--danger)'}">${r.score}%</td>
                 </tr>
             `;
@@ -1558,11 +1559,12 @@ window.viewUserDetail = async (uid, nickname) => {
         } else {
             document.getElementById('admin-detail-body').innerHTML = records.map(r => {
                 const date = r.timestamp ? (r.timestamp.toDate ? r.timestamp.toDate() : new Date(r.timestamp)) : new Date();
+                const countDisplay = r.correctCount !== undefined ? `${r.correctCount}/${r.count}` : r.count;
                 return `
                     <tr>
                         <td>${date.toLocaleString()}</td>
                         <td>${r.subject.name || r.subject}</td>
-                        <td>${r.count}</td>
+                        <td>${countDisplay}</td>
                         <td style="color:${r.score >= 80 ? 'var(--success)' : 'var(--danger)'}">${r.score}%</td>
                     </tr>
                 `;
