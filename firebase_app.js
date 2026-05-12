@@ -177,9 +177,12 @@ export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTim
     updateData.questionStats = questionStats;
   }
 
+  const oldLevel = Number(data.level) || 1;
+  let newLevel = oldLevel;
+
   // Auto-recalculate level if questions updated
   if (updateData.totalQuestions !== undefined) {
-    let newLevel = 1;
+    newLevel = 1;
     for (const threshold of LEVEL_THRESHOLDS) {
       if (updateData.totalQuestions >= threshold.req) {
         newLevel = threshold.level;

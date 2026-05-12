@@ -123,7 +123,9 @@ const elements = {
     paintingViewerModal: document.getElementById('painting-viewer-modal'),
     viewerImg: document.getElementById('viewer-img'),
     viewerTitle: document.getElementById('viewer-title'),
-    viewerArtist: document.getElementById('viewer-artist')
+    viewerArtist: document.getElementById('viewer-artist'),
+    battleResultModal: document.getElementById('battle-result-modal'),
+    battleResultContent: document.getElementById('battle-result-content')
 };
 
 let isLoginMode = true;
@@ -145,6 +147,10 @@ elements.openPawnBtn.addEventListener('click', () => {
     renderPawnShop();
     elements.pawnModal.classList.remove('hidden');
 });
+
+window.closeBattleResult = () => {
+    elements.battleResultModal.classList.add('hidden');
+};
 
 function migrateUserData() {
     if (!state.userProfile) return;
@@ -954,7 +960,25 @@ function awardRewards(scorePercent, questionCount) {
         }
     }
     
-    alert(`戰鬥結算:\n${rewardMessage}`);
+    // Show custom modal instead of alert
+    let resultHtml = `<div style="text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(251, 191, 36, 0.2);">`;
+    resultHtml += `<div><i class="fas fa-coins" style="color: var(--gold);"></i> 獲得金幣: <span style="color: var(--gold); font-weight: bold;">${goldAwarded}</span></div>`;
+    
+    if (loot) {
+        resultHtml += `<div><i class="fas fa-box-open" style="color: #60a5fa;"></i> 獲得寶物: <span style="color: #60a5fa;">${loot.icon} ${loot.name}</span></div>`;
+    }
+    
+    if (newPiece) {
+        const pName = Object.keys(state.paintings).find(k => state.paintings[k].file === newPiece.file);
+        resultHtml += `<div><i class="fas fa-puzzle-piece" style="color: var(--success);"></i> 獲得名畫碎片: <span style="color: var(--success);">${pName} (碎片 ${newPiece.index + 1})</span></div>`;
+    } else if (newPiece === false) {
+        resultHtml += `<div><i class="fas fa-redo" style="color: var(--text-dim);"></i> 獲得重複碎片，已轉化為 <span style="color: var(--gold);">50G</span></div>`;
+    }
+    resultHtml += `</div>`;
+    
+    elements.battleResultContent.innerHTML = resultHtml;
+    elements.battleResultModal.classList.remove('hidden');
+
     updateUserProfileDisplay();
     syncUserStats(state.currentUser.uid, { 
         gold: state.userProfile.gold, 
