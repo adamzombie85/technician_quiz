@@ -24,7 +24,30 @@ const state = {
     },
     cachedData: {}, // subjectKey -> questions
     userProfile: null,
-    practicedQuestionIds: []
+    practicedQuestionIds: [],
+    paintings: {
+        '約翰尼斯·維梅爾「戴珍珠耳環的少女」': { artist: '約翰尼斯·維梅爾', title: '戴珍珠耳環的少女', file: '約翰尼斯·維梅爾「戴珍珠耳環的少女」.webp', value: 5000 },
+        '格蘭特·伍德「美國哥德式」': { artist: '格蘭特·伍德', title: '美國哥德式', file: '格蘭特·伍德「美國哥德式」.jpg', value: 3000 },
+        '李奧納多·達文西「蒙娜麗莎」': { artist: '李奧納多·達文西', title: '蒙娜麗莎', file: '李奧納多·達文西「蒙娜麗莎」.jpg', value: 10000 },
+        '陳澄波「淡水夕照」': { artist: '陳澄波', title: '淡水夕照', file: '陳澄波「淡水夕照」.jpg', value: 8000 },
+        '桑德羅·波提且利「維納斯的誕生」': { artist: '桑德羅·波提且利', title: '維納斯的誕生', file: '桑德羅·波提且利「維納斯的誕生」.jpg', value: 6000 },
+        '葛飾北齋「神奈川沖浪裏」': { artist: '葛飾北齋', title: '神奈川沖浪裏', file: '葛飾北齋「神奈川沖浪裏」.webp', value: 4500 },
+        '愛德華·孟克「吶喊」': { artist: '愛德華·孟克', title: '吶喊', file: '愛德華·孟克「吶喊」.jpg', value: 7000 },
+        '傑克遜·波洛克「融合」': { artist: '傑克遜·波洛克', title: '融合', file: '傑克遜·波洛克「融合」.jpg', value: 5500 },
+        '薩爾瓦多·達利「記憶的堅持」': { artist: '薩爾瓦多·達利', title: '記憶的堅持', file: '薩爾瓦多·達利「記憶的堅持」.jpg', value: 7500 },
+        '巴勃羅·畢卡索「格爾尼卡」': { artist: '巴勃羅·畢卡索', title: '格爾尼卡', file: '巴勃羅·畢卡索「格爾尼卡」.png', value: 9000 },
+        '喬治·秀拉「大碗島的星期天下午」': { artist: '喬治·秀拉', title: '大碗島的星期天下午', file: '喬治·秀拉「大碗島的星期天下午」.jpg', value: 6500 },
+        '古斯塔夫·克林姆「吻」': { artist: '古斯塔夫·克林姆', title: '吻', file: '古斯塔夫·克林姆「吻」.jpg', value: 8500 }
+    },
+    lootPool: [
+        { name: '生鏽的鐵劍', icon: '⚔️', price: 50 },
+        { name: '破舊的皮盾', icon: '🛡️', price: 30 },
+        { name: '魔力藥水', icon: '🧪', price: 100 },
+        { name: '勇者披風', icon: '🧥', price: 200 },
+        { name: '幸運護符', icon: '🧿', price: 150 },
+        { name: '惡龍的鱗片', icon: '💎', price: 500 },
+        { name: '古老的神像', icon: '🗿', price: 1000 }
+    ]
 };
 
 // DOM Elements
@@ -89,7 +112,18 @@ const elements = {
     musicTrackSelect: document.getElementById('music-track-select'),
     musicVolumeSlider: document.getElementById('music-volume-slider'),
     musicEnabledToggle: document.getElementById('music-enabled-toggle'),
-    volumeValue: document.getElementById('volume-value')
+    volumeValue: document.getElementById('volume-value'),
+    openGalleryBtn: document.getElementById('open-gallery-btn'),
+    openPawnBtn: document.getElementById('open-pawn-btn'),
+    galleryModal: document.getElementById('gallery-modal'),
+    pawnModal: document.getElementById('pawn-modal'),
+    galleryContainer: document.getElementById('gallery-container'),
+    pawnInventory: document.getElementById('pawn-inventory'),
+    profileGold: document.getElementById('profile-gold'),
+    paintingViewerModal: document.getElementById('painting-viewer-modal'),
+    viewerImg: document.getElementById('viewer-img'),
+    viewerTitle: document.getElementById('viewer-title'),
+    viewerArtist: document.getElementById('viewer-artist')
 };
 
 let isLoginMode = true;
@@ -100,6 +134,17 @@ elements.subjectSelect.addEventListener('change', handleSubjectChange);
 elements.filterType.addEventListener('change', updateFilterOptions);
 elements.filterValue.addEventListener('change', updateQuestionCountDropdown);
 elements.keywordInput.addEventListener('input', updateQuestionCountDropdown);
+
+// RPG System Listeners
+elements.openGalleryBtn.addEventListener('click', () => {
+    renderGallery();
+    elements.galleryModal.classList.remove('hidden');
+});
+
+elements.openPawnBtn.addEventListener('click', () => {
+    renderPawnShop();
+    elements.pawnModal.classList.remove('hidden');
+});
 
 // Background Music Logic
 let isMusicMuted = localStorage.getItem('music_muted') === 'true';
@@ -813,6 +858,216 @@ async function endQuiz(isGiveUp = false) {
         }
 
         renderReview();
+        
+        // RPG Rewards
+        awardRewards(scorePercent, state.filteredQuestions.length);
+    }
+}
+
+function awardRewards(scorePercent, questionCount) {
+    if (!state.userProfile) return;
+    
+    // 1. Award Gold
+    const goldEarned = scorePercent >= 80 ? questionCount * 10 : questionCount * 2;
+    state.userProfile.gold = (state.userProfile.gold || 0) + goldEarned;
+    
+    let rewardMessage = `獲得金幣: ${goldEarned}`;
+    
+    // 2. Random Loot (50% chance if victory)
+    if (scorePercent >= 80 && Math.random() < 0.5) {
+        const loot = state.lootPool[Math.floor(Math.random() * state.lootPool.length)];
+        state.userProfile.inventory = state.userProfile.inventory || [];
+        state.userProfile.inventory.push({ ...loot, id: Date.now() });
+        rewardMessage += `\n獲得寶物: ${loot.icon} ${loot.name}`;
+    }
+    
+    // 3. Painting Fragment (30% chance if victory)
+    if (scorePercent >= 80 && Math.random() < 0.3) {
+        const paintingNames = Object.keys(state.paintings);
+        const paintingName = paintingNames[Math.floor(Math.random() * paintingNames.length)];
+        const fragIndex = Math.floor(Math.random() * 9);
+        
+        state.userProfile.paintings = state.userProfile.paintings || {};
+        if (!state.userProfile.paintings[paintingName]) {
+            state.userProfile.paintings[paintingName] = new Array(9).fill(false);
+        }
+        
+        if (!state.userProfile.paintings[paintingName][fragIndex]) {
+            state.userProfile.paintings[paintingName][fragIndex] = true;
+            rewardMessage += `\n獲得名畫碎片: ${paintingName} (碎片 ${fragIndex + 1})`;
+        } else {
+            rewardMessage += `\n獲得重複的名畫碎片，已轉化為 50 金幣`;
+            state.userProfile.gold += 50;
+        }
+    }
+    
+    alert(`戰鬥結算:\n${rewardMessage}`);
+    updateUserProfileDisplay();
+    syncUserStats(state.currentUser.uid, { 
+        gold: state.userProfile.gold, 
+        inventory: state.userProfile.inventory,
+        paintings: state.userProfile.paintings
+    });
+}
+
+function renderGallery() {
+    elements.galleryContainer.innerHTML = '';
+    
+    Object.entries(state.paintings).forEach(([name, info]) => {
+        const userProgress = (state.userProfile.paintings && state.userProfile.paintings[name]) || new Array(9).fill(false);
+        const collectedCount = userProgress.filter(p => p).length;
+        
+        const card = document.createElement('div');
+        card.className = 'painting-card';
+        
+        let fragmentsHtml = '';
+        for (let i = 0; i < 9; i++) {
+            const isCollected = userProgress[i];
+            const x = (i % 3) * 50;
+            const y = Math.floor(i / 3) * 50;
+            fragmentsHtml += `
+                <div class="painting-fragment ${isCollected ? 'collected' : ''}" 
+                     style="background-image: url('jigsaw puzzles/${info.file}'); background-position: ${x}% ${y}%">
+                </div>`;
+        }
+        
+        card.innerHTML = `
+            <div class="painting-display" onclick="openPaintingViewer('${name}')">
+                ${fragmentsHtml}
+            </div>
+            <div class="painting-info">
+                <div class="painting-title">${info.title}</div>
+                <div class="painting-artist">${info.artist}</div>
+                <div class="painting-value">收集進度: ${collectedCount}/9</div>
+                <div style="font-size: 0.8rem; color: var(--success); margin-top: 5px;">預估收購價: ${info.value}G</div>
+            </div>
+        `;
+        elements.galleryContainer.appendChild(card);
+    });
+}
+
+function openPaintingViewer(name) {
+    const info = state.paintings[name];
+    elements.viewerImg.src = `jigsaw puzzles/${info.file}`;
+    elements.viewerTitle.textContent = info.title;
+    elements.viewerArtist.textContent = info.artist;
+    elements.paintingViewerModal.classList.remove('hidden');
+}
+
+function renderPawnShop() {
+    elements.pawnInventory.innerHTML = '';
+    
+    // 1. Show Loot Items
+    const inventory = state.userProfile.inventory || [];
+    if (inventory.length === 0) {
+        elements.pawnInventory.innerHTML = '<div style="text-align:center; color:var(--text-dim);">背囊空空如也...</div>';
+    }
+    
+    inventory.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'pawn-item';
+        div.innerHTML = `
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <div class="loot-icon">${item.icon}</div>
+                <div>
+                    <div style="font-weight:bold;">${item.name}</div>
+                    <div style="font-size:0.8rem; color:var(--text-dim);">收購價: ${item.price}G</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="sellLootItem(${idx})">賣出</button>
+        `;
+        elements.pawnInventory.appendChild(div);
+    });
+    
+    // 2. Show Completed Paintings
+    const userPaintings = state.userProfile.paintings || {};
+    Object.entries(userPaintings).forEach(([name, fragments]) => {
+        const isComplete = fragments.every(f => f);
+        if (isComplete) {
+            const info = state.paintings[name];
+            const div = document.createElement('div');
+            div.className = 'pawn-item';
+            div.style.borderColor = 'var(--gold)';
+            div.innerHTML = `
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div class="loot-icon">🖼️</div>
+                    <div>
+                        <div style="font-weight:bold; color:var(--gold);">${info.title} (完好)</div>
+                        <div style="font-size:0.8rem; color:var(--text-dim);">大師之作！收購價: ${info.value}G</div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" style="background:var(--gold); color:black;" onclick="sellPainting('${name}')">出讓給博物館</button>
+            `;
+            elements.pawnInventory.appendChild(div);
+        }
+    });
+}
+
+window.sellLootItem = (idx) => {
+    const item = state.userProfile.inventory[idx];
+    state.userProfile.gold += item.price;
+    state.userProfile.inventory.splice(idx, 1);
+    renderPawnShop();
+    updateUserProfileDisplay();
+    syncUserStats(state.currentUser.uid, { gold: state.userProfile.gold, inventory: state.userProfile.inventory });
+};
+
+window.sellPainting = (name) => {
+    const info = state.paintings[name];
+    state.userProfile.gold += info.value;
+    delete state.userProfile.paintings[name];
+    renderPawnShop();
+    updateUserProfileDisplay();
+    syncUserStats(state.currentUser.uid, { gold: state.userProfile.gold, paintings: state.userProfile.paintings });
+};
+
+function updateUserProfileDisplay() {
+    if (!state.userProfile) return;
+    
+    // Basic Info
+    const nicknameInput = document.getElementById('profile-nickname');
+    if (nicknameInput) nicknameInput.value = state.userProfile.nickname || '';
+    
+    const levelBadge = document.getElementById('profile-level-badge');
+    if (levelBadge) levelBadge.textContent = `LV ${state.userProfile.level || 1} ${state.userProfile.title || '新手勇者'}`;
+
+    // RPG Stats
+    if (elements.profileGold) elements.profileGold.textContent = state.userProfile.gold || 0;
+
+    // EXP Bar
+    const expText = document.getElementById('profile-exp-text');
+    const expBar = document.getElementById('profile-exp-bar');
+    if (expText && expBar) {
+        const currentLevel = state.userProfile.level || 1;
+        const nextLevelExp = LEVEL_THRESHOLDS[currentLevel] || (currentLevel * 100); 
+        expText.textContent = `${state.userProfile.exp || 0} / ${nextLevelExp}`;
+        expBar.style.width = `${Math.min(100, ((state.userProfile.exp || 0) / nextLevelExp) * 100)}%`;
+    }
+
+    // Stats
+    const totalQ = document.getElementById('profile-total-questions');
+    const totalT = document.getElementById('profile-total-time');
+    if (totalQ) totalQ.textContent = state.userProfile.totalQuestions || 0;
+    if (totalT) totalT.textContent = `${Math.floor((state.userProfile.totalTime || 0) / 60)}m`;
+
+    // Role Fields
+    const roleSelect = document.getElementById('profile-role');
+    if (roleSelect) {
+        roleSelect.value = state.userProfile.role || '';
+        const teacherFields = document.getElementById('teacher-fields');
+        const studentFields = document.getElementById('student-fields');
+        if (teacherFields) teacherFields.classList.toggle('hidden', state.userProfile.role !== 'teacher');
+        if (studentFields) studentFields.classList.toggle('hidden', state.userProfile.role !== 'student');
+        
+        if (state.userProfile.role === 'teacher') {
+            document.getElementById('profile-teacher-name').value = state.userProfile.realName || '';
+            document.getElementById('profile-teacher-school').value = state.userProfile.school || '';
+            document.getElementById('profile-teacher-subject').value = state.userProfile.subject || '';
+        } else if (state.userProfile.role === 'student') {
+            document.getElementById('profile-student-name').value = state.userProfile.realName || '';
+            document.getElementById('profile-student-school').value = state.userProfile.school || '';
+            document.getElementById('profile-student-dept').value = state.userProfile.department || '';
+        }
     }
 }
 

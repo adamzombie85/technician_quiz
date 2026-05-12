@@ -344,7 +344,7 @@ select:focus, input:focus {
 
 .modal-content {
     width: 90%;
-    max-width: 700px;
+    max-width: 900px;
     max-height: 80vh;
     overflow-y: auto;
 }
@@ -1077,4 +1077,131 @@ input:checked + .slider:before {
 .typing-cursor {
     border-right: 2px solid var(--primary);
     animation: type-cursor 0.8s infinite;
+}
+/* Private Gallery & Pawn Shop */
+.private-gallery, .pawn-shop {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 1rem;
+    background: #1a1a1a;
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.1) 0%, transparent 70%),
+        repeating-linear-gradient(0deg, transparent, transparent 40px, rgba(0,0,0,0.2) 40px, rgba(0,0,0,0.2) 41px);
+    border-radius: 1rem;
+    box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 3rem;
+    padding: 2rem;
+}
+
+.painting-card {
+    background: #000;
+    border: 12px solid #3d2b1f; /* Premium dark wood */
+    border-image: linear-gradient(to bottom, #5d4037, #2d1b0f) 1;
+    padding: 0;
+    position: relative;
+    box-shadow: 
+        0 20px 40px rgba(0,0,0,0.8),
+        inset 0 0 20px rgba(0,0,0,0.5);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: zoom-in;
+}
+
+.painting-card::before {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 10px;
+    background: rgba(251, 191, 36, 0.4);
+    filter: blur(15px);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.painting-card:hover {
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.9);
+}
+
+.painting-display {
+    width: 100%;
+    aspect-ratio: 1;
+    background: #000;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 1px;
+    overflow: hidden;
+}
+
+.painting-fragment {
+    width: 100%;
+    height: 100%;
+    background-size: 300% 300%;
+    filter: brightness(0.2) contrast(1.2) sepia(100%) hue-rotate(320deg);
+    transition: all 0.8s ease;
+    border: 1px solid rgba(255,255,255,0.02);
+}
+
+.painting-fragment.collected {
+    filter: brightness(1) contrast(1) sepia(0);
+}
+
+.painting-info {
+    padding: 1.5rem 1rem;
+    background: linear-gradient(to bottom, #2d1b0f, #1a1a1a);
+    text-align: center;
+    border-top: 2px solid rgba(251, 191, 36, 0.2);
+}
+
+.painting-title {
+    font-size: 1.2rem;
+    color: var(--gold);
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.painting-artist {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-top: 0.3rem;
+}
+
+.painting-value {
+    margin-top: 1rem;
+    font-weight: 800;
+    color: var(--success);
+    letter-spacing: 1px;
+}
+
+.pawn-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.pawn-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.3s;
+}
+
+.pawn-item:hover {
+    background: rgba(255,255,255,0.07);
+    transform: translateX(10px);
 }
