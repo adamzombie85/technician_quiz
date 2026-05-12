@@ -566,9 +566,11 @@ function updateQuestionCountDropdown() {
     }
 
     elements.questionCount.innerHTML = '';
-    for (let i = 20; i <= poolSize; i += 20) {
-        elements.questionCount.innerHTML += `<option value="${i}">${i} 題</option>`;
-    }
+    const options = [5, 20, 50, 100].filter(n => n <= poolSize);
+    options.forEach(i => {
+        const label = i === 5 ? `${i} 題 (測試用)` : `${i} 題`;
+        elements.questionCount.innerHTML += `<option value="${i}">${label}</option>`;
+    });
     elements.questionCount.innerHTML += `<option value="all">所有題目 (${poolSize} 題)</option>`;
     
     if (poolSize === 0) {
