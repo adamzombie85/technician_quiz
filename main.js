@@ -700,11 +700,19 @@ function showQuestion() {
 
     elements.immediateExpContainer.classList.add('hidden');
     elements.optionsContainer.innerHTML = '';
-    q.options.forEach((opt, i) => {
+    
+    // Create an array mapping text to original indices (1-based)
+    const optionsWithIndices = q.options.map((opt, i) => ({ text: opt, originalIndex: i + 1 }));
+    // Shuffle the array
+    optionsWithIndices.sort(() => Math.random() - 0.5);
+
+    optionsWithIndices.forEach((optObj, i) => {
         const btn = document.createElement('button');
         btn.className = 'option-btn';
-        btn.textContent = `${i + 1}. ${opt}`;
-        btn.onclick = () => handleAnswer(i + 1, btn);
+        btn.dataset.originalIndex = optObj.originalIndex; // Store true index for checking
+        // The display number is the shuffled visual order, but the logic relies on originalIndex
+        btn.textContent = `${i + 1}. ${optObj.text}`;
+        btn.onclick = () => handleAnswer(optObj.originalIndex, btn);
         elements.optionsContainer.appendChild(btn);
     });
 }
@@ -775,7 +783,10 @@ function handleAnswer(choice, btn) {
         elements.dragonHpText.textContent = `${Math.round(newMonsterHp)}%`;
     } else {
         btn.classList.add('wrong');
-        btns[q.answer - 1].classList.add('correct');
+        // Find the button that holds the correct original index
+        const correctBtn = Array.from(btns).find(b => parseInt(b.dataset.originalIndex) === q.answer);
+        if (correctBtn) correctBtn.classList.add('correct');
+        
         playWrongSound();
         state.wrongQuestions.push({
             ...q,
