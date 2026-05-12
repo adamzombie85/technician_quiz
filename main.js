@@ -1325,3 +1325,31 @@ window.addEventListener('click', (e) => {
         e.target.classList.add('hidden');
     }
 });
+// --- Idle Auto-Logout Logic ---
+let idleTimer;
+const IDLE_LIMIT = 2 * 60 * 60 * 1000; // 2 hours in ms
+
+function resetIdleTimer() {
+    if (idleTimer) clearTimeout(idleTimer);
+    if (state.currentUser) {
+        idleTimer = setTimeout(() => {
+            handleIdleLogout();
+        }, IDLE_LIMIT);
+    }
+}
+
+async function handleIdleLogout() {
+    if (state.currentUser) {
+        await logoutUser();
+        alert('您已閒置超過 2 小時，系統已自動登出以保護帳號安全。');
+        window.location.reload();
+    }
+}
+
+// Global activity listeners
+['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
+    window.addEventListener(evt, resetIdleTimer);
+});
+
+// Initial start
+resetIdleTimer();
