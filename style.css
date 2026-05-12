@@ -1094,7 +1094,7 @@ input:checked + .slider:before {
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 3rem;
     padding: 2rem;
 }
@@ -1110,6 +1110,8 @@ input:checked + .slider:before {
         inset 0 0 20px rgba(0,0,0,0.5);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: zoom-in;
+    display: flex;
+    flex-direction: column;
 }
 
 .painting-card::before {
@@ -1133,7 +1135,7 @@ input:checked + .slider:before {
 
 .painting-display {
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: var(--painting-ratio, 1/1);
     background: #000;
     position: relative;
     display: grid;
@@ -1147,13 +1149,13 @@ input:checked + .slider:before {
     width: 100%;
     height: 100%;
     background-size: 300% 300%;
-    filter: brightness(0.2) contrast(1.2) sepia(100%) hue-rotate(320deg);
+    filter: brightness(0.4) contrast(1.1) sepia(60%) hue-rotate(320deg);
     transition: all 0.8s ease;
     border: 1px solid rgba(255,255,255,0.02);
 }
 
 .painting-fragment.collected {
-    filter: brightness(1) contrast(1) sepia(0);
+    filter: brightness(1) contrast(1) sepia(0) hue-rotate(0deg);
 }
 
 .painting-info {
@@ -1161,6 +1163,10 @@ input:checked + .slider:before {
     background: linear-gradient(to bottom, #2d1b0f, #1a1a1a);
     text-align: center;
     border-top: 2px solid rgba(251, 191, 36, 0.2);
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .painting-title {

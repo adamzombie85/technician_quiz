@@ -26,18 +26,18 @@ const state = {
     userProfile: null,
     practicedQuestionIds: [],
     paintings: {
-        '約翰尼斯·維梅爾「戴珍珠耳環的少女」': { artist: '約翰尼斯·維梅爾', title: '戴珍珠耳環的少女', file: '約翰尼斯·維梅爾「戴珍珠耳環的少女」.webp', value: 5000 },
-        '格蘭特·伍德「美國哥德式」': { artist: '格蘭特·伍德', title: '美國哥德式', file: '格蘭特·伍德「美國哥德式」.jpg', value: 3000 },
-        '李奧納多·達文西「蒙娜麗莎」': { artist: '李奧納多·達文西', title: '蒙娜麗莎', file: '李奧納多·達文西「蒙娜麗莎」.jpg', value: 10000 },
-        '陳澄波「淡水夕照」': { artist: '陳澄波', title: '淡水夕照', file: '陳澄波「淡水夕照」.jpg', value: 8000 },
-        '桑德羅·波提且利「維納斯的誕生」': { artist: '桑德羅·波提且利', title: '維納斯的誕生', file: '桑德羅·波提且利「維納斯的誕生」.jpg', value: 6000 },
-        '葛飾北齋「神奈川沖浪裏」': { artist: '葛飾北齋', title: '神奈川沖浪裏', file: '葛飾北齋「神奈川沖浪裏」.webp', value: 4500 },
-        '愛德華·孟克「吶喊」': { artist: '愛德華·孟克', title: '吶喊', file: '愛德華·孟克「吶喊」.jpg', value: 7000 },
-        '傑克遜·波洛克「融合」': { artist: '傑克遜·波洛克', title: '融合', file: '傑克遜·波洛克「融合」.jpg', value: 5500 },
-        '薩爾瓦多·達利「記憶的堅持」': { artist: '薩爾瓦多·達利', title: '記憶的堅持', file: '薩爾瓦多·達利「記憶的堅持」.jpg', value: 7500 },
-        '巴勃羅·畢卡索「格爾尼卡」': { artist: '巴勃羅·畢卡索', title: '格爾尼卡', file: '巴勃羅·畢卡索「格爾尼卡」.png', value: 9000 },
-        '喬治·秀拉「大碗島的星期天下午」': { artist: '喬治·秀拉', title: '大碗島的星期天下午', file: '喬治·秀拉「大碗島的星期天下午」.jpg', value: 6500 },
-        '古斯塔夫·克林姆「吻」': { artist: '古斯塔夫·克林姆', title: '吻', file: '古斯塔夫·克林姆「吻」.jpg', value: 8500 }
+        '李奧納多·達文西「蒙娜麗莎」': { artist: '李奧納多·達文西', title: '蒙娜麗莎', file: '李奧納多·達文西「蒙娜麗莎」.jpg', value: 10000, ratio: '960/1431' },
+        '陳澄波「淡水夕照」': { artist: '陳澄波', title: '淡水夕照', file: '陳澄波「淡水夕照」.jpg', value: 8000, ratio: '1/1' },
+        '約翰尼斯·維梅爾「戴珍珠耳環的少女」': { artist: '約翰尼斯·維梅爾', title: '戴珍珠耳環的少女', file: '約翰尼斯·維梅爾「戴珍珠耳環的少女」.webp', value: 9000, ratio: '390/445' },
+        '葛飾北齋「神奈川沖浪裏」': { artist: '葛飾北齋', title: '神奈川沖浪裏', file: '葛飾北齋「神奈川沖浪裏」.webp', value: 7500, ratio: '1600/1091' },
+        '古斯塔夫·克林姆「吻」': { artist: '古斯塔夫·克林姆', title: '吻', file: '古斯塔夫·克林姆「吻」.jpg', value: 8500, ratio: '1/1' },
+        '愛德華·孟克「吶喊」': { artist: '愛德華·孟克', title: '吶喊', file: '愛德華·孟克「吶喊」.jpg', value: 8200, ratio: '735/914' },
+        '喬治·秀拉「大碗島的星期天下午」': { artist: '喬治·秀拉', title: '大碗島的星期天下午', file: '喬治·秀拉「大碗島的星期天下午」.jpg', value: 8800, ratio: '3072/2048' },
+        '桑德羅·波提切利「維納斯的誕生」': { artist: '桑德羅·波提切利', title: '維納斯的誕生', file: '桑德羅·波提切利「維納斯的誕生」.jpg', value: 9500, ratio: '1728/1101' },
+        '薩爾瓦多·達利「記憶的堅持」': { artist: '薩爾瓦多·達利', title: '記憶的堅持', file: '薩爾瓦多·達利「記憶的堅持」.jpg', value: 7800, ratio: '330/240' },
+        '格蘭特·伍德「美國哥德式」': { artist: '格蘭特·伍德', title: '美國哥德式', file: '格蘭特·伍德「美國哥德式」.jpg', value: 7200, ratio: '633/768' },
+        '傑克森·波洛克「融合」': { artist: '傑克森·波洛克', title: '融合', file: '傑克森·波洛克「融合」.jpg', value: 6500, ratio: '2430/1180' },
+        '巴勃羅·畢卡索「格爾尼卡」': { artist: '巴勃羅·畢卡索', title: '格爾尼卡', file: '巴勃羅·畢卡索「格爾尼卡」.png', value: 12000, ratio: '776/349' }
     },
     lootPool: [
         { name: '生鏽的鐵劍', icon: '⚔️', price: 50 },
@@ -302,6 +302,20 @@ onAuthStateChanged(auth, async (user) => {
         try {
             state.userProfile = await getUserProfile(user.uid, user.email);
             
+            // Self-Healing for corrupted stats (NaN)
+            if (isNaN(state.userProfile.totalQuestions) || state.userProfile.totalQuestions === null) {
+                state.userProfile.totalQuestions = 0;
+            }
+            if (isNaN(state.userProfile.totalTime) || state.userProfile.totalTime === null) {
+                state.userProfile.totalTime = 0;
+            }
+            if (isNaN(state.userProfile.level) || state.userProfile.level === null) {
+                state.userProfile.level = 1;
+            }
+            if (isNaN(state.userProfile.gold) || state.userProfile.gold === null) {
+                state.userProfile.gold = 0;
+            }
+
             // Migration for old puzzle data to new painting system
             migrateUserData();
             
@@ -828,6 +842,7 @@ async function endQuiz(isGiveUp = false) {
                 state.userProfile.totalTime = statsResult.totalTime;
                 state.userProfile.level = statsResult.newLevel;
                 state.userProfile.puzzlePieces = statsResult.puzzlePieces;
+                state.userProfile.gold = statsResult.gold || state.userProfile.gold;
                 
                 // Merge question stats
                 state.practicedQuestionIds.forEach(id => {
@@ -952,26 +967,22 @@ function renderGallery() {
     elements.galleryContainer.innerHTML = '';
     
     Object.entries(state.paintings).forEach(([name, info]) => {
-        const userProgress = (state.userProfile.paintings && state.userProfile.paintings[name]) || new Array(9).fill(false);
-        const collectedCount = userProgress.filter(p => p).length;
+        const fragments = (state.userProfile.paintings && state.userProfile.paintings[name]) || new Array(9).fill(false);
+        const collectedCount = fragments.filter(p => p).length;
         
         const card = document.createElement('div');
         card.className = 'painting-card';
-        
-        let fragmentsHtml = '';
-        for (let i = 0; i < 9; i++) {
-            const isCollected = userProgress[i];
-            const x = (i % 3) * 50;
-            const y = Math.floor(i / 3) * 50;
-            fragmentsHtml += `
-                <div class="painting-fragment ${isCollected ? 'collected' : ''}" 
-                     style="background-image: url('jigsaw puzzles/${info.file}'); background-position: ${x}% ${y}%">
-                </div>`;
-        }
+        card.style.setProperty('--painting-ratio', info.ratio || '1/1');
+        card.onclick = () => openPaintingViewer(name);
         
         card.innerHTML = `
-            <div class="painting-display" onclick="openPaintingViewer('${name}')">
-                ${fragmentsHtml}
+            <div class="painting-display">
+                ${fragments.map((collected, i) => {
+                    const x = (i % 3) * 50;
+                    const y = Math.floor(i / 3) * 50;
+                    return `<div class="painting-fragment ${collected ? 'collected' : ''}" 
+                            style="background-image: url('jigsaw puzzles/${info.file}'); background-position: ${x}% ${y}%"></div>`;
+                }).join('')}
             </div>
             <div class="painting-info">
                 <div class="painting-title">${info.title}</div>
@@ -1043,7 +1054,7 @@ function renderPawnShop() {
 
 window.sellLootItem = (idx) => {
     const item = state.userProfile.inventory[idx];
-    state.userProfile.gold += item.price;
+    state.userProfile.gold = (Number(state.userProfile.gold) || 0) + Number(item.price);
     state.userProfile.inventory.splice(idx, 1);
     renderPawnShop();
     updateUserProfileDisplay();
@@ -1052,7 +1063,7 @@ window.sellLootItem = (idx) => {
 
 window.sellPainting = (name) => {
     const info = state.paintings[name];
-    state.userProfile.gold += info.value;
+    state.userProfile.gold = (Number(state.userProfile.gold) || 0) + Number(info.value);
     delete state.userProfile.paintings[name];
     renderPawnShop();
     updateUserProfileDisplay();
@@ -1362,11 +1373,11 @@ document.getElementById('save-profile-btn').addEventListener('click', async () =
     if (role === 'teacher') {
         profileData.realName = document.getElementById('profile-teacher-name').value.trim();
         profileData.school = document.getElementById('profile-teacher-school').value.trim();
-        profileData.teacherSubject = document.getElementById('profile-teacher-subject').value.trim();
+        profileData.subject = document.getElementById('profile-teacher-subject').value.trim();
     } else {
         profileData.realName = document.getElementById('profile-student-name').value.trim();
         profileData.school = document.getElementById('profile-student-school').value.trim();
-        profileData.studentDept = document.getElementById('profile-student-dept').value;
+        profileData.department = document.getElementById('profile-student-dept').value;
     }
 
     // Basic validation
