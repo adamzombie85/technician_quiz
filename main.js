@@ -1077,9 +1077,14 @@ function updateUserProfileDisplay() {
     const expBar = document.getElementById('profile-exp-bar');
     if (expText && expBar) {
         const currentLevel = state.userProfile.level || 1;
-        const nextLevelExp = LEVEL_THRESHOLDS[currentLevel] || (currentLevel * 100); 
-        expText.textContent = `${state.userProfile.exp || 0} / ${nextLevelExp}`;
-        expBar.style.width = `${Math.min(100, ((state.userProfile.exp || 0) / nextLevelExp) * 100)}%`;
+        const totalQ = state.userProfile.totalQuestions || 0;
+        
+        // Find next level info
+        const nextLevelInfo = LEVEL_THRESHOLDS.find(t => t.level === currentLevel + 1);
+        const req = nextLevelInfo ? nextLevelInfo.req : (currentLevel * 100);
+        
+        expText.textContent = `${totalQ} / ${req}`;
+        expBar.style.width = `${Math.min(100, (totalQ / req) * 100)}%`;
     }
 
     // Stats
