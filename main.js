@@ -1,4 +1,4 @@
-import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, TERRITORY_CONFIG, getAllUsers, getAllPracticeRecords, getUserPracticeRecords } from './firebase_app.js';
+import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, TERRITORY_CONFIG, getAllUsers, getAllPracticeRecords, getUserPracticeRecords, processBattleResult, WARRIOR_SKILLS } from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 
 // Main Application Logic
@@ -63,7 +63,12 @@ const state = {
     heroHp: 100,
     isRetryMode: false,
     goldPerQuestion: 0,
-    leaderboardCache: null // Memory cache for leaderboard
+    leaderboardCache: null, // Memory cache for leaderboard
+    battle: {
+        isBattling: false,
+        opponent: null,
+        bet: 100
+    }
 };
 
 // DOM Elements
@@ -156,7 +161,17 @@ const elements = {
     territoryPudding: document.getElementById('territory-pudding'),
     globalPreloader: document.getElementById('global-preloader'),
     preloaderBar: document.getElementById('preloader-bar'),
-    preloaderStatus: document.getElementById('preloader-status')
+    preloaderStatus: document.getElementById('preloader-status'),
+    challengeModal: document.getElementById('challenge-modal'),
+    battleConsoleModal: document.getElementById('battle-console-modal'),
+    dosLog: document.getElementById('dos-log'),
+    betDisplay: document.getElementById('bet-display'),
+    confirmChallengeBtn: document.getElementById('confirm-challenge-btn'),
+    challengeOpponentName: document.getElementById('challenge-opponent-name'),
+    challengeOpponentLevel: document.getElementById('challenge-opponent-level'),
+    challengeOpponentAvatar: document.getElementById('challenge-opponent-avatar'),
+    closeDosBtn: document.getElementById('close-dos-btn'),
+    battleConsoleTimer: document.getElementById('battle-console-timer')
 };
 
 let isLoginMode = true;
@@ -1510,11 +1525,17 @@ function renderLeaderboardRows(container, users) {
             avatarHtml = `<div style="width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold); display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.1);"><i class="fas ${u.avatar || 'fa-user-ninja'}" style="font-size: 0.8rem; color: var(--gold);"></i></div>`;
         }
         
+        const isMe = state.currentUser && u.uid === state.currentUser.uid;
+        
         return `
-            <tr>
+            <tr style="${isMe ? 'background: rgba(251, 191, 36, 0.1);' : ''}">
                 <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
                 <td>${avatarHtml}</td>
-                <td>${u.nickname || '無名勇者'}</td>
+                <td style="cursor: ${isMe ? 'default' : 'pointer'}; color: ${isMe ? 'var(--gold)' : 'var(--primary)'}; font-weight: bold;" 
+                    ${isMe ? '' : `onclick="openChallenge('${u.uid}')"`}>
+                    ${u.nickname || '無名勇者'}
+                    ${isMe ? ' (我)' : ' <i class="fas fa-swords" style="font-size: 0.7rem; opacity: 0.6;"></i>'}
+                </td>
                 <td>LV ${u.level || 1}</td>
                 <td style="color: var(--gold); font-weight:bold;">
                     ${u.totalQuestions || 0}
@@ -1825,6 +1846,7 @@ function renderProfileAvatar() {
     if (profileAvatar) {
         profileAvatar.innerHTML = `<img src="${avatarPath}" style="width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover; display: block;">`;
     }
+    updateProfileDisplay();
 }
 
 // --- Story Prologue Logic ---
@@ -2246,3 +2268,241 @@ window.synthesizeItem = synthesizeItem;
 window.sellToPawnShop = sellToPawnShop;
 window.toggleTerritoryModal = toggleTerritoryModal;
 window.switchTerritoryTab = switchTerritoryTab;
+
+// --- Warrior Battle System ---
+
+window.openChallenge = async (opponentUid) => {
+    if (!state.currentUser) {
+        alert('請先登入才能發起挑戰！');
+        return;
+    }
+
+    try {
+        showLoadingOverlay(true);
+        const opponent = state.leaderboardCache ? state.leaderboardCache.find(u => u.uid === opponentUid) : null;
+        if (!opponent) {
+            // If not in cache, fetch from profile (though it should be in cache)
+            alert('對象資料載入失敗');
+            return;
+        }
+
+        state.battle.opponent = opponent;
+        state.battle.bet = 100; // Default bet
+
+        // Update UI
+        elements.challengeOpponentName.textContent = opponent.nickname || '無名勇者';
+        elements.challengeOpponentLevel.textContent = `LV ${opponent.level || 1}`;
+        elements.betDisplay.textContent = state.battle.bet;
+
+        if (opponent.avatar && opponent.avatar.includes('.png')) {
+            elements.challengeOpponentAvatar.innerHTML = `<img src="assets/avatars/${opponent.avatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+        } else {
+            elements.challengeOpponentAvatar.innerHTML = `<i class="fas ${opponent.avatar || 'fa-user-ninja'}"></i>`;
+        }
+
+        elements.challengeModal.classList.remove('hidden');
+    } catch (e) {
+        console.error(e);
+        alert('開啟挑戰介面失敗');
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+
+window.adjustBet = (delta) => {
+    const step = 10;
+    let newBet = state.battle.bet + (delta * step);
+    if (newBet < 10) newBet = 10;
+    if (newBet > 1000) newBet = 1000;
+    
+    state.battle.bet = newBet;
+    elements.betDisplay.textContent = newBet;
+};
+
+elements.confirmChallengeBtn.addEventListener('click', async () => {
+    if (!state.userProfile || state.userProfile.gold < state.battle.bet) {
+        alert('金幣不足，無法發起這場挑戰！');
+        return;
+    }
+
+    if (confirm(`確定要打賭 ${state.battle.bet} 金幣與 ${state.battle.opponent.nickname} 進行決鬥嗎？\n(勝利獲得 2 倍獎勵，失敗失去賭注)`)) {
+        elements.challengeModal.classList.add('hidden');
+        await startBattle();
+    }
+});
+
+async function startBattle() {
+    state.battle.isBattling = true;
+    elements.battleConsoleModal.classList.remove('hidden');
+    elements.closeDosBtn.classList.add('hidden');
+    elements.dosLog.innerHTML = '';
+    
+    // Timer animation
+    let startTime = Date.now();
+    const timerInterval = setInterval(() => {
+        if (!state.battle.isBattling) {
+            clearInterval(timerInterval);
+            return;
+        }
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const h = Math.floor(elapsed / 3600).toString().padStart(2, '0');
+        const m = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
+        const s = (elapsed % 60).toString().padStart(2, '0');
+        elements.battleConsoleTimer.textContent = `${h}:${m}:${s}`;
+    }, 1000);
+
+    await runBattleSimulation(state.battle.opponent, state.battle.bet);
+}
+
+async function runBattleSimulation(opponent, bet) {
+    const log = elements.dosLog;
+    
+    await writeLog('>>> INITIALIZING BATTLE_STREAM_V2.0...', log, 'dos-text-dim');
+    await writeLog('>>> CONNECTING TO GLOBAL_ARENA_SATELLITE...', log, 'dos-text-dim');
+    await writeLog('>>> ENCRYPTION_KEY: 0x' + Math.random().toString(16).slice(2, 10).toUpperCase(), log, 'dos-text-dim');
+    await writeLog('>>> CONNECTION ESTABLISHED. CHANNEL_SECURE.', log, 'dos-text-dim');
+    await new Promise(r => setTimeout(r, 600));
+
+    const myName = state.userProfile.nickname || '你';
+    const opName = opponent.nickname || '對手';
+    
+    await writeLog(`\n[對戰開始] ${myName} 向 ${opName} 發起了決鬥！`, log, 'dos-text-gold');
+    await writeLog(`[對戰開始] 決鬥賭注：${bet} 枚金幣`, log, 'dos-text-gold');
+    await new Promise(r => setTimeout(r, 500));
+
+    let myHp = 100;
+    let opHp = 100;
+    const willWin = Math.random() < 0.5;
+    
+    const mySkills = state.userProfile.skills || WARRIOR_SKILLS.slice(0, 3);
+    const opSkills = opponent.skills || WARRIOR_SKILLS.slice(0, 3);
+
+    const renderHpBar = (hp, label, colorClass) => {
+        const totalSegments = 20;
+        const filled = Math.ceil((hp / 100) * totalSegments);
+        const bar = '[' + '#'.repeat(Math.max(0, filled)) + '-'.repeat(Math.max(0, totalSegments - filled)) + ']';
+        return `${label} HP: ${bar} ${hp}/100`;
+    };
+
+    let round = 1;
+    while (myHp > 0 && opHp > 0) {
+        await writeLog(`\n--- ROUND ${round} ---`, log);
+        await writeLog(renderHpBar(myHp, 'YOU   ', 'dos-text-blue'), log, 'dos-text-blue');
+        await writeLog(renderHpBar(opHp, 'TARGET', 'dos-text-red'), log, 'dos-text-red');
+        await new Promise(r => setTimeout(r, 600));
+
+        // Player Turn
+        const mySkill = mySkills[Math.floor(Math.random() * mySkills.length)];
+        await writeLog(`> ${myName} ${mySkill.msg}`, log);
+        
+        let dmgToOp = 0;
+        if (round >= 4 && willWin) {
+            dmgToOp = opHp; // Fatal blow
+        } else {
+            const range = mySkill.power || [5, 15];
+            dmgToOp = range[0] + Math.floor(Math.random() * (range[1] - range[0]));
+            if (opHp - dmgToOp < 5 && !willWin) dmgToOp = 0; // Don't kill if going to lose
+        }
+        opHp = Math.max(0, opHp - dmgToOp);
+        await writeLog(`  擊中對手！造成的傷害：${dmgToOp}`, log, 'dos-text-blue');
+        
+        if (opHp <= 0) break;
+        await new Promise(r => setTimeout(r, 800));
+
+        // Opponent Turn
+        const opSkill = opSkills[Math.floor(Math.random() * opSkills.length)];
+        await writeLog(`> ${opName} ${opSkill.msg}`, log);
+        
+        let dmgToMe = 0;
+        if (round >= 4 && !willWin) {
+            dmgToMe = myHp; // Fatal blow
+        } else {
+            const range = opSkill.power || [5, 15];
+            dmgToMe = range[0] + Math.floor(Math.random() * (range[1] - range[0]));
+            if (myHp - dmgToMe < 5 && willWin) dmgToMe = 0; // Don't kill if going to win
+        }
+        myHp = Math.max(0, myHp - dmgToMe);
+        await writeLog(`  受到攻擊！承受的傷害：${dmgToMe}`, log, 'dos-text-red');
+
+        if (myHp <= 0) break;
+        await new Promise(r => setTimeout(r, 1000));
+        round++;
+    }
+
+    await writeLog('\n>>> BATTLE_CONCLUDED. ANALYZING_RESULTS...', log, 'dos-text-dim');
+    await new Promise(r => setTimeout(r, 1000));
+
+    if (opHp <= 0) {
+        await writeLog(`\n[勝利] ${opName} 體力不支倒下了！`, log, 'dos-text-gold');
+        await writeLog(`[勝利] 你贏得了這場決鬥！`, log, 'dos-text-gold');
+        await writeLog(`>>> 獲得金幣：${bet * 2}`, log, 'dos-text-gold');
+    } else {
+        await writeLog(`\n[失敗] 你感覺視線模糊，體力已到極限...`, log, 'dos-text-red');
+        await writeLog(`[失敗] ${opName} 獲得了勝利！`, log, 'dos-text-red');
+        await writeLog(`>>> 失去金幣：${bet}`, log, 'dos-text-red');
+    }
+
+    try {
+        await processBattleResult(state.currentUser.uid, opponent.uid, bet, opHp <= 0);
+        // Refresh local state
+        state.userProfile = await getUserProfile(state.currentUser.uid, state.currentUser.email);
+        updateProfileDisplay(); // Update gold in profile
+        updateTerritoryAssets(); // Update gold in territory if open
+    } catch (e) {
+        console.error("Failed to process battle result", e);
+        await writeLog('\n[警告] 資料庫同步失敗。', log, 'dos-text-red');
+    }
+
+    state.battle.isBattling = false;
+    elements.closeDosBtn.classList.remove('hidden');
+    
+    // Refresh leaderboard to reflect gold changes if possible
+    renderHomepageLeaderboard();
+}
+
+async function writeLog(text, container, className = '') {
+    const p = document.createElement('p');
+    if (className) p.className = className;
+    container.appendChild(p);
+    
+    for (let char of text) {
+        p.textContent += char;
+        await new Promise(resolve => setTimeout(resolve, 20));
+    }
+    container.scrollTop = container.scrollHeight;
+}
+
+function updateProfileDisplay() {
+    if (!state.userProfile) return;
+    elements.profileGold.textContent = state.userProfile.gold || 0;
+    
+    const nick = document.getElementById('profile-nickname');
+    if (nick) nick.value = state.userProfile.nickname || '';
+    
+    const badge = document.getElementById('profile-level-badge');
+    if (badge) {
+        const threshold = LEVEL_THRESHOLDS.find(t => t.level === (state.userProfile.level || 1));
+        badge.textContent = `LV ${state.userProfile.level || 1} ${threshold ? threshold.name : '勇者'}`;
+    }
+
+    const totalQ = document.getElementById('profile-total-questions');
+    if (totalQ) totalQ.textContent = state.userProfile.totalQuestions || 0;
+
+    const totalT = document.getElementById('profile-total-time');
+    if (totalT) totalT.textContent = Math.floor((state.userProfile.totalTime || 0) / 60) + 'm';
+
+    // Update EXP bar
+    const currentLevel = state.userProfile.level || 1;
+    const currentThreshold = LEVEL_THRESHOLDS.find(t => t.level === currentLevel);
+    const nextThreshold = LEVEL_THRESHOLDS.find(t => t.level === currentLevel + 1);
+    
+    if (currentThreshold && nextThreshold) {
+        const progress = state.userProfile.totalQuestions - currentThreshold.req;
+        const total = nextThreshold.req - currentThreshold.req;
+        const percent = Math.min(100, Math.max(0, (progress / total) * 100));
+        const bar = document.getElementById('profile-exp-bar');
+        const text = document.getElementById('profile-exp-text');
+        if (bar) bar.style.width = `${percent}%`;
+        if (text) text.textContent = `${state.userProfile.totalQuestions} / ${nextThreshold.req}`;
+    }
+}

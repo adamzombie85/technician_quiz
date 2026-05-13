@@ -727,6 +727,55 @@
             </div>
         </div>
 
+        <!-- Challenge Modal -->
+        <div id="challenge-modal" class="modal hidden" style="z-index: 2100;">
+            <div class="glass-card modal-content" style="max-width: 400px; text-align: center;">
+                <div class="modal-header">
+                    <h2 class="glow-text"><i class="fas fa-swords"></i> 發起對戰</h2>
+                    <button class="close-modal" onclick="document.getElementById('challenge-modal').classList.add('hidden')">&times;</button>
+                </div>
+                <div style="margin: 1.5rem 0;">
+                    <div class="profile-avatar-large" id="challenge-opponent-avatar">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3 id="challenge-opponent-name" style="color: var(--gold); margin-top: 1rem;">對手名字</h3>
+                    <p id="challenge-opponent-level" style="color: var(--text-dim);">LV 10</p>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-coins"></i> 打賭金額 (1單位=10金幣)</label>
+                    <div style="display: flex; align-items: center; gap: 1rem; justify-content: center;">
+                        <button class="btn btn-outline btn-small" onclick="adjustBet(-1)">-</button>
+                        <span id="bet-display" style="font-size: 1.5rem; font-weight: bold; min-width: 100px;">100</span>
+                        <button class="btn btn-outline btn-small" onclick="adjustBet(1)">+</button>
+                    </div>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">單次挑戰限額：10 ~ 1000 金幣</p>
+                </div>
+                <button id="confirm-challenge-btn" class="btn btn-primary btn-large" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-check"></i> 確認對戰
+                </button>
+            </div>
+        </div>
+
+        <!-- Battle Console Modal (DOS Style) -->
+        <div id="battle-console-modal" class="modal hidden" style="z-index: 3000;">
+            <div class="dos-console-container">
+                <div class="dos-header">
+                    <div class="dos-title">WARRIOR_BATTLE_SYSTEM.EXE</div>
+                    <div class="dos-timer" id="battle-console-timer">00:00:00</div>
+                </div>
+                <div id="dos-log" class="dos-log">
+                    <!-- DOS text will be streamed here -->
+                </div>
+                <div class="dos-footer">
+                    <div class="dos-status">READY_FOR_COMBAT...</div>
+                    <button id="close-dos-btn" class="dos-btn hidden" onclick="document.getElementById('battle-console-modal').classList.add('hidden')">PRESS ANY KEY TO EXIT</button>
+                </div>
+                <!-- Scanline effect -->
+                <div class="dos-scanlines"></div>
+                <div class="dos-vignette"></div>
+            </div>
+        </div>
+
         <!-- Loading Overlay -->
         <div id="loading-overlay" class="modal hidden">
             <div class="loading-content">

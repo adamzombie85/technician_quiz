@@ -103,6 +103,29 @@ export const TERRITORY_CONFIG = {
   }
 };
 
+export const WARRIOR_SKILLS = [
+  { name: "基礎斬擊", power: [5, 15], msg: "使出了俐落的斬擊！" },
+  { name: "重磅打擊", power: [10, 20], msg: "發動了充滿力量的重擊！" },
+  { name: "迴旋踢", power: [8, 12], msg: "使出華麗的迴旋踢！" },
+  { name: "聖光裁決", power: [15, 25], msg: "召喚聖光進行審判！" },
+  { name: "暗影突襲", power: [12, 28], msg: "從陰影中發動突襲！" },
+  { name: "雷霆一擊", power: [20, 30], msg: "降下雷霆重創對手！" },
+  { name: "烈焰風暴", power: [18, 26], msg: "召喚烈焰席捲戰場！" },
+  { name: "冰封陵墓", power: [10, 30], msg: "將對手封印在冰霜中！" },
+  { name: "幻影劍舞", power: [22, 28], msg: "揮舞出無數劍影！" },
+  { name: "破軍升龍擊", power: [15, 25], msg: "強力的衝撞接續升龍斬！" },
+  { name: "猛龍斷空斬", power: [20, 30], msg: "化身猛龍穿梭戰場！" },
+  { name: "拔刀斬", power: [25, 30], msg: "極速的一閃，空間彷彿裂開！" },
+  { name: "怒氣爆發", power: [10, 25], msg: "釋放積累的怒氣衝擊對手！" },
+  { name: "嗜魂封魔斬", power: [15, 20], msg: "吸取靈魂並發動強力一擊！" },
+  { name: "崩山裂地斬", power: [25, 30], msg: "躍起並重重劈向地面！" },
+  { name: "地裂波動劍", power: [5, 15], msg: "在大地引發波動衝擊！" },
+  { name: "修羅邪光斬", power: [18, 25], msg: "發出巨大的邪光波動！" },
+  { name: "爆炎波動劍", power: [20, 28], msg: "噴射火熱的波動氣息！" },
+  { name: "冰刃波動劍", power: [15, 22], msg: "射出極寒的冰霜之刃！" },
+  { name: "不動明王陣", power: [25, 30], msg: "召喚法陣禁錮並摧毀對手！" }
+];
+
 export function calculateLevel(totalQuestions) {
   let currentLevel = 1;
   for (let i = LEVEL_THRESHOLDS.length - 1; i >= 0; i--) {
@@ -148,6 +171,10 @@ export async function getUserProfile(uid, email) {
     // Ensure default puzzle fields
     if (!data.puzzlePieces) data.puzzlePieces = [];
     if (!data.currentPuzzleId) data.currentPuzzleId = 'mona_lisa';
+    if (!data.skills || data.skills.length === 0) {
+      data.skills = WARRIOR_SKILLS.slice(0, 3);
+      await updateDoc(userRef, { skills: data.skills });
+    }
 
     return data;
   } else {
@@ -247,6 +274,16 @@ export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTim
     updateData.puzzlePieces = currentPieces;
   }
 
+  // Award new skill on level up
+  if (newLevel > oldLevel) {
+    const currentSkills = data.skills || WARRIOR_SKILLS.slice(0, 3);
+    const availableSkills = WARRIOR_SKILLS.filter(s => !currentSkills.some(cs => cs.name === s.name));
+    if (availableSkills.length > 0) {
+      const newSkill = availableSkills[Math.floor(Math.random() * availableSkills.length)];
+      updateData.skills = [...currentSkills, newSkill];
+    }
+  }
+
   if (scoreOrUpdate && scoreOrUpdate.honorMessage !== undefined) {
     updateData.honorMessage = scoreOrUpdate.honorMessage.substring(0, 20);
   }
@@ -316,4 +353,29 @@ export async function getUserPracticeRecords(uid, limitCount = 50) {
   docs.sort((a, b) => getTime(b.timestamp) - getTime(a.timestamp));
   
   return docs.slice(0, limitCount);
+}
+
+export async function processBattleResult(challengerUid, opponentUid, betAmount, isWin) {
+  const challengerRef = doc(db, "users", challengerUid);
+  const opponentRef = doc(db, "users", opponentUid);
+  
+  const challengerSnap = await getDoc(challengerRef);
+  const opponentSnap = await getDoc(opponentRef);
+  
+  if (!challengerSnap.exists() || !opponentSnap.exists()) return;
+  
+  const challengerData = challengerSnap.data();
+  const opponentData = opponentSnap.data();
+  
+  const bet = Number(betAmount);
+  
+  if (isWin) {
+    // Challenger wins: gains 2x bet, Opponent loses 1x bet
+    await updateDoc(challengerRef, { gold: (Number(challengerData.gold) || 0) + (bet * 2) });
+    await updateDoc(opponentRef, { gold: Math.max(0, (Number(opponentData.gold) || 0) - bet) });
+  } else {
+    // Challenger loses: loses 1x bet, Opponent gains 1x bet
+    await updateDoc(challengerRef, { gold: Math.max(0, (Number(challengerData.gold) || 0) - bet) });
+    await updateDoc(opponentRef, { gold: (Number(opponentData.gold) || 0) + bet });
+  }
 }
