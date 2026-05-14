@@ -72,6 +72,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <button id="open-challenge-list-btn" class="btn btn-gold btn-large" style="width: 100%;">
+                        <i class="fas fa-swords"></i> 進入排行榜挑戰賽
+                    </button>
+                </div>
             </div>
 
             <div class="glass-card main-card">
@@ -728,7 +733,7 @@
         </div>
 
         <!-- Challenge Modal -->
-        <div id="challenge-modal" class="modal hidden" style="z-index: 2100;">
+        <div id="challenge-modal" class="modal hidden" style="z-index: 2200;">
             <div class="glass-card modal-content" style="max-width: 400px; text-align: center;">
                 <div class="modal-header">
                     <h2 class="glow-text"><i class="fas fa-swords"></i> 發起對戰</h2>
@@ -753,6 +758,19 @@
                 <button id="confirm-challenge-btn" class="btn btn-primary btn-large" style="width: 100%; margin-top: 1rem;">
                     <i class="fas fa-check"></i> 確認對戰
                 </button>
+            </div>
+        </div>
+
+        <!-- Challenge Selection Modal -->
+        <div id="challenge-selection-modal" class="modal hidden" style="z-index: 2100;">
+            <div class="glass-card modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2 class="glow-text"><i class="fas fa-list-ul"></i> 選擇挑戰對手</h2>
+                    <button class="close-modal" onclick="document.getElementById('challenge-selection-modal').classList.add('hidden')">&times;</button>
+                </div>
+                <div id="challenge-list-container" class="challenge-list-container" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
+                    <!-- 勇者列表將由 JS 注入 -->
+                </div>
             </div>
         </div>
 

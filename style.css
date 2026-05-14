@@ -1778,3 +1778,67 @@ input:checked + .slider:before {
     color: var(--gold);
     background: rgba(251, 191, 36, 0.1);
 }
+
+/* Challenge Selection Styles */
+.challenge-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+
+.challenge-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.challenge-item:hover {
+    background: rgba(251, 191, 36, 0.1);
+    border-color: var(--gold);
+    transform: translateX(10px);
+}
+
+.challenge-item-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.challenge-item-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.challenge-item-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.challenge-item-name {
+    font-weight: bold;
+    color: var(--gold);
+}
+
+.challenge-item-id {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+.challenge-item-level {
+    font-weight: bold;
+    color: var(--primary);
+}

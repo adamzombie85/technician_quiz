@@ -171,7 +171,10 @@ const elements = {
     challengeOpponentLevel: document.getElementById('challenge-opponent-level'),
     challengeOpponentAvatar: document.getElementById('challenge-opponent-avatar'),
     closeDosBtn: document.getElementById('close-dos-btn'),
-    battleConsoleTimer: document.getElementById('battle-console-timer')
+    battleConsoleTimer: document.getElementById('battle-console-timer'),
+    openChallengeListBtn: document.getElementById('open-challenge-list-btn'),
+    challengeSelectionModal: document.getElementById('challenge-selection-modal'),
+    challengeListContainer: document.getElementById('challenge-list-container')
 };
 
 let isLoginMode = true;
@@ -182,6 +185,7 @@ elements.subjectSelect.addEventListener('change', handleSubjectChange);
 elements.filterType.addEventListener('change', updateFilterOptions);
 elements.filterValue.addEventListener('change', updateQuestionCountDropdown);
 elements.keywordInput.addEventListener('input', updateQuestionCountDropdown);
+elements.openChallengeListBtn?.addEventListener('click', openChallengeSelection);
 
 // RPG System Listeners
 elements.openGalleryBtn.addEventListener('click', () => {
@@ -1531,10 +1535,9 @@ function renderLeaderboardRows(container, users) {
             <tr style="${isMe ? 'background: rgba(251, 191, 36, 0.1);' : ''}">
                 <td>${idx === 0 ? '<i class="fas fa-crown" style="color:var(--gold);"></i> 1' : idx === 1 ? '<i class="fas fa-medal" style="color:silver;"></i> 2' : idx === 2 ? '<i class="fas fa-medal" style="color:#cd7f32;"></i> 3' : idx + 1}</td>
                 <td>${avatarHtml}</td>
-                <td style="cursor: ${isMe ? 'default' : 'pointer'}; color: ${isMe ? 'var(--gold)' : 'var(--primary)'}; font-weight: bold;" 
-                    ${isMe ? '' : `onclick="openChallenge('${u.uid}')"`}>
+                <td style="color: ${isMe ? 'var(--gold)' : 'var(--text-light)'}; font-weight: bold;">
                     ${u.nickname || '無名勇者'}
-                    ${isMe ? ' (我)' : ' <i class="fas fa-swords" style="font-size: 0.7rem; opacity: 0.6;"></i>'}
+                    ${isMe ? ' (我)' : ''}
                 </td>
                 <td>LV ${u.level || 1}</td>
                 <td style="color: var(--gold); font-weight:bold;">
@@ -2268,10 +2271,63 @@ window.synthesizeItem = synthesizeItem;
 window.sellToPawnShop = sellToPawnShop;
 window.toggleTerritoryModal = toggleTerritoryModal;
 window.switchTerritoryTab = switchTerritoryTab;
+window.openChallengeSelection = openChallengeSelection;
+window.openChallenge = openChallenge;
 
 // --- Warrior Battle System ---
 
-window.openChallenge = async (opponentUid) => {
+const openChallengeSelection = () => {
+    if (!state.currentUser) {
+        alert('請先登入才能發起挑戰！');
+        return;
+    }
+
+    if (!state.leaderboardCache || state.leaderboardCache.length === 0) {
+        alert('暫無勇者名單，請稍後再試。');
+        return;
+    }
+
+    const container = elements.challengeListContainer;
+    container.innerHTML = '';
+
+    const others = state.leaderboardCache.filter(u => u.uid !== state.currentUser.uid);
+
+    if (others.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: var(--text-dim); padding: 1rem;">目前沒有其他勇者可以挑戰...</p>';
+    } else {
+        others.forEach(u => {
+            const item = document.createElement('div');
+            item.className = 'challenge-item';
+            item.onclick = () => {
+                elements.challengeSelectionModal.classList.add('hidden');
+                openChallenge(u.uid);
+            };
+
+            let avatarHtml = '';
+            if (u.avatar && typeof u.avatar === 'string' && u.avatar.includes('.png')) {
+                avatarHtml = `<img src="assets/avatars/${u.avatar}" style="width: 100%; height: 100%; object-fit: cover;">`;
+            } else {
+                avatarHtml = `<i class="fas ${u.avatar || 'fa-user-ninja'}" style="font-size: 1.2rem; color: var(--gold);"></i>`;
+            }
+
+            item.innerHTML = `
+                <div class="challenge-item-info">
+                    <div class="challenge-item-avatar">${avatarHtml}</div>
+                    <div class="challenge-item-details">
+                        <div class="challenge-item-name">${u.nickname || '無名勇者'}</div>
+                        <div class="challenge-item-id">ID: ${u.uid.slice(0, 8)}...</div>
+                    </div>
+                </div>
+                <div class="challenge-item-level">LV ${u.level || 1}</div>
+            `;
+            container.appendChild(item);
+        });
+    }
+
+    elements.challengeSelectionModal.classList.remove('hidden');
+};
+
+const openChallenge = async (opponentUid) => {
     if (!state.currentUser) {
         alert('請先登入才能發起挑戰！');
         return;
@@ -2281,15 +2337,13 @@ window.openChallenge = async (opponentUid) => {
         showLoadingOverlay(true);
         const opponent = state.leaderboardCache ? state.leaderboardCache.find(u => u.uid === opponentUid) : null;
         if (!opponent) {
-            // If not in cache, fetch from profile (though it should be in cache)
             alert('對象資料載入失敗');
             return;
         }
 
         state.battle.opponent = opponent;
-        state.battle.bet = 100; // Default bet
+        state.battle.bet = 100;
 
-        // Update UI
         elements.challengeOpponentName.textContent = opponent.nickname || '無名勇者';
         elements.challengeOpponentLevel.textContent = `LV ${opponent.level || 1}`;
         elements.betDisplay.textContent = state.battle.bet;
@@ -2380,11 +2434,16 @@ async function runBattleSimulation(opponent, bet) {
     const renderHpBar = (hp, label, colorClass) => {
         const totalSegments = 20;
         const filled = Math.ceil((hp / 100) * totalSegments);
+        const icon = hp > 50 ? ' (^_^) <3' : (hp > 0 ? ' (>_<) !' : ' (X_X) [dead]');
         const bar = '[' + '#'.repeat(Math.max(0, filled)) + '-'.repeat(Math.max(0, totalSegments - filled)) + ']';
-        return `${label} HP: ${bar} ${hp}/100`;
+        return `${label} HP: ${bar} ${hp}/100 ${icon}`;
     };
 
     let round = 1;
+    const playerAttackEmotes = ['(╯°▽°)╯ ┻━┻', '(╬ﾟдﾟ)▄︻┻┳═一', '(☄️◣ω◢)☄️', 'ᕙ(⇀‸↼‶)ᕗ'];
+    const opAttackEmotes = ['(◣_◢)', '(ノಠ益ಠ)ノ', 'ψ(｀∇´)ψ', '(╬ﾟдﾟ)'];
+    const hitEmotes = ['(>_<)', '(×_×)', '(O_Q)', 'Σ(っ °Д °;)っ'];
+
     while (myHp > 0 && opHp > 0) {
         await writeLog(`\n--- ROUND ${round} ---`, log);
         await writeLog(renderHpBar(myHp, 'YOU   ', 'dos-text-blue'), log, 'dos-text-blue');
@@ -2393,7 +2452,8 @@ async function runBattleSimulation(opponent, bet) {
 
         // Player Turn
         const mySkill = mySkills[Math.floor(Math.random() * mySkills.length)];
-        await writeLog(`> ${myName} ${mySkill.msg}`, log);
+        const myEmote = playerAttackEmotes[Math.floor(Math.random() * playerAttackEmotes.length)];
+        await writeLog(`> ${myName} ${mySkill.msg} ${myEmote}`, log);
         
         let dmgToOp = 0;
         if (round >= 4 && willWin) {
@@ -2404,14 +2464,16 @@ async function runBattleSimulation(opponent, bet) {
             if (opHp - dmgToOp < 5 && !willWin) dmgToOp = 0; // Don't kill if going to lose
         }
         opHp = Math.max(0, opHp - dmgToOp);
-        await writeLog(`  擊中對手！造成的傷害：${dmgToOp}`, log, 'dos-text-blue');
+        const hitEmote = hitEmotes[Math.floor(Math.random() * hitEmotes.length)];
+        await writeLog(`  擊中對手！造成的傷害：${dmgToOp} ${hitEmote}`, log, 'dos-text-blue');
         
         if (opHp <= 0) break;
         await new Promise(r => setTimeout(r, 800));
 
         // Opponent Turn
         const opSkill = opSkills[Math.floor(Math.random() * opSkills.length)];
-        await writeLog(`> ${opName} ${opSkill.msg}`, log);
+        const opEmote = opAttackEmotes[Math.floor(Math.random() * opAttackEmotes.length)];
+        await writeLog(`> ${opName} ${opSkill.msg} ${opEmote}`, log);
         
         let dmgToMe = 0;
         if (round >= 4 && !willWin) {
@@ -2422,7 +2484,8 @@ async function runBattleSimulation(opponent, bet) {
             if (myHp - dmgToMe < 5 && willWin) dmgToMe = 0; // Don't kill if going to win
         }
         myHp = Math.max(0, myHp - dmgToMe);
-        await writeLog(`  受到攻擊！承受的傷害：${dmgToMe}`, log, 'dos-text-red');
+        const myHitEmote = hitEmotes[Math.floor(Math.random() * hitEmotes.length)];
+        await writeLog(`  受到攻擊！承受的傷害：${dmgToMe} ${myHitEmote}`, log, 'dos-text-red');
 
         if (myHp <= 0) break;
         await new Promise(r => setTimeout(r, 1000));
@@ -2433,13 +2496,13 @@ async function runBattleSimulation(opponent, bet) {
     await new Promise(r => setTimeout(r, 1000));
 
     if (opHp <= 0) {
-        await writeLog(`\n[勝利] ${opName} 體力不支倒下了！`, log, 'dos-text-gold');
-        await writeLog(`[勝利] 你贏得了這場決鬥！`, log, 'dos-text-gold');
-        await writeLog(`>>> 獲得金幣：${bet * 2}`, log, 'dos-text-gold');
+        await writeLog(`\n[勝利] ${opName} 體力不支倒下了！ (×_×)`, log, 'dos-text-gold');
+        await writeLog(`[勝利] 你贏得了這場決鬥！ (^_^)v`, log, 'dos-text-gold');
+        await writeLog(`>>> 獲得金幣：${bet * 2} (★≧▽^))★☆`, log, 'dos-text-gold');
     } else {
-        await writeLog(`\n[失敗] 你感覺視線模糊，體力已到極限...`, log, 'dos-text-red');
-        await writeLog(`[失敗] ${opName} 獲得了勝利！`, log, 'dos-text-red');
-        await writeLog(`>>> 失去金幣：${bet}`, log, 'dos-text-red');
+        await writeLog(`\n[失敗] 你感覺視線模糊，體力已到極限... (O_Q)`, log, 'dos-text-red');
+        await writeLog(`[失敗] ${opName} 獲得了勝利！ (つд⊂)`, log, 'dos-text-red');
+        await writeLog(`>>> 失去金幣：${bet} (T_T)`, log, 'dos-text-red');
     }
 
     try {
