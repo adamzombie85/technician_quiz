@@ -79,6 +79,17 @@
                 </div>
             </div>
 
+            <!-- Area Mastery Stats Section -->
+            <div id="mastery-section" class="glass-card hidden" style="margin-bottom: 2rem;">
+                <h3 class="glow-text" style="text-align: center; margin-bottom: 1.5rem;">
+                    <i class="fas fa-graduation-cap"></i> 領域熟練度統計
+                </h3>
+                <div id="mastery-stats-container" class="mastery-grid">
+                    <!-- Mastery bars injected here -->
+                    <div style="text-align: center; color: var(--text-dim); width: 100%;">請先選擇領域以查看熟練度</div>
+                </div>
+            </div>
+
             <div class="glass-card main-card">
                 <header>
                     <h1 class="glow-text"><i class="fas fa-dragon"></i> 勇者題庫</h1>
@@ -198,6 +209,11 @@
                     <div class="question-container">
                         <div id="question-text" class="question-box">載入中...</div>
                         <button id="tts-btn" class="control-btn tts-btn hidden" onclick="readQuestionAloud()"><i class="fas fa-volume-up"></i> 朗讀</button>
+                    </div>
+
+                    <!-- Question Star Display -->
+                    <div id="question-stars-container" class="stars-display">
+                        <!-- Stars will be injected here -->
                     </div>
                     
                     <div id="options-container" class="options-grid">

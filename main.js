@@ -68,8 +68,22 @@ const state = {
         isBattling: false,
         opponent: null,
         bet: 100
-    }
+    },
+    userProgress: { scores: {} },
+    pendingProgressUpdates: false
 };
+
+// Unique Question ID Helper
+function getQuestionId(q, index) {
+    if (q.id && q.id !== null) return q.id;
+    // Fallback: combination of category and a hash of the question text
+    const cleanCat = (q.category || 'misc').replace(/[^a-zA-Z0-9]/g, '');
+    const hash = q.question.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+    }, 0);
+    return `${cleanCat}_${Math.abs(hash)}`;
+}
 
 // DOM Elements
 const elements = {
@@ -172,9 +186,15 @@ const elements = {
     challengeOpponentAvatar: document.getElementById('challenge-opponent-avatar'),
     closeDosBtn: document.getElementById('close-dos-btn'),
     battleConsoleTimer: document.getElementById('battle-console-timer'),
+    challengeOpponentAvatar: document.getElementById('challenge-opponent-avatar'),
+    closeDosBtn: document.getElementById('close-dos-btn'),
+    battleConsoleTimer: document.getElementById('battle-console-timer'),
     openChallengeListBtn: document.getElementById('open-challenge-list-btn'),
     challengeSelectionModal: document.getElementById('challenge-selection-modal'),
-    challengeListContainer: document.getElementById('challenge-list-container')
+    challengeListContainer: document.getElementById('challenge-list-container'),
+    masterySection: document.getElementById('mastery-section'),
+    masteryStatsContainer: document.getElementById('mastery-stats-container'),
+    questionStarsContainer: document.getElementById('question-stars-container')
 };
 
 let isLoginMode = true;
@@ -430,6 +450,19 @@ onAuthStateChanged(auth, async (user) => {
     }
     // Always refresh leaderboard
     renderHomepageLeaderboard();
+
+    // Load Mastery Progress
+    if (user) {
+        try {
+            const { getUserProgress } = await import('./firebase_app.js');
+            state.userProgress = await getUserProgress(user.uid);
+            if (state.selectedSubject) renderMasteryStats();
+        } catch (e) {
+            console.error("Failed to load user progress:", e);
+        }
+    } else {
+        state.userProgress = { scores: {} };
+    }
 });
 
 // Check for redirect result on load
@@ -558,11 +591,65 @@ async function handleSubjectChange() {
     }
 }
 
+function renderMasteryStats() {
+    if (!state.selectedSubject || !state.allQuestions.length || !state.currentUser) {
+        elements.masterySection.classList.add('hidden');
+        return;
+    }
+    
+    elements.masterySection.classList.remove('hidden');
+    elements.masteryStatsContainer.innerHTML = '';
+    
+    // Group questions by category
+    const categories = {};
+    state.allQuestions.forEach(q => {
+        const cat = q.category || '未分類';
+        if (!categories[cat]) categories[cat] = { total: 0, earned: 0 };
+        categories[cat].total++;
+        
+        // Get earned stars from userProgress
+        const qId = getQuestionId(q);
+        const score = (state.userProgress.scores[state.selectedSubject] && 
+                      state.userProgress.scores[state.selectedSubject][cat] && 
+                      state.userProgress.scores[state.selectedSubject][cat][qId]) || 0;
+        categories[cat].earned += score;
+    });
+    
+    const entries = Object.entries(categories).sort();
+    if (entries.length === 0) {
+        elements.masteryStatsContainer.innerHTML = '<div style="text-align: center; color: var(--text-dim); width: 100%;">暫無工作項目資料</div>';
+        return;
+    }
+
+    // Render each category
+    entries.forEach(([name, data]) => {
+        const percent = Math.min(100, Math.round((data.earned / (data.total * 3)) * 100));
+        
+        const item = document.createElement('div');
+        item.className = 'mastery-item';
+        item.innerHTML = `
+            <div class="mastery-info">
+                <span class="mastery-label" title="${name}">${name}</span>
+                <span class="mastery-percent">${percent}%</span>
+            </div>
+            <div class="mastery-bar-bg">
+                <div class="mastery-bar-fill" style="width: ${percent}%"></div>
+            </div>
+            <div style="font-size: 0.65rem; color: var(--text-dim); margin-top: 0.4rem; text-align: right; display: flex; justify-content: space-between;">
+                <span>${data.total} 題</span>
+                <span>熟練度: ${data.earned} / ${data.total * 3} ⭐</span>
+            </div>
+        `;
+        elements.masteryStatsContainer.appendChild(item);
+    });
+}
+
 function finishLoadingSubject() {
     elements.subOptions.classList.remove('hidden');
     elements.startBtn.disabled = false;
     elements.startBtn.innerHTML = '<i class="fas fa-sword"></i> 開始練習';
     updateFilterOptions();
+    renderMasteryStats();
 }
 
 // 支援重試機制的 Fetch (優化慢速網路)
@@ -733,17 +820,34 @@ function updateTimer() {
     elements.timer.innerHTML = `<i class="fas fa-clock"></i> ${m}:${s}`;
 }
 
+function updateStars(score) {
+    elements.questionStarsContainer.innerHTML = '';
+    for (let i = 1; i <= 3; i++) {
+        const star = document.createElement('i');
+        star.className = i <= score ? 'fas fa-star star-filled' : 'far fa-star star-empty';
+        elements.questionStarsContainer.appendChild(star);
+    }
+}
+
 function showQuestion() {
     const q = state.filteredQuestions[state.currentQuestionIndex];
+    const qId = getQuestionId(q);
+    const cat = q.category || '未分類';
     
     // Add to practiced list for stats
-    const qKey = `${state.selectedSubject}_${q.id}`;
+    const qKey = `${state.selectedSubject}_${qId}`;
     if (!state.practicedQuestionIds.includes(qKey)) {
         state.practicedQuestionIds.push(qKey);
     }
 
     elements.progress.textContent = `題目 ${state.currentQuestionIndex + 1} / ${state.filteredQuestions.length}`;
     elements.questionText.textContent = q.question;
+
+    // Show stars
+    const currentScore = (state.userProgress.scores[state.selectedSubject] && 
+                          state.userProgress.scores[state.selectedSubject][cat] && 
+                          state.userProgress.scores[state.selectedSubject][cat][qId]) || 0;
+    updateStars(currentScore);
 
     elements.immediateExpContainer.classList.add('hidden');
     elements.optionsContainer.innerHTML = '';
@@ -833,6 +937,24 @@ function handleAnswer(choice, btn) {
         state.score++;
         btn.classList.add('correct');
         playCorrectSound();
+        
+        // Mastery System: Increment star if not in retry mode and < 3
+        if (!state.isRetryMode && state.currentUser) {
+            const currentQ = state.filteredQuestions[state.currentQuestionIndex];
+            const currentQId = getQuestionId(currentQ);
+            const currentCat = currentQ.category || '未分類';
+            
+            if (!state.userProgress.scores[state.selectedSubject]) state.userProgress.scores[state.selectedSubject] = {};
+            if (!state.userProgress.scores[state.selectedSubject][currentCat]) state.userProgress.scores[state.selectedSubject][currentCat] = {};
+            
+            let currentScore = state.userProgress.scores[state.selectedSubject][currentCat][currentQId] || 0;
+            if (currentScore < 3) {
+                state.userProgress.scores[state.selectedSubject][currentCat][currentQId] = currentScore + 1;
+                state.pendingProgressUpdates = true;
+                updateStars(currentScore + 1);
+            }
+        }
+
         triggerHitEffect();
         
         // Damage Monster - dealt proportionally to total questions
@@ -1024,6 +1146,15 @@ async function endQuiz(isGiveUp = false) {
                         lands: [{ id: 'L1', type: 'farm', level: 1, lastHarvest: new Date() }]
                     };
                 }
+            }
+
+            // 3. Sync Mastery Progress (Stars)
+            if (state.pendingProgressUpdates) {
+                const { updateUserProgress } = await import('./firebase_app.js');
+                await updateUserProgress(state.currentUser.uid, state.userProgress);
+                state.pendingProgressUpdates = false;
+                console.log("Mastery progress synced successfully.");
+                renderMasteryStats(); // Refresh homepage stats
             }
         } catch (e) {
             console.error('個人資料同步失敗:', e);

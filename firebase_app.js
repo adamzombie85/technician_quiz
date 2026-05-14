@@ -379,3 +379,20 @@ export async function processBattleResult(challengerUid, opponentUid, betAmount,
     await updateDoc(opponentRef, { gold: (Number(opponentData.gold) || 0) + bet });
   }
 }
+
+export async function getUserProgress(uid) {
+  const progressRef = doc(db, "user_progress", uid);
+  const progressSnap = await getDoc(progressRef);
+  if (progressSnap.exists()) {
+    return progressSnap.data();
+  } else {
+    const defaultProgress = { scores: {} };
+    await setDoc(progressRef, defaultProgress);
+    return defaultProgress;
+  }
+}
+
+export async function updateUserProgress(uid, progress) {
+  const progressRef = doc(db, "user_progress", uid);
+  await setDoc(progressRef, progress, { merge: true });
+}
