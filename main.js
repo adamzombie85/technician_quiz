@@ -21,8 +21,8 @@ const state = {
         subjectMap: {
             'chinese_pasta': { name: '[丙級學科題庫] 中式麵食加工', file: '[丙級學科題庫] 中式麵食加工.json' },
             'beverage': { name: '[丙級學科題庫] 飲料調製', file: '[丙級學科題庫] 飲料調製.json' },
-            'technical': { name: '技術士技能檢定學科測試共同題庫', file: '技術士技能檢定學科測試共同題庫.json' },
-            'food_safety': { name: '[共同科目題庫] 食品安全衛生及營養相關職類', file: '[共同科目題庫] 食品安全衛生及營養相關職類.json' },
+            'technical': { name: '（共同科目）技術士技能檢定', file: '技術士技能檢定學科測試共同題庫.json' },
+            'food_safety': { name: '（共同科目）食品安全衛生', file: '[共同科目題庫] 食品安全衛生及營養相關職類.json' },
             'baking': { name: '[丙級學科題庫] 烘焙食品', file: '[丙級學科題庫] 烘焙食品.json' }
         }
     },
@@ -1291,7 +1291,7 @@ async function awardRewards(scorePercent, questionCount) {
 
     updateUserProfileDisplay();
     syncUserStats(state.currentUser.uid, { 
-        gold: state.userProfile.gold, 
+        goldDelta: goldEarned, // Use increment to prevent stale state overwriting
         inventory: state.userProfile.inventory,
         paintings: state.userProfile.paintings
     });
@@ -1673,7 +1673,7 @@ function renderLeaderboardRows(container, users) {
                 <td>LV ${u.level || 1}</td>
                 <td style="color: var(--gold); font-weight:bold;">
                     ${u.totalQuestions || 0}
-                    ${u.honorMessage ? `
+                    ${(u.honorMessage && idx < 3) ? `
                     <div class="honor-marquee-container" style="margin-top: 4px;">
                         <div class="honor-marquee-text">${u.honorMessage}</div>
                     </div>` : ''}
@@ -1963,11 +1963,38 @@ window.viewUserProfile = async (uid) => {
                 <div><strong style="color:var(--gold);">持有金幣：</strong> ${user.gold || 0} G</div>
                 <div><strong style="color:var(--gold);">上榜感言：</strong> ${user.honorMessage || '未設定'}</div>
             </div>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
+                <button class="btn btn-outline btn-small" onclick="adminClearHonorMessage('${user.uid}')" style="border-color: #f87171; color: #f87171;">
+                    <i class="fas fa-eraser"></i> 清除上榜感言
+                </button>
+                <button class="btn btn-outline btn-small" onclick="adminDeductGold('${user.uid}')" style="border-color: #f87171; color: #f87171;">
+                    <i class="fas fa-coins"></i> 扣除 500 金幣 (處罰)
+                </button>
+            </div>
         `;
     } catch (e) {
         console.error(e);
         contentDiv.innerHTML = '<div style="color:var(--danger);">載入失敗。</div>';
     }
+};
+
+window.adminClearHonorMessage = async (uid) => {
+    if (!confirm('確定要清除此勇者的上榜感言嗎？')) return;
+    try {
+        await syncUserStats(uid, { honorMessage: '' });
+        alert('感言已清除。');
+        viewUserProfile(uid); // Refresh
+        renderHomepageLeaderboard(); // Refresh global cache
+    } catch (e) { alert('操作失敗: ' + e.message); }
+};
+
+window.adminDeductGold = async (uid) => {
+    if (!confirm('確定要對此勇者扣除 500 金幣作為處罰嗎？')) return;
+    try {
+        await syncUserStats(uid, { goldDelta: -500 });
+        alert('金幣已扣除。');
+        viewUserProfile(uid); // Refresh
+    } catch (e) { alert('操作失敗: ' + e.message); }
 };
 
 function renderProfileAvatar() {

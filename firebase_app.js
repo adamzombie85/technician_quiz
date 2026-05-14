@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit, doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, orderBy, limit, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAAHbfwLcqeXEk32Oc7q9kUFf9rLCn5I6c",
@@ -223,12 +223,23 @@ export async function syncUserStats(uid, scoreOrUpdate, totalQuestions, totalTim
 
   if (typeof scoreOrUpdate === 'object' && scoreOrUpdate !== null && !Array.isArray(scoreOrUpdate)) {
     updateData = { ...scoreOrUpdate };
+    // If goldDelta is provided, use increment for gold
+    if (updateData.goldDelta !== undefined) {
+      updateData.gold = increment(Number(updateData.goldDelta) || 0);
+      delete updateData.goldDelta;
+    }
   } else {
     const qCount = Number(totalQuestions) || 0;
     const tTime = Number(totalTime) || 0;
     
     updateData.totalQuestions = (Number(data.totalQuestions) || 0) + qCount;
     updateData.totalTime = (Number(data.totalTime) || 0) + tTime;
+    
+    // Add gold update if provided as a separate field or derived
+    if (scoreOrUpdate && typeof scoreOrUpdate === 'number') {
+        // If scoreOrUpdate is a number, it might be the score percent. 
+        // Gold awarding is usually handled in awardRewards in main.js
+    }
     
     const questionStats = data.questionStats || {};
     if (Array.isArray(practicedQuestionIds)) {
@@ -357,26 +368,16 @@ export async function getUserPracticeRecords(uid, limitCount = 50) {
 
 export async function processBattleResult(challengerUid, opponentUid, betAmount, isWin) {
   const challengerRef = doc(db, "users", challengerUid);
-  const opponentRef = doc(db, "users", opponentUid);
-  
-  const challengerSnap = await getDoc(challengerRef);
-  const opponentSnap = await getDoc(opponentRef);
-  
-  if (!challengerSnap.exists() || !opponentSnap.exists()) return;
-  
-  const challengerData = challengerSnap.data();
-  const opponentData = opponentSnap.data();
+  // Opponent is no longer affected to prevent unexplained gold loss
   
   const bet = Number(betAmount);
   
   if (isWin) {
-    // Challenger wins: gains 2x bet, Opponent loses 1x bet
-    await updateDoc(challengerRef, { gold: (Number(challengerData.gold) || 0) + (bet * 2) });
-    await updateDoc(opponentRef, { gold: Math.max(0, (Number(opponentData.gold) || 0) - bet) });
+    // Challenger wins: gains 2x bet
+    await updateDoc(challengerRef, { gold: increment(bet * 2) });
   } else {
-    // Challenger loses: loses 1x bet, Opponent gains 1x bet
-    await updateDoc(challengerRef, { gold: Math.max(0, (Number(challengerData.gold) || 0) - bet) });
-    await updateDoc(opponentRef, { gold: (Number(opponentData.gold) || 0) + bet });
+    // Challenger loses: loses 1x bet
+    await updateDoc(challengerRef, { gold: increment(-bet) });
   }
 }
 
