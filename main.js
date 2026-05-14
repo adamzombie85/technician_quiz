@@ -2276,7 +2276,7 @@ window.openChallenge = openChallenge;
 
 // --- Warrior Battle System ---
 
-const openChallengeSelection = () => {
+function openChallengeSelection() {
     if (!state.currentUser) {
         alert('請先登入才能發起挑戰！');
         return;
@@ -2325,9 +2325,9 @@ const openChallengeSelection = () => {
     }
 
     elements.challengeSelectionModal.classList.remove('hidden');
-};
+}
 
-const openChallenge = async (opponentUid) => {
+async function openChallenge(opponentUid) {
     if (!state.currentUser) {
         alert('請先登入才能發起挑戰！');
         return;
