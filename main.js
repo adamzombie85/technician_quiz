@@ -70,7 +70,8 @@ const state = {
         bet: 100
     },
     userProgress: { scores: {} },
-    pendingProgressUpdates: false
+    pendingProgressUpdates: false,
+    territoryInterval: null
 };
 
 // Unique Question ID Helper
@@ -2155,6 +2156,15 @@ window.toggleTerritoryModal = () => {
     if (!isHidden) {
         switchTerritoryTab('map');
         updateTerritoryAssets();
+        // Start real-time timer
+        if (state.territoryInterval) clearInterval(state.territoryInterval);
+        state.territoryInterval = setInterval(updateProductionTimers, 5000); // Update every 5 seconds
+    } else {
+        // Stop timer
+        if (state.territoryInterval) {
+            clearInterval(state.territoryInterval);
+            state.territoryInterval = null;
+        }
     }
 };
 
@@ -2192,52 +2202,124 @@ function renderTerritoryMap() {
     for (let i = 0; i < 9; i++) {
         const cell = document.createElement('div');
         cell.className = 'land-cell';
+        cell.dataset.index = i;
         
-        const land = lands[i]; // For now, assume lands are stored in order
+        const land = lands[i];
         if (land) {
             cell.classList.add('farm');
-            cell.innerHTML = `
-                <div class="land-icon"><i class="fas fa-tractor" style="color: #10b981;"></i></div>
-                <div class="land-name">等級 ${land.level} 農場</div>
-            `;
-            
-            // Calculate Harvest Status
-            const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
-            const now = Date.now();
-            const elapsed = now - lastHarvest;
-            const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
-            
-            if (Q > 0) {
-                cell.innerHTML += `<div class="harvest-indicator">${Q}</div>`;
-                cell.onclick = () => harvestLand(i);
-            } else {
-                const progressPct = Math.min(100, (elapsed / TERRITORY_CONFIG.productionTime) * 100);
-                cell.innerHTML += `
-                    <div class="farm-progress-container">
-                        <div class="farm-progress-fill" style="width: ${progressPct}%"></div>
-                    </div>
-                    <div class="farm-progress-text">生產中 ${Math.floor(progressPct)}%</div>
-                `;
-                cell.onclick = () => showToast('物資生產中... 請耐心等待。');
-            }
+            updateLandCellContent(cell, land, i);
         } else {
-            cell.classList.add('locked');
-            cell.innerHTML = `
-                <div class="land-icon"><i class="fas fa-lock" style="color: rgba(255,255,255,0.2);"></i></div>
-                <div class="land-name">未開發</div>
-            `;
-            // First empty slot could be purchasable?
+            const threshold = TERRITORY_CONFIG.landThresholds[i] || 99999;
+            const currentCorrect = state.userProfile.totalQuestions || 0;
+            
             if (i === lands.length) {
-                cell.classList.remove('locked');
+                // Next available expansion slot
                 cell.classList.add('purchasable');
                 cell.innerHTML = `
                     <div class="land-icon"><i class="fas fa-plus-circle" style="color: var(--gold);"></i></div>
                     <div class="land-name">擴張領地</div>
+                    <div style="font-size: 0.65rem; color: var(--gold); margin-top: 4px;">需累積答對 ${threshold} 題</div>
                 `;
-                cell.onclick = () => showToast('未來擴張功能即將開放！目前先專心經營現有農場吧。');
+                cell.onclick = () => {
+                    if (currentCorrect >= threshold) {
+                        unlockNewLand(i);
+                    } else {
+                        showToast(`還需要累積答對 ${threshold - currentCorrect} 題才能擴張！`, 'error');
+                    }
+                };
+            } else {
+                // Future locked slots
+                cell.classList.add('locked');
+                cell.innerHTML = `
+                    <div class="land-icon"><i class="fas fa-lock" style="color: rgba(255,255,255,0.2);"></i></div>
+                    <div class="land-name">未開發</div>
+                `;
+                cell.onclick = () => {
+                    showToast(`此地塊解鎖條件：累積答對 ${threshold} 題。`, 'info');
+                };
             }
         }
         elements.territoryGrid.appendChild(cell);
+    }
+}
+
+function updateProductionTimers() {
+    if (elements.territoryModal.classList.contains('hidden')) return;
+    const lands = state.userProfile.territory ? state.userProfile.territory.lands : [];
+    const cells = elements.territoryGrid.querySelectorAll('.land-cell.farm');
+    
+    cells.forEach(cell => {
+        const idx = parseInt(cell.dataset.index);
+        const land = lands[idx];
+        if (land) {
+            updateLandCellContent(cell, land, idx);
+        }
+    });
+}
+
+function updateLandCellContent(cell, land, index) {
+    const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
+    const now = Date.now();
+    const elapsed = now - lastHarvest;
+    const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
+
+    if (Q > 0) {
+        cell.innerHTML = `
+            <div class="land-icon"><i class="fas fa-tractor" style="color: #10b981;"></i></div>
+            <div class="land-name">等級 ${land.level} 農場</div>
+            <div class="harvest-indicator">${Q}</div>
+        `;
+        cell.onclick = () => harvestLand(index);
+    } else {
+        const progressPct = Math.min(100, (elapsed / TERRITORY_CONFIG.productionTime) * 100);
+        const remainingMs = Math.max(0, TERRITORY_CONFIG.productionTime - elapsed);
+        const h = Math.floor(remainingMs / 3600000);
+        const m = Math.floor((remainingMs % 3600000) / 60000);
+        
+        cell.innerHTML = `
+            <div class="land-icon"><i class="fas fa-tractor" style="color: #10b981; opacity: 0.7;"></i></div>
+            <div class="land-name">等級 ${land.level} 農場</div>
+            <div class="farm-progress-container">
+                <div class="farm-progress-fill" style="width: ${progressPct}%"></div>
+            </div>
+            <div class="farm-progress-text">生產中 ${Math.floor(progressPct)}%</div>
+            <div class="farm-time-remaining">剩餘 ${h}時${m}分</div>
+        `;
+        cell.onclick = () => showToast('物資生產中... 請耐心等待。');
+    }
+}
+
+async function unlockNewLand(index) {
+    if (!state.currentUser || !state.userProfile) return;
+    
+    const threshold = TERRITORY_CONFIG.landThresholds[index];
+    if (state.userProfile.totalQuestions < threshold) return;
+
+    if (!confirm(`確定要消耗您的勇者榮譽（累積答對 ${threshold} 題）來擴張領地嗎？`)) return;
+
+    showLoadingOverlay(true);
+    try {
+        const lands = [...(state.userProfile.territory.lands || [])];
+        const newLand = {
+            id: `L${lands.length + 1}`,
+            type: 'farm',
+            level: 1,
+            lastHarvest: new Date()
+        };
+        lands.push(newLand);
+
+        await updateUserProfile(state.currentUser.uid, {
+            "territory.lands": lands
+        });
+
+        state.userProfile.territory.lands = lands;
+        showToast('擴張成功！新農場已投入生產。', 'success');
+        renderTerritoryMap();
+    } catch (e) {
+        console.error(e);
+        showToast('擴張失敗，請稍後再試。', 'error');
+    } finally {
+        showLoadingOverlay(false);
     }
 }
 

@@ -90,7 +90,8 @@ export const PUZZLE_THEMES = [
 ];
 
 export const TERRITORY_CONFIG = {
-  unlockThreshold: 100, // Correct answers to unlock
+  unlockThreshold: 100, // Correct answers to unlock first land
+  landThresholds: [100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500], // Requirements for each of the 9 slots
   productionTime: 48 * 60 * 60 * 1000, // 48 hours in milliseconds
   synthesis: {
     pudding: { egg: 1, milk: 1, gold: 200, reward: 2000 },

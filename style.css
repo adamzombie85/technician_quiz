@@ -1472,8 +1472,17 @@ input:checked + .slider:before {
 }
 
 .land-cell.locked {
-    cursor: not-allowed;
+    cursor: pointer;
     background: rgba(0,0,0,0.3);
+}
+
+.land-cell.purchasable {
+    border: 2px dashed var(--gold);
+    background: rgba(251, 191, 36, 0.05);
+}
+
+.land-cell.purchasable .land-name {
+    color: var(--gold);
 }
 
 .land-cell:hover:not(.locked) {
@@ -1513,6 +1522,35 @@ input:checked + .slider:before {
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-5px); }
+}
+
+.farm-progress-container {
+    width: 80%;
+    height: 8px;
+    background: rgba(0,0,0,0.4);
+    border-radius: 4px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.farm-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    width: 0%;
+    transition: width 0.5s ease-out;
+}
+
+.farm-progress-text {
+    font-size: 0.7rem;
+    color: #10b981;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.farm-time-remaining {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    margin-top: 2px;
 }
 
 .territory-footer {
