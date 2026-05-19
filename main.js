@@ -2662,7 +2662,7 @@ async function openChallenge(opponentUid) {
         }
 
         state.battle.opponent = opponent;
-        state.battle.bet = 100;
+        state.battle.bet = 500;
 
         elements.challengeOpponentName.textContent = opponent.nickname || '無名勇者';
         elements.challengeOpponentLevel.textContent = `LV ${opponent.level || 1}`;
@@ -2692,10 +2692,10 @@ async function openChallenge(opponentUid) {
 };
 
 window.adjustBet = (delta) => {
-    const step = 10;
+    const step = 100;
     let newBet = state.battle.bet + (delta * step);
-    if (newBet < 10) newBet = 10;
-    if (newBet > 1000) newBet = 1000;
+    if (newBet < 500) newBet = 500;
+    if (newBet > 2000) newBet = 2000;
     
     state.battle.bet = newBet;
     elements.betDisplay.textContent = newBet;
