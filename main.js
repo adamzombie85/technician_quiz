@@ -207,6 +207,7 @@ elements.filterType.addEventListener('change', updateFilterOptions);
 elements.filterValue.addEventListener('change', updateQuestionCountDropdown);
 elements.keywordInput.addEventListener('input', updateQuestionCountDropdown);
 elements.openChallengeListBtn?.addEventListener('click', openChallengeSelection);
+document.getElementById('challenge-subject-select')?.addEventListener('change', handleChallengeSubjectChange);
 
 // RPG System Listeners
 elements.openGalleryBtn.addEventListener('click', () => {
@@ -383,7 +384,14 @@ document.getElementById('site-title').addEventListener('click', () => {
 });
 
 // Auth Setup
-onAuthStateChanged(auth, async (user) => {
+const devMode = new URLSearchParams(window.location.search).get('devMode') === 'true';
+const mockUser = {
+    uid: "dev_mock_user_123",
+    email: "dev_mock@example.com",
+    displayName: "開發者勇者"
+};
+
+async function setupUserSession(user) {
     state.currentUser = user;
     const reqElements = document.querySelectorAll('.auth-required');
     if (user) {
@@ -402,6 +410,13 @@ onAuthStateChanged(auth, async (user) => {
             }
             if (isNaN(state.userProfile.gold) || state.userProfile.gold === null) {
                 state.userProfile.gold = 0;
+            }
+
+            // Mock profile setup complete for devMode
+            if (devMode) {
+                state.userProfile.profileCompleted = true;
+                state.userProfile.gold = Math.max(state.userProfile.gold, 2000); // Give plenty of gold to bet!
+                state.userProfile.nickname = "開發者勇者";
             }
 
             // Migration for old puzzle data to new painting system
@@ -428,7 +443,7 @@ onAuthStateChanged(auth, async (user) => {
         }
         
         // Check for Admin
-        if (user.email === 'adamzombie85@gmail.com') {
+        if (user.email === 'adamzombie85@gmail.com' || devMode) {
             elements.adminBtn.classList.remove('hidden');
         } else {
             elements.adminBtn.classList.add('hidden');
@@ -464,7 +479,14 @@ onAuthStateChanged(auth, async (user) => {
     } else {
         state.userProgress = { scores: {} };
     }
-});
+}
+
+if (devMode) {
+    console.log("Dev Mode enabled. Mocking user session...");
+    setupUserSession(mockUser);
+} else {
+    onAuthStateChanged(auth, setupUserSession);
+}
 
 // Check for redirect result on load
 handleRedirectResult().then((result) => {
@@ -2328,10 +2350,51 @@ async function harvestLand(landIndex) {
     
     showLoadingOverlay(true);
     try {
-        // Get trusted time from WorldTimeAPI
-        const timeResp = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
-        const timeData = await timeResp.json();
-        const now = new Date(timeData.datetime).getTime();
+        let now;
+        let isTrusted = true;
+
+        const getOnlineTime = async () => {
+            // Server 1: WorldTimeAPI
+            try {
+                const resp = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
+                const data = await resp.json();
+                if (data && data.datetime) return new Date(data.datetime).getTime();
+            } catch (e) {
+                console.warn("WorldTimeAPI failed, trying TimeAPI.world...", e);
+            }
+
+            // Server 2: TimeAPI.world
+            try {
+                const resp = await fetch('https://timeapi.world/api/timezone/Etc/UTC');
+                const data = await resp.json();
+                if (data && data.datetime) return new Date(data.datetime).getTime();
+            } catch (e) {
+                console.warn("TimeAPI.world failed, trying TimeAPI.io...", e);
+            }
+
+            // Server 3: TimeAPI.io
+            try {
+                const resp = await fetch('https://timeapi.io/api/time/current/zone?timeZone=Etc/UTC');
+                const data = await resp.json();
+                if (data && data.dateTime) return new Date(data.dateTime).getTime();
+            } catch (e) {
+                console.warn("TimeAPI.io failed...", e);
+            }
+
+            throw new Error("All time servers failed");
+        };
+
+        try {
+            now = await getOnlineTime();
+        } catch (apiErr) {
+            console.warn("All time servers down/busy. Falling back to local device time.", apiErr);
+            now = Date.now();
+            isTrusted = false;
+        }
+
+        if (!isTrusted) {
+            showToast('時間伺服器忙碌中，已使用本地時間進行收穫。', 'info');
+        }
         
         const land = state.userProfile.territory.lands[landIndex];
         const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
@@ -2522,6 +2585,23 @@ function openChallengeSelection() {
         return;
     }
 
+    // Auto-mock leaderboard in devMode or if empty
+    if (devMode && (!state.leaderboardCache || state.leaderboardCache.length <= 1)) {
+        state.leaderboardCache = [
+            { uid: "mock_opponent_1", nickname: "傳奇騎士·亞瑟", level: 15, avatar: "fa-shield-halved" },
+            { uid: "mock_opponent_2", nickname: "龍之召喚師·艾莉絲", level: 20, avatar: "fa-dragon" },
+            { uid: "mock_opponent_3", nickname: "影之刺客·凱", level: 10, avatar: "fa-user-ninja" }
+        ];
+        if (state.currentUser) {
+            state.leaderboardCache.push({
+                uid: state.currentUser.uid,
+                nickname: state.userProfile ? state.userProfile.nickname : "你",
+                level: state.userProfile ? state.userProfile.level : 1,
+                avatar: state.userProfile ? state.userProfile.avatar : "fa-user"
+            });
+        }
+    }
+
     if (!state.leaderboardCache || state.leaderboardCache.length === 0) {
         alert('暫無勇者名單，請稍後再試。');
         return;
@@ -2588,6 +2668,14 @@ async function openChallenge(opponentUid) {
         elements.challengeOpponentLevel.textContent = `LV ${opponent.level || 1}`;
         elements.betDisplay.textContent = state.battle.bet;
 
+        // Reset battle setup dropdowns
+        const subSel = document.getElementById('challenge-subject-select');
+        const catCont = document.getElementById('challenge-category-container');
+        const catSel = document.getElementById('challenge-category-select');
+        if (subSel) subSel.value = '';
+        if (catCont) catCont.classList.add('hidden');
+        if (catSel) catSel.innerHTML = '';
+
         if (opponent.avatar && opponent.avatar.includes('.png')) {
             elements.challengeOpponentAvatar.innerHTML = `<img src="assets/avatars/${opponent.avatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
         } else {
@@ -2613,9 +2701,185 @@ window.adjustBet = (delta) => {
     elements.betDisplay.textContent = newBet;
 };
 
+let battleAnswerResolver = null;
+
+window.submitBattleAnswer = (choiceIndex, btn) => {
+    if (battleAnswerResolver) {
+        // Disable all sibling buttons in this grid
+        const container = btn.parentElement;
+        const buttons = container.querySelectorAll('.dos-combat-btn');
+        buttons.forEach(b => {
+            b.disabled = true;
+            b.style.opacity = '0.5';
+            b.style.cursor = 'not-allowed';
+        });
+        
+        battleAnswerResolver(choiceIndex);
+        battleAnswerResolver = null;
+    }
+};
+
+async function handleChallengeSubjectChange() {
+    const val = document.getElementById('challenge-subject-select').value;
+    const catContainer = document.getElementById('challenge-category-container');
+    const catSelect = document.getElementById('challenge-category-select');
+    
+    if (!val) {
+        catContainer.classList.add('hidden');
+        return;
+    }
+
+    try {
+        showLoadingOverlay(true);
+        let questions = state.cachedData[val];
+        if (!questions) {
+            const subjectConfig = state.config.subjectMap[val];
+            const CACHE_VERSION = 'v4'; 
+            const localCacheKey = `quiz_cache_${val}_${CACHE_VERSION}`;
+            const savedData = localStorage.getItem(localCacheKey);
+            if (savedData) {
+                try {
+                    questions = JSON.parse(savedData);
+                    state.cachedData[val] = questions;
+                } catch (e) {
+                    console.warn("Local storage cache corrupted, refetching...");
+                }
+            }
+            
+            if (!questions) {
+                const response = await fetchWithRetry(encodeURIComponent(subjectConfig.file));
+                questions = await response.json();
+                state.cachedData[val] = questions;
+                localStorage.setItem(localCacheKey, JSON.stringify(questions));
+            }
+        }
+
+        // Get distinct categories
+        const categories = [...new Set(questions.map(q => q.category).filter(Boolean))];
+        catSelect.innerHTML = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+        catContainer.classList.remove('hidden');
+    } catch (err) {
+        console.error('Failed to load questions for challenge:', err);
+        alert('載入對戰題庫失敗，請確認網路連線。');
+        document.getElementById('challenge-subject-select').value = '';
+        catContainer.classList.add('hidden');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+async function askBattleQuestion(q, questionIndex, totalQuestions) {
+    const log = elements.dosLog;
+    
+    await writeLog(`\n----------------------------------------`, log, 'dos-text-dim');
+    await writeLog(`[題目 ${questionIndex + 1} / ${totalQuestions}]`, log, 'dos-text-gold');
+    await writeLog(q.question, log, 'dos-text-gold');
+    
+    let paddedOptions = [...q.options];
+    while (paddedOptions.length < 4) {
+        paddedOptions.push("(無文字選項)");
+    }
+    
+    const optionsWithIndices = paddedOptions.map((opt, idx) => ({ 
+        text: (opt === "無選項" || !opt) ? "(無文字選項)" : opt, 
+        originalIndex: idx + 1 
+    }));
+    
+    // Shuffle the options
+    for (let i = optionsWithIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [optionsWithIndices[i], optionsWithIndices[j]] = [optionsWithIndices[j], optionsWithIndices[i]];
+    }
+
+    const containerDiv = document.createElement('div');
+    containerDiv.style.margin = '10px 0';
+    containerDiv.style.display = 'flex';
+    containerDiv.style.flexDirection = 'column';
+    containerDiv.style.gap = '8px';
+    
+    optionsWithIndices.forEach((optObj, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'dos-combat-btn';
+        btn.style.background = 'transparent';
+        btn.style.border = '1px solid #00ff00';
+        btn.style.color = '#00ff00';
+        btn.style.padding = '8px';
+        btn.style.textAlign = 'left';
+        btn.style.fontFamily = 'monospace';
+        btn.style.fontSize = '0.9rem';
+        btn.style.cursor = 'pointer';
+        btn.style.width = '100%';
+        btn.style.textShadow = '0 0 5px rgba(0, 255, 0, 0.5)';
+        btn.style.boxShadow = 'inset 0 0 5px rgba(0, 255, 0, 0.1)';
+        btn.style.borderRadius = '4px';
+        btn.style.transition = 'all 0.2s';
+        
+        btn.onmouseover = () => {
+            if (!btn.disabled) {
+                btn.style.background = '#00ff00';
+                btn.style.color = '#000';
+            }
+        };
+        btn.onmouseout = () => {
+            if (!btn.disabled) {
+                btn.style.background = 'transparent';
+                btn.style.color = '#00ff00';
+            }
+        };
+        
+        btn.textContent = `(${idx + 1}) ${optObj.text}`;
+        btn.onclick = () => window.submitBattleAnswer(optObj.originalIndex, btn);
+        containerDiv.appendChild(btn);
+    });
+    
+    log.appendChild(containerDiv);
+    log.scrollTop = log.scrollHeight;
+    
+    const chosenIndex = await new Promise(resolve => {
+        battleAnswerResolver = resolve;
+    });
+
+    const isCorrect = chosenIndex === q.answer;
+    
+    const buttons = containerDiv.querySelectorAll('.dos-combat-btn');
+    buttons.forEach((btn, idx) => {
+        const optObj = optionsWithIndices[idx];
+        if (optObj.originalIndex === q.answer) {
+            btn.style.border = '2px solid #00ff00';
+            btn.style.background = 'rgba(0, 255, 0, 0.2)';
+            btn.style.color = '#00ff00';
+            btn.style.opacity = '1';
+        } else if (optObj.originalIndex === chosenIndex && !isCorrect) {
+            btn.style.border = '2px solid #ff3333';
+            btn.style.background = 'rgba(255, 51, 51, 0.2)';
+            btn.style.color = '#ff3333';
+            btn.style.opacity = '1';
+        }
+    });
+
+    if (isCorrect) {
+        await writeLog(`>> 回答正確！`, log, 'dos-text-blue');
+        playCorrectSound();
+    } else {
+        const correctText = optionsWithIndices.find(o => o.originalIndex === q.answer)?.text || '';
+        await writeLog(`>> 回答錯誤。正確答案是：${correctText}`, log, 'dos-text-red');
+        playWrongSound();
+    }
+    
+    return isCorrect;
+}
+
 elements.confirmChallengeBtn.addEventListener('click', async () => {
     if (!state.userProfile || state.userProfile.gold < state.battle.bet) {
         alert('金幣不足，無法發起這場挑戰！');
+        return;
+    }
+
+    const sub = document.getElementById('challenge-subject-select').value;
+    const cat = document.getElementById('challenge-category-select').value;
+    
+    if (!sub || !cat) {
+        alert('請先選擇對戰領域和工作項目！');
         return;
     }
 
@@ -2664,12 +2928,16 @@ async function runBattleSimulation(opponent, bet) {
     await writeLog(`[對戰開始] 決鬥賭注：${bet} 枚金幣`, log, 'dos-text-gold');
     await new Promise(r => setTimeout(r, 500));
 
+    const sub = document.getElementById('challenge-subject-select').value;
+    const cat = document.getElementById('challenge-category-select').value;
+    const questionsPool = state.cachedData[sub].filter(q => q.category === cat);
+    
+    // Shuffle and pick 20 questions
+    const shuffled = [...questionsPool].sort(() => 0.5 - Math.random());
+    const selectedQuestions = shuffled.slice(0, 20);
+
     let myHp = 100;
     let opHp = 100;
-    const willWin = Math.random() < 0.5;
-    
-    const mySkills = state.userProfile.skills || WARRIOR_SKILLS.slice(0, 3);
-    const opSkills = opponent.skills || WARRIOR_SKILLS.slice(0, 3);
 
     const renderHpBar = (hp, label, colorClass) => {
         const totalSegments = 20;
@@ -2679,74 +2947,119 @@ async function runBattleSimulation(opponent, bet) {
         return `${label} HP: ${bar} ${hp}/100 ${icon}`;
     };
 
-    let round = 1;
-    const playerAttackEmotes = ['(╯°▽°)╯ ┻━┻', '(╬ﾟдﾟ)▄︻┻┳═一', '(☄️◣ω◢)☄️', 'ᕙ(⇀‸↼‶)ᕗ'];
-    const opAttackEmotes = ['(◣_◢)', '(ノಠ益ಠ)ノ', 'ψ(｀∇´)ψ', '(╬ﾟдﾟ)'];
-    const hitEmotes = ['(>_<)', '(×_×)', '(O_Q)', 'Σ(っ °Д °;)っ'];
-
-    while (myHp > 0 && opHp > 0) {
-        await writeLog(`\n--- ROUND ${round} ---`, log);
+    let round = 0;
+    while (myHp > 0 && opHp > 0 && round < selectedQuestions.length) {
+        const q = selectedQuestions[round];
+        
+        await writeLog(`\n=== 回合 ${round + 1} ===`, log);
         await writeLog(renderHpBar(myHp, 'YOU   ', 'dos-text-blue'), log, 'dos-text-blue');
         await writeLog(renderHpBar(opHp, 'TARGET', 'dos-text-red'), log, 'dos-text-red');
+        
+        const isCorrect = await askBattleQuestion(q, round, selectedQuestions.length);
         await new Promise(r => setTimeout(r, 600));
 
-        // Player Turn
-        const mySkill = mySkills[Math.floor(Math.random() * mySkills.length)];
-        const myEmote = playerAttackEmotes[Math.floor(Math.random() * playerAttackEmotes.length)];
-        await writeLog(`> ${myName} ${mySkill.msg} ${myEmote}`, log);
-        
-        let dmgToOp = 0;
-        if (round >= 4 && willWin) {
-            dmgToOp = opHp; // Fatal blow
-        } else {
-            const range = mySkill.power || [5, 15];
-            dmgToOp = range[0] + Math.floor(Math.random() * (range[1] - range[0]));
-            if (opHp - dmgToOp < 5 && !willWin) dmgToOp = 0; // Don't kill if going to lose
-        }
-        opHp = Math.max(0, opHp - dmgToOp);
-        const hitEmote = hitEmotes[Math.floor(Math.random() * hitEmotes.length)];
-        await writeLog(`  擊中對手！造成的傷害：${dmgToOp} ${hitEmote}`, log, 'dos-text-blue');
-        
-        if (opHp <= 0) break;
-        await new Promise(r => setTimeout(r, 800));
+        if (isCorrect) {
+            // Player attacks first!
+            const playerCrit = Math.random() < 0.10;
+            const playerDmg = playerCrit ? 20 : 5;
+            opHp = Math.max(0, opHp - playerDmg);
+            
+            if (playerCrit) {
+                await writeLog(`⚔️ 爆擊！${myName} 使出致命一擊 💥 造成 ${playerDmg} 點傷害！`, log, 'dos-text-gold');
+            } else {
+                await writeLog(`⚔️ ${myName} 發動攻擊，造成 ${playerDmg} 點傷害。`, log, 'dos-text-blue');
+            }
+            
+            if (opHp <= 0) {
+                await writeLog(`💀 ${opName} 被擊倒了！`, log, 'dos-text-red');
+                break;
+            }
+            
+            await new Promise(r => setTimeout(r, 800));
 
-        // Opponent Turn
-        const opSkill = opSkills[Math.floor(Math.random() * opSkills.length)];
-        const opEmote = opAttackEmotes[Math.floor(Math.random() * opAttackEmotes.length)];
-        await writeLog(`> ${opName} ${opSkill.msg} ${opEmote}`, log);
-        
-        let dmgToMe = 0;
-        if (round >= 4 && !willWin) {
-            dmgToMe = myHp; // Fatal blow
+            // Opponent counter-attacks with 50% chance
+            if (Math.random() < 0.50) {
+                const opCrit = Math.random() < 0.10;
+                const opDmg = opCrit ? 20 : 5;
+                myHp = Math.max(0, myHp - opDmg);
+                if (opCrit) {
+                    await writeLog(`💥 爆擊！${opName} 反擊使出致命一擊，造成 ${opDmg} 點傷害！`, log, 'dos-text-red');
+                } else {
+                    await writeLog(`🛡️ ${opName} 發動反擊，造成 ${opDmg} 點傷害。`, log, 'dos-text-red');
+                }
+                if (myHp <= 0) {
+                    await writeLog(`💀 你被擊倒了！`, log, 'dos-text-red');
+                    break;
+                }
+            } else {
+                await writeLog(`🛡️ ${opName} 來不及反應，防禦成功！`, log, 'dos-text-dim');
+            }
         } else {
-            const range = opSkill.power || [5, 15];
-            dmgToMe = range[0] + Math.floor(Math.random() * (range[1] - range[0]));
-            if (myHp - dmgToMe < 5 && willWin) dmgToMe = 0; // Don't kill if going to win
-        }
-        myHp = Math.max(0, myHp - dmgToMe);
-        const myHitEmote = hitEmotes[Math.floor(Math.random() * hitEmotes.length)];
-        await writeLog(`  受到攻擊！承受的傷害：${dmgToMe} ${myHitEmote}`, log, 'dos-text-red');
+            // Opponent attacks first!
+            const opCrit = Math.random() < 0.10;
+            const opDmg = opCrit ? 20 : 5;
+            myHp = Math.max(0, myHp - opDmg);
+            
+            if (opCrit) {
+                await writeLog(`💥 爆擊！${opName} 趁你露出破綻，使出致命一擊！造成 ${opDmg} 點傷害！`, log, 'dos-text-red');
+            } else {
+                await writeLog(`⚔️ ${opName} 先攻！趁你答錯發動突襲，造成 ${opDmg} 點傷害。`, log, 'dos-text-red');
+            }
+            
+            if (myHp <= 0) {
+                await writeLog(`💀 你被擊倒了！`, log, 'dos-text-red');
+                break;
+            }
+            
+            await new Promise(r => setTimeout(r, 800));
 
-        if (myHp <= 0) break;
-        await new Promise(r => setTimeout(r, 1000));
+            // Player counter-attacks
+            const playerCrit = Math.random() < 0.10;
+            const playerDmg = playerCrit ? 20 : 5;
+            opHp = Math.max(0, opHp - playerDmg);
+            if (playerCrit) {
+                await writeLog(`⚔️ 爆擊！${myName} 重整旗鼓進行反擊 💥 造成 ${playerDmg} 點傷害！`, log, 'dos-text-gold');
+            } else {
+                await writeLog(`⚔️ ${myName} 進行反擊，造成 ${playerDmg} 點傷害。`, log, 'dos-text-blue');
+            }
+            
+            if (opHp <= 0) {
+                await writeLog(`💀 ${opName} 被擊倒了！`, log, 'dos-text-red');
+                break;
+            }
+        }
+        
         round++;
+        await new Promise(r => setTimeout(r, 1000));
     }
 
     await writeLog('\n>>> BATTLE_CONCLUDED. ANALYZING_RESULTS...', log, 'dos-text-dim');
     await new Promise(r => setTimeout(r, 1000));
 
-    if (opHp <= 0) {
-        await writeLog(`\n[勝利] ${opName} 體力不支倒下了！ (×_×)`, log, 'dos-text-gold');
+    const playerWon = opHp <= 0 || (myHp > 0 && opHp > 0 && myHp >= opHp);
+
+    if (playerWon) {
+        if (opHp <= 0) {
+            await writeLog(`\n[勝利] ${opName} 體力不支倒下了！ (×_×)`, log, 'dos-text-gold');
+        } else {
+            await writeLog(`\n[時間到] 20 題已答完！雙方均未倒下。`, log, 'dos-text-gold');
+            await writeLog(`[判定勝利] 你的剩餘生命值 (${myHp}) 高於對手 (${opHp})！`, log, 'dos-text-gold');
+        }
         await writeLog(`[勝利] 你贏得了這場決鬥！ (^_^)v`, log, 'dos-text-gold');
         await writeLog(`>>> 獲得金幣：${bet * 2} (★≧▽^))★☆`, log, 'dos-text-gold');
     } else {
-        await writeLog(`\n[失敗] 你感覺視線模糊，體力已到極限... (O_Q)`, log, 'dos-text-red');
+        if (myHp <= 0) {
+            await writeLog(`\n[失敗] 你感覺視線模糊，體力已到極限... (O_Q)`, log, 'dos-text-red');
+        } else {
+            await writeLog(`\n[時間到] 20 題已答完！雙方均未倒下。`, log, 'dos-text-red');
+            await writeLog(`[判定失敗] 你的剩餘生命值 (${myHp}) 低於對手 (${opHp})...`, log, 'dos-text-red');
+        }
         await writeLog(`[失敗] ${opName} 獲得了勝利！ (つд⊂)`, log, 'dos-text-red');
         await writeLog(`>>> 失去金幣：${bet} (T_T)`, log, 'dos-text-red');
     }
 
     try {
-        await processBattleResult(state.currentUser.uid, opponent.uid, bet, opHp <= 0);
+        await processBattleResult(state.currentUser.uid, opponent.uid, bet, playerWon);
         // Refresh local state
         state.userProfile = await getUserProfile(state.currentUser.uid, state.currentUser.email);
         updateProfileDisplay(); // Update gold in profile

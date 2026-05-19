@@ -772,7 +772,23 @@
                     </div>
                     <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">單次挑戰限額：10 ~ 1000 金幣</p>
                 </div>
-                <button id="confirm-challenge-btn" class="btn btn-primary btn-large" style="width: 100%; margin-top: 1rem;">
+                <!-- Battle Setup: Subject and Category Selection -->
+                <div class="form-group" style="text-align: left; margin-top: 1rem;">
+                    <label for="challenge-subject-select"><i class="fas fa-map"></i> 選擇對戰領域</label>
+                    <select id="challenge-subject-select" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;">
+                        <option value="">-- 請選擇 --</option>
+                        <option value="chinese_pasta">中式麵食加工</option>
+                        <option value="beverage">飲料調製</option>
+                        <option value="technical">（共同科目）技術士技能檢定</option>
+                        <option value="food_safety">（共同科目）食品安全衛生</option>
+                        <option value="baking">烘焙食品</option>
+                    </select>
+                </div>
+                <div class="form-group hidden" id="challenge-category-container" style="text-align: left; margin-top: 1rem;">
+                    <label for="challenge-category-select"><i class="fas fa-filter"></i> 選擇工作項目</label>
+                    <select id="challenge-category-select" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;"></select>
+                </div>
+                <button id="confirm-challenge-btn" class="btn btn-primary btn-large" style="width: 100%; margin-top: 1.5rem;">
                     <i class="fas fa-check"></i> 確認對戰
                 </button>
             </div>
