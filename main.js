@@ -440,6 +440,31 @@ async function setupUserSession(user) {
             }
         } catch(e) {
             console.error("Failed to load profile:", e);
+            // Fallback for when Firestore connection or permissions fail
+            state.userProfile = {
+                uid: user.uid,
+                email: user.email,
+                nickname: user.email ? user.email.split('@')[0] : '訪客勇者',
+                avatar: 'male_1.png',
+                level: 1,
+                gold: 0,
+                totalQuestions: 0,
+                totalTime: 0,
+                profileCompleted: true
+            };
+            
+            renderProfileAvatar();
+            elements.userAvatarBtn.classList.remove('hidden');
+            elements.authBtn.classList.add('hidden');
+            
+            // Show alert for offline mode
+            setTimeout(() => {
+                const isOfflineMsgShown = sessionStorage.getItem('offlineMsgShown');
+                if (!isOfflineMsgShown) {
+                    alert('無法連線到資料庫讀取您的進度，系統目前以離線/訪客模式運行。這通常是因為資料庫權限已過期。');
+                    sessionStorage.setItem('offlineMsgShown', 'true');
+                }
+            }, 1000);
         }
         
         // Check for Admin
@@ -1664,7 +1689,7 @@ async function renderHomepageLeaderboard() {
     } catch (e) {
         console.error("Leaderboard error:", e);
         if (!state.leaderboardCache) {
-            body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger);">榮譽榜載入失敗，請稍後再試</td></tr>';
+            body.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger); padding: 20px;">榮譽榜載入失敗，無法連線至資料庫<br><small style="color: #666;">（可能是資料庫權限過期）</small></td></tr>';
         }
     }
 }
