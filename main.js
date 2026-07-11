@@ -169,6 +169,8 @@ const elements = {
     newTreasureIcon: document.getElementById('new-treasure-icon'),
     newTreasureName: document.getElementById('new-treasure-name'),
     adminBtn: document.getElementById('admin-btn'),
+    teacherBtn: document.getElementById('teacher-btn'),
+    openFeedbackBtn: document.getElementById('open-feedback-btn'),
     musicToggleBtn: document.getElementById('music-toggle-btn'),
     bgMusic: document.getElementById('bg-music'),
     musicTrackSelect: document.getElementById('music-track-select'),
@@ -258,6 +260,51 @@ elements.openPawnBtn.addEventListener('click', () => {
     renderPawnShop();
     elements.pawnModal.classList.remove('hidden');
 });
+
+elements.openFeedbackBtn.addEventListener('click', async () => {
+    document.getElementById('feedback-modal').classList.remove('hidden');
+    await renderUserFeedbackHistory();
+});
+
+async function renderUserFeedbackHistory() {
+    const historyDiv = document.getElementById('user-feedbacks-history');
+    if (!historyDiv) return;
+    historyDiv.innerHTML = '<p style="text-align: center; color: var(--text-dim);">載入中...</p>';
+    
+    try {
+        const feedbacks = await getFeedbacksOfUser(state.currentUser.email);
+        if (feedbacks.length === 0) {
+            historyDiv.innerHTML = '<p style="text-align: center; color: var(--text-dim);">尚無任何建議回覆紀錄</p>';
+            return;
+        }
+        
+        historyDiv.innerHTML = feedbacks.map(f => {
+            const time = f.timestamp ? (f.timestamp.toDate ? f.timestamp.toDate() : new Date(f.timestamp)) : new Date();
+            const replyHtml = f.reply ? `
+                <div style="background: rgba(76, 175, 80, 0.1); border-left: 2px solid var(--success); padding: 0.5rem; margin-top: 0.5rem; border-radius: 0.25rem; text-align: left;">
+                    <div style="font-weight: bold; color: var(--success); font-size: 0.75rem;">管理者回覆：</div>
+                    <div style="color: white; margin-top: 0.1rem;">${f.reply}</div>
+                    <div style="font-size: 0.7rem; color: var(--text-dim); margin-top: 0.2rem;">${f.replyTime ? (f.replyTime.toDate ? f.replyTime.toDate() : new Date(f.replyTime)).toLocaleString() : ''}</div>
+                </div>
+            ` : `
+                <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.25rem; font-style: italic; text-align: left;">等待管理者處理中...</div>
+            `;
+            
+            return `
+                <div class="glass-card" style="margin-bottom: 0.75rem; padding: 0.75rem; background: rgba(255,255,255,0.03);">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.25rem;">
+                        <span><i class="fas fa-clock"></i> ${time.toLocaleString()}</span>
+                    </div>
+                    <div style="color: var(--gold); text-align: left;">${f.content}</div>
+                    ${replyHtml}
+                </div>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error(e);
+        historyDiv.innerHTML = '<p style="text-align: center; color: var(--danger);">載入歷史紀錄失敗</p>';
+    }
+}
 
 window.closeBattleResult = async () => {
     const honorInput = document.getElementById('honor-message-input');
@@ -1998,17 +2045,27 @@ window.toggleAdminModal = async () => {
 window.switchAdminTab = async (tab) => {
     const usersTab = document.getElementById('admin-tab-users');
     const recordsTab = document.getElementById('admin-tab-records');
+    const teachersTab = document.getElementById('admin-tab-teachers');
+    const feedbacksTab = document.getElementById('admin-tab-feedbacks');
     const detailTab = document.getElementById('admin-tab-detail');
     const tabsContainer = document.getElementById('admin-tabs-container');
+    
     const usersBtn = document.getElementById('admin-tab-users-btn');
     const recordsBtn = document.getElementById('admin-tab-records-btn');
+    const teachersBtn = document.getElementById('admin-tab-teachers-btn');
+    const feedbacksBtn = document.getElementById('admin-tab-feedbacks-btn');
 
     usersTab.classList.add('hidden');
     recordsTab.classList.add('hidden');
+    teachersTab.classList.add('hidden');
+    feedbacksTab.classList.add('hidden');
     detailTab.classList.add('hidden');
     tabsContainer.classList.remove('hidden');
+    
     usersBtn.classList.remove('btn-primary');
     recordsBtn.classList.remove('btn-primary');
+    teachersBtn.classList.remove('btn-primary');
+    feedbacksBtn.classList.remove('btn-primary');
 
     if (tab === 'users') {
         usersTab.classList.remove('hidden');
@@ -2052,6 +2109,14 @@ window.switchAdminTab = async (tab) => {
                 </tr>
             `;
         }).join('');
+    } else if (tab === 'teachers') {
+        teachersTab.classList.remove('hidden');
+        teachersBtn.classList.add('btn-primary');
+        await renderAdminTeachers();
+    } else if (tab === 'feedbacks') {
+        feedbacksTab.classList.remove('hidden');
+        feedbacksBtn.classList.add('btn-primary');
+        await renderAdminFeedbacks();
     }
 };
 
@@ -2163,6 +2228,433 @@ window.adminDeductGold = async (uid) => {
         alert('金幣已扣除。');
         viewUserProfile(uid); // Refresh
     } catch (e) { alert('操作失敗: ' + e.message); }
+};
+
+// --- Teacher and Feedback Front-End Management ---
+
+const renderAdminTeachers = async () => {
+    const tbody = document.getElementById('admin-teachers-body');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">載入中...</td></tr>';
+    
+    try {
+        const teachers = await getAllTeachers();
+        if (teachers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center;">尚未建立任何教師資料</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = teachers.map(t => `
+            <tr>
+                <td><strong style="color: var(--gold);">${t.name}</strong></td>
+                <td>${t.email}</td>
+                <td>
+                    <button class="btn btn-outline btn-small" onclick="deleteTeacherAction('${t.email}')" style="border-color: #f87171; color: #f87171;">
+                        <i class="fas fa-trash-can"></i> 刪除
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--danger);">載入失敗</td></tr>';
+    }
+};
+window.renderAdminTeachers = renderAdminTeachers;
+
+const toggleAddTeacherManual = () => {
+    const form = document.getElementById('manual-teacher-form');
+    if (form) form.classList.toggle('hidden');
+};
+window.toggleAddTeacherManual = toggleAddTeacherManual;
+
+const addTeacherManualSubmit = async () => {
+    const nameEl = document.getElementById('new-teacher-name');
+    const emailEl = document.getElementById('new-teacher-email');
+    if (!nameEl || !emailEl) return;
+    
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim().toLowerCase();
+    
+    if (!name || !email) {
+        alert('姓名與 Email 皆為必填！');
+        return;
+    }
+    
+    // Warning domain check
+    if (!email.endsWith('@apps.ycvs.tn.edu.tw') && email !== 'adamzombie85@gmail.com') {
+        if (!confirm('提示：非學校網域信箱 (@apps.ycvs.tn.edu.tw) 可能無法直接註冊登入。是否確定要新增？')) {
+            return;
+        }
+    }
+    
+    showLoadingOverlay(true);
+    try {
+        await addTeacher(name, email);
+        alert('教師新增成功！');
+        nameEl.value = '';
+        emailEl.value = '';
+        const form = document.getElementById('manual-teacher-form');
+        if (form) form.classList.add('hidden');
+        await renderAdminTeachers();
+    } catch (e) {
+        console.error(e);
+        alert('新增失敗: ' + e.message);
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+window.addTeacherManualSubmit = addTeacherManualSubmit;
+
+const deleteTeacherAction = async (email) => {
+    if (!confirm(`確定要刪除教師 (${email}) 嗎？其授權權限將會被收回。`)) return;
+    
+    showLoadingOverlay(true);
+    try {
+        await deleteTeacher(email);
+        alert('已成功刪除該教師！');
+        await renderAdminTeachers();
+    } catch (e) {
+        console.error(e);
+        alert('刪除失敗: ' + e.message);
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+window.deleteTeacherAction = deleteTeacherAction;
+
+const importTeachersCSV = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        let successCount = 0;
+        let failCount = 0;
+        
+        showLoadingOverlay(true);
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            // Handle simple CSV splitting
+            const parts = parseCSVLine(line);
+            if (parts.length >= 2) {
+                const name = parts[0].trim();
+                const email = parts[1].trim().toLowerCase();
+                if (email && name) {
+                    try {
+                        await addTeacher(name, email);
+                        successCount++;
+                    } catch (err) {
+                        console.error("Failed to import teacher:", name, email, err);
+                        failCount++;
+                    }
+                }
+            }
+        }
+        showLoadingOverlay(false);
+        alert(`批次匯入完成！\n成功：${successCount} 筆\n失敗：${failCount} 筆`);
+        renderAdminTeachers();
+        event.target.value = ''; // Reset input
+    };
+    reader.readAsText(file);
+};
+window.importTeachersCSV = importTeachersCSV;
+
+const renderAdminFeedbacks = async () => {
+    const tbody = document.getElementById('admin-feedbacks-body');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">載入中...</td></tr>';
+    
+    try {
+        const feedbacks = await getAllFeedbacks();
+        if (feedbacks.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">目前尚無建議與回饋紀錄</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = feedbacks.map(f => {
+            const time = f.timestamp ? (f.timestamp.toDate ? f.timestamp.toDate() : new Date(f.timestamp)) : new Date();
+            const replySection = f.reply ? `
+                <div style="font-size: 0.8rem; color: var(--success); margin-top: 0.25rem;">
+                    <strong>回覆：</strong> ${f.reply}
+                    <div style="font-size: 0.7rem; color: var(--text-dim);">${f.replyTime ? (f.replyTime.toDate ? f.replyTime.toDate() : new Date(f.replyTime)).toLocaleString() : ''}</div>
+                </div>
+            ` : `<span style="color: var(--danger); font-style: italic;">尚未回覆</span>`;
+            
+            const replyBtn = !f.reply ? `
+                <button class="btn btn-outline btn-small" onclick="replyFeedbackPrompt('${f.id}')"><i class="fas fa-reply"></i> 回覆</button>
+            ` : '';
+            
+            return `
+                <tr>
+                    <td>${f.email}</td>
+                    <td style="max-width: 280px; word-break: break-all; text-align: left; padding: 0.75rem;">${f.content}</td>
+                    <td>${time.toLocaleString()}</td>
+                    <td>${replySection}</td>
+                    <td>${replyBtn}</td>
+                </tr>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--danger);">載入失敗</td></tr>';
+    }
+};
+window.renderAdminFeedbacks = renderAdminFeedbacks;
+
+const replyFeedbackPrompt = async (id) => {
+    const replyText = prompt('請輸入對該回饋的回覆內容：');
+    if (replyText === null) return;
+    const trimmed = replyText.trim();
+    if (!trimmed) {
+        alert('回覆內容不可為空！');
+        return;
+    }
+    
+    showLoadingOverlay(true);
+    try {
+        await replyToFeedback(id, trimmed, state.currentUser.email);
+        alert('回覆成功！');
+        await renderAdminFeedbacks();
+    } catch (e) {
+        console.error(e);
+        alert('回覆失敗：' + e.message);
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+window.replyFeedbackPrompt = replyFeedbackPrompt;
+
+// --- Teacher Dashboard and Students Management ---
+
+const toggleTeacherModal = async () => {
+    if (state.userRole !== 'teacher' && state.userRole !== 'admin') return;
+    
+    document.getElementById('teacher-modal').classList.remove('hidden');
+    switchTeacherTab('students');
+};
+window.toggleTeacherModal = toggleTeacherModal;
+
+const switchTeacherTab = async (tab) => {
+    const studentsTab = document.getElementById('teacher-tab-students');
+    const statsTab = document.getElementById('teacher-tab-stats');
+    const studentsBtn = document.getElementById('teacher-tab-students-btn');
+    const statsBtn = document.getElementById('teacher-tab-stats-btn');
+    
+    studentsTab.classList.add('hidden');
+    statsTab.classList.add('hidden');
+    studentsBtn.classList.remove('btn-primary');
+    statsBtn.classList.remove('btn-primary');
+    
+    if (tab === 'students') {
+        studentsTab.classList.remove('hidden');
+        studentsBtn.classList.add('btn-primary');
+        await renderTeacherStudents();
+    } else if (tab === 'stats') {
+        statsTab.classList.remove('hidden');
+        statsBtn.classList.add('btn-primary');
+        await renderTeacherStats();
+    }
+};
+window.switchTeacherTab = switchTeacherTab;
+
+const renderTeacherStudents = async () => {
+    const tbody = document.getElementById('teacher-students-body');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">載入中...</td></tr>';
+    
+    try {
+        const students = await getStudentsOfTeacher(state.currentUser.email);
+        if (students.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">尚未建立任何學生名單</td></tr>';
+            return;
+        }
+        
+        tbody.innerHTML = students.map(s => `
+            <tr>
+                <td>${s.className}</td>
+                <td><strong style="color: var(--gold);">${s.name}</strong></td>
+                <td>${s.email}</td>
+                <td>
+                    <button class="btn btn-outline btn-small" onclick="deleteStudentAction('${s.email}')" style="border-color: #f87171; color: #f87171;">
+                        <i class="fas fa-user-minus"></i> 移除
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--danger);">載入失敗</td></tr>';
+    }
+};
+window.renderTeacherStudents = renderTeacherStudents;
+
+const toggleAddStudentManual = () => {
+    const form = document.getElementById('manual-student-form');
+    if (form) form.classList.toggle('hidden');
+};
+window.toggleAddStudentManual = toggleAddStudentManual;
+
+const addStudentManualSubmit = async () => {
+    const classEl = document.getElementById('new-student-class');
+    const nameEl = document.getElementById('new-student-name');
+    const emailEl = document.getElementById('new-student-email');
+    if (!classEl || !nameEl || !emailEl) return;
+    
+    const className = classEl.value.trim();
+    const name = nameEl.value.trim();
+    const email = emailEl.value.trim().toLowerCase();
+    
+    if (!className || !name || !email) {
+        alert('班級、姓名與 Email 皆為必填欄位！');
+        return;
+    }
+    
+    // Warning domain check
+    if (!email.endsWith('@apps.ycvs.tn.edu.tw')) {
+        alert('注意：學生僅限使用學校信箱 (@apps.ycvs.tn.edu.tw)！');
+        return;
+    }
+    
+    showLoadingOverlay(true);
+    try {
+        await addStudent(className, name, email, state.currentUser.email);
+        alert('學生新增成功！');
+        classEl.value = '';
+        nameEl.value = '';
+        emailEl.value = '';
+        const form = document.getElementById('manual-student-form');
+        if (form) form.classList.add('hidden');
+        await renderTeacherStudents();
+    } catch (e) {
+        console.error(e);
+        alert('新增失敗: ' + e.message);
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+window.addStudentManualSubmit = addStudentManualSubmit;
+
+const deleteStudentAction = async (email) => {
+    if (!confirm(`確定要將此學生 (${email}) 自您的班級學生名冊中移除嗎？其授權將會被收回。`)) return;
+    
+    showLoadingOverlay(true);
+    try {
+        await deleteStudent(email);
+        alert('已成功移除該學生！');
+        await renderTeacherStudents();
+    } catch (e) {
+        console.error(e);
+        alert('移除失敗: ' + e.message);
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+window.deleteStudentAction = deleteStudentAction;
+
+const importStudentsCSV = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        const text = e.target.result;
+        const lines = text.split('\n');
+        let successCount = 0;
+        let failCount = 0;
+        
+        showLoadingOverlay(true);
+        for (let line of lines) {
+            line = line.trim();
+            if (!line) continue;
+            const parts = parseCSVLine(line);
+            if (parts.length >= 3) {
+                const className = parts[0].trim();
+                const name = parts[1].trim();
+                const email = parts[2].trim().toLowerCase();
+                if (className && name && email) {
+                    try {
+                        await addStudent(className, name, email, state.currentUser.email);
+                        successCount++;
+                    } catch (err) {
+                        console.error("Failed to import student:", className, name, email, err);
+                        failCount++;
+                    }
+                }
+            }
+        }
+        showLoadingOverlay(false);
+        alert(`批次匯入完成！\n成功：${successCount} 筆\n失敗：${failCount} 筆`);
+        renderTeacherStudents();
+        event.target.value = '';
+    };
+    reader.readAsText(file);
+};
+
+window.renderTeacherStats = async () => {
+    const tbody = document.getElementById('teacher-stats-body');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">載入中...</td></tr>';
+    
+    try {
+        const students = await getStudentsOfTeacher(state.currentUser.email);
+        if (students.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">尚無任何學生的統計資料</td></tr>';
+            return;
+        }
+        
+        const allUsers = await getAllUsers();
+        
+        tbody.innerHTML = students.map(s => {
+            const userProfile = allUsers.find(u => u.email === s.email);
+            const level = userProfile ? (userProfile.level || 1) : 1;
+            const totalQuestions = userProfile ? (userProfile.totalQuestions || 0) : 0;
+            const totalTime = userProfile ? (userProfile.totalTime || 0) : 0;
+            const mins = Math.floor(totalTime / 60);
+            
+            const detailBtn = userProfile ? `
+                <button class="btn btn-outline btn-small" onclick="viewStudentDetail('${userProfile.uid}', '${s.name}')"><i class="fas fa-eye"></i> 觀看紀錄</button>
+            ` : `<span style="font-size: 0.8rem; color: var(--text-dim); font-style: italic;">學生尚未註冊</span>`;
+            
+            return `
+                <tr>
+                    <td>${s.className}</td>
+                    <td><strong style="color: var(--gold);">${s.name}</strong></td>
+                    <td>LV ${level}</td>
+                    <td style="color: var(--gold); font-weight: bold;">${totalQuestions}</td>
+                    <td>${mins} 分鐘</td>
+                    <td>${detailBtn}</td>
+                </tr>
+            `;
+        }).join('');
+    } catch (e) {
+        console.error(e);
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--danger);">載入失敗</td></tr>';
+    }
+};
+
+window.viewStudentDetail = async (uid, nickname) => {
+    document.getElementById('teacher-modal').classList.add('hidden');
+    document.getElementById('admin-modal').classList.remove('hidden');
+    switchAdminTab('users'); // Reset admin view tabs first
+    viewUserDetail(uid, nickname);
+    
+    // Add custom back handler to admin modal back button to return to teacher modal if needed
+    const backBtn = document.querySelector('#admin-tab-detail button');
+    if (backBtn) {
+        const originalOnClick = backBtn.getAttribute('onclick');
+        backBtn.onclick = () => {
+            document.getElementById('admin-modal').classList.add('hidden');
+            document.getElementById('teacher-modal').classList.remove('hidden');
+            switchTeacherTab('stats');
+            // restore standard onclick
+            backBtn.onclick = null;
+            backBtn.setAttribute('onclick', originalOnClick);
+        };
+    }
 };
 
 function renderProfileAvatar() {
@@ -2873,15 +3365,20 @@ function initThreeJS() {
     }
     animate();
 
-    // RWD resizing canvas
-    window.addEventListener('resize', () => {
-        if (!state.three.renderer) return;
-        const w = container.clientWidth;
-        const h = container.clientHeight;
-        camera.aspect = w / h;
-        camera.updateProjectionMatrix();
-        renderer.setSize(w, h);
+    // RWD resizing canvas using ResizeObserver
+    const resizeObserver = new ResizeObserver(entries => {
+        for (let entry of entries) {
+            const { width, height } = entry.contentRect;
+            if (width > 0 && height > 0) {
+                if (state.three.renderer && state.three.camera) {
+                    state.three.camera.aspect = width / height;
+                    state.three.camera.updateProjectionMatrix();
+                    state.three.renderer.setSize(width, height);
+                }
+            }
+        }
     });
+    resizeObserver.observe(container);
 }
 
 // Smoothly move 3D selection box
@@ -3919,17 +4416,6 @@ window.toggleTerritoryModal = () => {
         if (state.territoryInterval) clearInterval(state.territoryInterval);
         state.territoryInterval = setInterval(updateProductionTimers, 5000); // 5 sec timer
         
-        // Correct 3D viewport canvas size once DOM rendering settles
-        setTimeout(() => {
-            if (state.three.renderer && state.three.camera) {
-                const container = elements.threeCanvasContainer;
-                const w = container.clientWidth || 800;
-                const h = container.clientHeight || 450;
-                state.three.camera.aspect = w / h;
-                state.three.camera.updateProjectionMatrix();
-                state.three.renderer.setSize(w, h);
-            }
-        }, 80);
     } else {
         // Close: Reset visit mode if active
         if (state.three.isVisiting) {
@@ -4194,6 +4680,7 @@ window.unlockGridCell = unlockGridCell;
 window.harvestGridCell = harvestGridCell;
 window.upgradeGridCell = upgradeGridCell;
 window.demolishGridCell = demolishGridCell;
+window.submitUserFeedback = submitUserFeedback;
 
 // --- Warrior Battle System ---
 
