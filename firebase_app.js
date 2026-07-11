@@ -19,7 +19,13 @@ export const db = getFirestore(app);
 // Authentication helper functions
 const googleProvider = new GoogleAuthProvider();
 export const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);
-export const registerUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+export const registerUser = (email, password) => {
+  const normalizedEmail = email.trim().toLowerCase();
+  if (normalizedEmail !== "adamzombie85@gmail.com" && !normalizedEmail.endsWith("@apps.ycvs.tn.edu.tw")) {
+    throw new Error("auth/domain-restricted: 僅限使用學校信箱 (@apps.ycvs.tn.edu.tw) 進行註冊與登入！");
+  }
+  return createUserWithEmailAndPassword(auth, email, password);
+};
 export const loginWithGoogle = () => signInWithPopup(auth, googleProvider);
 export const loginWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 export const handleRedirectResult = () => getRedirectResult(auth);
@@ -92,15 +98,36 @@ export const PUZZLE_THEMES = [
 export const TERRITORY_CONFIG = {
   unlockThreshold: 100, // Correct answers to unlock first land
   landThresholds: [100, 300, 600, 1000, 1500, 2100, 2800, 3600, 4500], // Requirements for each of the 9 slots
-  productionTime: 48 * 60 * 60 * 1000, // 48 hours in milliseconds
+  productionTime: 12 * 60 * 60 * 1000, // 12 hours in milliseconds (faster for fun gameplay)
   synthesis: {
-    pudding: { egg: 1, milk: 1, gold: 200, reward: 2000 },
-    potion: { milk: 2, gold: 50, reward: 'heal_20' }
+    mango_pudding: { egg: 1, milk: 1, mango: 1, gold: 200, reward: "mango_pudding" },
+    mango_shaved_ice: { milk: 2, mango: 2, gold: 300, reward: "mango_shaved_ice" },
+    mango_green_slush: { mango_native: 2, gold: 100, reward: "mango_green_slush" },
+    deluxe_irwin_pudding: { mango_irwin: 1, egg: 1, milk: 1, gold: 300, reward: "deluxe_irwin_pudding" },
+    premium_irwin_shaved_ice: { mango_irwin: 2, milk: 2, gold: 500, reward: "premium_irwin_shaved_ice" },
+    dried_jinhuang_mango: { mango_jinhuang: 3, gold: 200, reward: "dried_jinhuang_mango" },
+    royal_yuwen_panna_cotta: { mango_yuwen: 2, milk: 2, gold: 400, reward: "royal_yuwen_panna_cotta" }
   },
   pawnShop: {
-    egg: 5,
-    milk: 5,
-    pudding: 2000
+    mango_seeds: 20,
+    mango: 100,
+    egg: 10,
+    milk: 10,
+    mango_pudding: 2500,
+    mango_shaved_ice: 4000,
+    seed_native: 10,
+    seed_irwin: 20,
+    seed_jinhuang: 30,
+    seed_yuwen: 50,
+    mango_native: 50,
+    mango_irwin: 120,
+    mango_jinhuang: 180,
+    mango_yuwen: 250,
+    mango_green_slush: 800,
+    deluxe_irwin_pudding: 3500,
+    premium_irwin_shaved_ice: 6000,
+    dried_jinhuang_mango: 3000,
+    royal_yuwen_panna_cotta: 7000
   }
 };
 
@@ -138,6 +165,50 @@ export function calculateLevel(totalQuestions) {
   return currentLevel;
 }
 
+export function generateInitialLands() {
+  const initialLands = [];
+  for (let x = 0; x < 6; x++) {
+    for (let y = 0; y < 6; y++) {
+      let type = 'locked';
+      let isMonster = false;
+      let monsterName = '';
+      let monsterHp = 0;
+      let level = 0;
+      
+      // Central 2x2 unlocked
+      if ((x === 2 || x === 3) && (y === 2 || y === 3)) {
+        if (x === 2 && y === 2) {
+          type = 'mango_orchard'; // Starting building
+          level = 1;
+        } else {
+          type = 'empty';
+        }
+      } 
+      // Specific monster spots
+      else if ((x === 0 && y === 1) || (x === 4 && y === 5) || (x === 5 && y === 0)) {
+        type = 'empty';
+        isMonster = true;
+        monsterName = (x === 0) ? '芒果小偷' : ((x === 4) ? '荒野山豬' : '惡霸巨龍');
+        monsterHp = (x === 0) ? 50 : ((x === 4) ? 80 : 150);
+        level = 1;
+      }
+      
+      initialLands.push({
+        x,
+        y,
+        type,
+        level,
+        lastHarvest: Date.now(),
+        isMonster,
+        monsterName,
+        monsterHp,
+        maxMonsterHp: monsterHp
+      });
+    }
+  }
+  return initialLands;
+}
+
 export async function getUserProfile(uid, email) {
   const userRef = doc(db, "users", uid);
   const userSnap = await getDoc(userRef);
@@ -162,10 +233,55 @@ export async function getUserProfile(uid, email) {
       
       data.puzzlePieces = pieces;
       data.currentPuzzleId = 'mona_lisa';
-      // Keep treasures for safety but prioritize puzzlePieces in UI
       await updateDoc(userRef, { 
         puzzlePieces: data.puzzlePieces,
         currentPuzzleId: data.currentPuzzleId
+      });
+    }
+
+    // Migration: Convert 2D 3x3 territory lands or missing territory to 6x6 lands
+    let needsTerritoryMigration = false;
+    if (!data.territory) {
+      data.territory = { isUnlocked: true, lands: generateInitialLands() };
+      needsTerritoryMigration = true;
+    } else if (!data.territory.lands || data.territory.lands.length !== 36) {
+      // Migrate old lands to new layout, maintaining level of unlocked lands if possible
+      const newLands = generateInitialLands();
+      data.territory.lands = newLands;
+      data.territory.isUnlocked = true;
+      needsTerritoryMigration = true;
+    }
+
+    // Ensure inventory contains mango resources and new varieties
+    if (!data.inventory || data.inventory.egg === undefined || data.inventory.mango === undefined || data.inventory.seed_native === undefined) {
+      data.inventory = {
+        mango_seeds: (data.inventory && data.inventory.mango_seeds) !== undefined ? data.inventory.mango_seeds : 5,
+        mango: (data.inventory && data.inventory.mango) || 0,
+        egg: (data.inventory && data.inventory.egg) || 0,
+        milk: (data.inventory && data.inventory.milk) || 0,
+        mango_pudding: (data.inventory && data.inventory.mango_pudding) || (data.inventory && data.inventory.pudding) || 0,
+        mango_shaved_ice: (data.inventory && data.inventory.mango_shaved_ice) || 0,
+        seed_native: (data.inventory && data.inventory.seed_native) || 0,
+        seed_irwin: (data.inventory && data.inventory.seed_irwin) || 0,
+        seed_jinhuang: (data.inventory && data.inventory.seed_jinhuang) || 0,
+        seed_yuwen: (data.inventory && data.inventory.seed_yuwen) || 0,
+        mango_native: (data.inventory && data.inventory.mango_native) || 0,
+        mango_irwin: (data.inventory && data.inventory.mango_irwin) || 0,
+        mango_jinhuang: (data.inventory && data.inventory.mango_jinhuang) || 0,
+        mango_yuwen: (data.inventory && data.inventory.mango_yuwen) || 0,
+        mango_green_slush: (data.inventory && data.inventory.mango_green_slush) || 0,
+        deluxe_irwin_pudding: (data.inventory && data.inventory.deluxe_irwin_pudding) || 0,
+        premium_irwin_shaved_ice: (data.inventory && data.inventory.premium_irwin_shaved_ice) || 0,
+        dried_jinhuang_mango: (data.inventory && data.inventory.dried_jinhuang_mango) || 0,
+        royal_yuwen_panna_cotta: (data.inventory && data.inventory.royal_yuwen_panna_cotta) || 0
+      };
+      needsTerritoryMigration = true;
+    }
+
+    if (needsTerritoryMigration) {
+      await updateDoc(userRef, {
+        territory: data.territory,
+        inventory: data.inventory
       });
     }
 
@@ -184,7 +300,7 @@ export async function getUserProfile(uid, email) {
       uid,
       email,
       nickname: email.split('@')[0],
-      avatar: 'male_1.png', // New default avatar
+      avatar: 'male_1.png',
       totalQuestions: 0,
       totalTime: 0, // in seconds
       level: 1,
@@ -193,14 +309,19 @@ export async function getUserProfile(uid, email) {
       profileCompleted: false,
       role: '', // teacher or student
       realName: '',
-      school: '',
+      school: '玉井工商',
       teacherSubject: '',
       studentDept: '',
-      gold: 0,
-      inventory: { egg: 0, milk: 0, pudding: 0 },
+      gold: 500, // start with some gold to build Yujing!
+      inventory: { 
+        mango_seeds: 5, mango: 0, egg: 0, milk: 0, mango_pudding: 0, mango_shaved_ice: 0,
+        seed_native: 0, seed_irwin: 0, seed_jinhuang: 0, seed_yuwen: 0,
+        mango_native: 0, mango_irwin: 0, mango_jinhuang: 0, mango_yuwen: 0,
+        mango_green_slush: 0, deluxe_irwin_pudding: 0, premium_irwin_shaved_ice: 0, dried_jinhuang_mango: 0, royal_yuwen_panna_cotta: 0
+      },
       territory: {
-        isUnlocked: false,
-        lands: []
+        isUnlocked: true,
+        lands: generateInitialLands()
       }
     };
     await setDoc(userRef, defaultProfile);
@@ -397,4 +518,139 @@ export async function getUserProgress(uid) {
 export async function updateUserProgress(uid, progress) {
   const progressRef = doc(db, "user_progress", uid);
   await setDoc(progressRef, progress, { merge: true });
+}
+
+// --- Yujing Tech 3-Level Authorization & Feedback Helper Functions ---
+
+export async function checkUserAuthorization(email) {
+  const normalizedEmail = email.trim().toLowerCase();
+  if (normalizedEmail === "adamzombie85@gmail.com") {
+    return { authorized: true, role: "admin" };
+  }
+  
+  // Check if teacher
+  const teacherKey = normalizedEmail.replace(/[^a-z0-9]/g, "_");
+  const teacherSnap = await getDoc(doc(db, "teachers", teacherKey));
+  if (teacherSnap.exists() && !teacherSnap.data().deleted) {
+    return { authorized: true, role: "teacher", name: teacherSnap.data().name };
+  }
+  
+  // Check if student
+  const studentKey = normalizedEmail.replace(/[^a-z0-9]/g, "_");
+  const studentSnap = await getDoc(doc(db, "students", studentKey));
+  if (studentSnap.exists() && !studentSnap.data().deleted) {
+    return { authorized: true, role: "student", name: studentSnap.data().name, className: studentSnap.data().className };
+  }
+  
+  return { authorized: false, role: "" };
+}
+
+export async function getAllTeachers() {
+  const querySnapshot = await getDocs(collection(db, "teachers"));
+  // Filter out soft-deleted teachers locally
+  return querySnapshot.docs
+    .map(doc => doc.data())
+    .filter(t => !t.deleted);
+}
+
+export async function addTeacher(name, email) {
+  const emailKey = email.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+  await setDoc(doc(db, "teachers", emailKey), {
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    addedAt: new Date().getTime(),
+    deleted: false
+  });
+  // If the user profile already exists, update its role
+  const q = query(collection(db, "users"), where("email", "==", email.trim().toLowerCase()));
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    const userDoc = snapshot.docs[0];
+    await updateDoc(doc(db, "users", userDoc.id), { role: "teacher" });
+  }
+}
+
+export async function deleteTeacher(email) {
+  const emailKey = email.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+  // Soft delete teacher
+  await updateDoc(doc(db, "teachers", emailKey), { deleted: true });
+  // Also revert user role if exists
+  const q = query(collection(db, "users"), where("email", "==", email.trim().toLowerCase()));
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    const userDoc = snapshot.docs[0];
+    await updateDoc(doc(db, "users", userDoc.id), { role: "student" });
+  }
+}
+
+export async function getStudentsOfTeacher(teacherEmail) {
+  const q = query(collection(db, "students"), where("teacherEmail", "==", teacherEmail.toLowerCase()));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs
+    .map(doc => doc.data())
+    .filter(s => !s.deleted);
+}
+
+export async function addStudent(className, name, email, teacherEmail) {
+  const emailKey = email.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+  await setDoc(doc(db, "students", emailKey), {
+    className: className.trim(),
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    teacherEmail: teacherEmail.toLowerCase(),
+    addedAt: new Date().getTime(),
+    deleted: false
+  });
+  // If user profile exists, update its role and metadata
+  const q = query(collection(db, "users"), where("email", "==", email.trim().toLowerCase()));
+  const snapshot = await getDocs(q);
+  if (!snapshot.empty) {
+    const userDoc = snapshot.docs[0];
+    await updateDoc(doc(db, "users", userDoc.id), {
+      role: "student",
+      realName: name.trim(),
+      studentDept: className.trim()
+    });
+  }
+}
+
+export async function deleteStudent(email) {
+  const emailKey = email.trim().toLowerCase().replace(/[^a-z0-9]/g, "_");
+  await updateDoc(doc(db, "students", emailKey), { deleted: true });
+}
+
+export async function submitUserFeedback(uid, email, nickname, content) {
+  await addDoc(collection(db, "feedbacks"), {
+    uid,
+    email,
+    nickname,
+    content: content.trim(),
+    timestamp: new Date().getTime(),
+    reply: "",
+    repliedAt: null,
+    repliedBy: null
+  });
+}
+
+export async function getAllFeedbacks() {
+  const q = query(collection(db, "feedbacks"), orderBy("timestamp", "desc"), limit(100));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+}
+
+export async function getFeedbacksOfUser(uid) {
+  const q = query(collection(db, "feedbacks"), where("uid", "==", uid));
+  const querySnapshot = await getDocs(q);
+  const docs = querySnapshot.docs.map(doc => doc.data());
+  docs.sort((a, b) => b.timestamp - a.timestamp);
+  return docs;
+}
+
+export async function replyToFeedback(feedbackId, replyText, repliedBy) {
+  const feedbackRef = doc(db, "feedbacks", feedbackId);
+  await updateDoc(feedbackRef, {
+    reply: replyText.trim(),
+    repliedAt: new Date().getTime(),
+    repliedBy
+  });
 }

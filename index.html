@@ -11,11 +11,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><path fill='%23fbbf24' d='M504.1 35.1c-14.8-14.8-38.9-14.8-53.7 0L241.4 244.1 190.1 192.8c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L196.1 291 113.6 373.5c-4.4-1.2-8.9-1.9-13.6-1.9-24.3 0-44 19.7-44 44 0 4.7.7 9.2 1.9 13.6L7.1 480c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l50.8-50.8c4.4 1.2 8.9 1.9 13.6 1.9 24.3 0 44-19.7 44-44 0-4.7-.7-9.2-1.9-13.6l82.5-82.5 52.8 52.8c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-51.3-51.3L504.1 88.8c14.8-14.8 14.8-38.9 0-53.7z'/></svg>">
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.128.0/build/three.module.js"
+        }
+    }
+    </script>
     <!-- docx.js for Word export -->
     <script src="https://unpkg.com/docx@8.2.2/build/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body class="dark-theme">
+    <a href="#app" class="skip-link">跳過主選單並進入主要內容</a>
+
     <!-- Global Preloader -->
     <div id="global-preloader">
         <div class="preloader-content">
@@ -34,10 +43,17 @@
         <div id="site-title" class="site-title" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: bold; color: var(--gold);">
             <i class="fas fa-dragon"></i> 勇者題庫
         </div>
-        <div style="display: flex; gap: 1rem; align-items: center;">
+        <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
             <button id="admin-btn" class="control-btn hidden" onclick="toggleAdminModal()" title="管理介面" style="border-color: var(--gold); color: var(--gold);">
                 <i class="fas fa-user-gear"></i> 管理
             </button>
+            <button id="teacher-btn" class="control-btn hidden" onclick="toggleTeacherModal()" title="教師後台" style="border-color: var(--gold); color: var(--gold);">
+                <i class="fas fa-chalkboard-user"></i> 教師
+            </button>
+            <button id="open-feedback-btn" class="control-btn hidden" onclick="toggleFeedbackModal()" title="提供建議" style="border-color: var(--gold); color: var(--gold);">
+                <i class="fas fa-comment-dots"></i> 建議
+            </button>
+            <button id="music-toggle-btn" class="control-btn" title="切換音樂靜音"><i class="fas fa-music"></i></button>
             <button id="user-avatar-btn" class="avatar-btn hidden" onclick="toggleProfileModal()" title="個人檔案">
                 <i class="fas fa-cat"></i>
             </button>
@@ -281,8 +297,10 @@
                     <button class="close-modal" onclick="document.getElementById('admin-modal').classList.add('hidden')">&times;</button>
                 </div>
                 
-                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;" id="admin-tabs-container">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;" id="admin-tabs-container">
                     <button class="btn btn-outline btn-primary" onclick="switchAdminTab('users')" id="admin-tab-users-btn">勇者清單</button>
+                    <button class="btn btn-outline" onclick="switchAdminTab('teachers')" id="admin-tab-teachers-btn">教師管理</button>
+                    <button class="btn btn-outline" onclick="switchAdminTab('feedbacks')" id="admin-tab-feedbacks-btn">建議回饋箱</button>
                     <button class="btn btn-outline" onclick="switchAdminTab('records')" id="admin-tab-records-btn">全服練習紀錄</button>
                 </div>
 
@@ -300,6 +318,70 @@
                         </thead>
                         <tbody id="admin-users-body"></tbody>
                     </table>
+                </div>
+
+                <div id="admin-tab-teachers" class="hidden">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+                        <h3 style="color: var(--gold); margin: 0;">任課教師群管理</h3>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <input type="file" id="teacher-csv-file" class="hidden" accept=".csv" onchange="importTeachersCSV(event)">
+                            <button class="btn btn-outline btn-small" onclick="document.getElementById('teacher-csv-file').click()"><i class="fas fa-file-csv"></i> 匯入 CSV</button>
+                            <button class="btn btn-outline btn-small" onclick="toggleAddTeacherManual()"><i class="fas fa-plus"></i> 手動新增</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual Teacher form -->
+                    <div id="manual-teacher-form" class="glass-card hidden" style="margin-bottom: 1rem; padding: 1rem; border-color: var(--gold);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group" style="margin: 0;">
+                                <label for="new-teacher-name">姓名</label>
+                                <input type="text" id="new-teacher-name" placeholder="例如：林老師" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label for="new-teacher-email">Email (@apps.ycvs.tn.edu.tw)</label>
+                                <input type="email" id="new-teacher-email" placeholder="例如：teacher@apps.ycvs.tn.edu.tw" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;">
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                            <button class="btn btn-outline btn-small" onclick="toggleAddTeacherManual()">取消</button>
+                            <button class="btn btn-primary btn-small" onclick="addTeacherManualSubmit()">確認新增</button>
+                        </div>
+                    </div>
+
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>姓名</th>
+                                    <th>Email</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-teachers-body">
+                                <tr><td colspan="3" style="text-align: center;">載入中...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="admin-tab-feedbacks" class="hidden">
+                    <h3 style="color: var(--gold); margin-bottom: 1rem;">使用者建議與回饋箱</h3>
+                    <div class="table-wrapper">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>提交者</th>
+                                    <th>建議內容</th>
+                                    <th>提交時間</th>
+                                    <th>管理者回覆</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-feedbacks-body">
+                                <tr><td colspan="5" style="text-align: center;">載入中...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 <div id="admin-tab-userprofile" class="hidden">
@@ -699,7 +781,7 @@
 
         <!-- Territory Modal -->
         <div id="territory-modal" class="modal hidden" style="z-index: 2500;">
-            <div class="glass-card modal-content territory-container" style="max-width: 900px; padding: 0;">
+            <div class="glass-card modal-content territory-container" style="max-width: 950px; padding: 0;">
                 <button class="close-modal" onclick="toggleTerritoryModal()" style="position: absolute; right: 1rem; top: 1rem; z-index: 10;">&times;</button>
                 
                 <div class="territory-tabs">
@@ -708,20 +790,71 @@
                     <button class="tab-btn" onclick="switchTerritoryTab('pawn')"><i class="fas fa-coins"></i> 皇家當舖</button>
                 </div>
 
-                <div id="territory-tab-map" class="territory-content">
-                    <div class="territory-header">
-                        <h2 class="glow-text"><i class="fas fa-seedling"></i> 勇者領地</h2>
-                        <p class="subtitle">累積正確題數解鎖更多土地，領取物資變現！</p>
+                <div id="territory-tab-map" class="territory-content" style="padding: 1rem 1.5rem;">
+                    <div class="territory-header" style="margin-bottom: 1rem;">
+                        <h2 class="glow-text" id="territory-map-title"><i class="fas fa-crown"></i> 3D 皇家疆域</h2>
+                        <p class="subtitle" id="territory-map-subtitle">在層狀泥岩島嶼上收復野怪、打造你的玉井王國！</p>
                     </div>
-                    <div id="territory-grid" class="territory-grid">
-                        <!-- Grid cells will be injected here -->
+                    
+                    <div class="territory-3d-layout">
+                        <!-- 3D Canvas Viewport -->
+                        <div id="three-canvas-container" class="three-canvas-container" tabindex="0" role="application" aria-label="3D 國度地圖，可使用鍵盤方向鍵或 WASD 鍵移動選取框，Enter 鍵進行操作。用滑鼠拖曳可旋轉視角，滾輪縮放。">
+                            <div id="three-loading" class="three-loading-spinner">
+                                <i class="fas fa-spinner fa-spin"></i> 正在建構 3D 世界...
+                            </div>
+                        </div>
+                        
+                        <!-- Side Control Panel (Accessible) -->
+                        <div id="territory-controls-panel" class="territory-controls-panel">
+                            <!-- Selected Tile Info -->
+                            <div class="panel-section active-cell-info" aria-live="polite">
+                                <h3><i class="fas fa-location-crosshairs"></i> 當前選取位置</h3>
+                                <div class="cell-coords-display">
+                                    <span id="selected-coords">座標：(0, 0)</span>
+                                    <span id="selected-status" class="cell-status-tag">載入中...</span>
+                                </div>
+                                <p id="selected-desc" class="cell-desc">使用鍵盤 WASD/方向鍵或點擊滑鼠選擇地塊。</p>
+                                
+                                <!-- Real Landmark Photo -->
+                                <div id="landmark-photo-container" class="landmark-photo-container hidden">
+                                    <img id="landmark-photo-img" src="" alt="地標照片" class="landmark-photo">
+                                </div>
+
+                                <div id="cell-action-buttons" class="cell-actions" style="margin-top: 1rem;">
+                                    <!-- Populated in main.js -->
+                                </div>
+                            </div>
+
+                            <!-- Build Shop -->
+                            <div class="panel-section build-shop">
+                                <h3><i class="fas fa-hammer"></i> 建築工坊</h3>
+                                <div id="build-options-list" class="build-options-grid">
+                                    <!-- Populated in main.js -->
+                                </div>
+                            </div>
+
+                            <!-- A11y Help -->
+                            <div class="panel-section a11y-guide-section">
+                                <h3><i class="fas fa-keyboard"></i> 鍵盤無障礙指南</h3>
+                                <ul class="a11y-guide-list">
+                                    <li><kbd>WASD</kbd> / <kbd>↑↓←→</kbd>：移動 3D 焦點</li>
+                                    <li><kbd>Enter</kbd>：操作或建造地塊</li>
+                                    <li><kbd>Escape</kbd>：取消選取或關閉</li>
+                                </ul>
+                                <div class="a11y-actions-row">
+                                    <button id="tts-speak-scene-btn" class="btn btn-outline btn-small" title="語音朗讀當前地圖狀態">
+                                        <i class="fas fa-volume-up"></i> 朗讀地圖狀態
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div id="territory-tab-kitchen" class="territory-content hidden">
                     <div class="territory-header">
                         <h2 class="glow-text"><i class="fas fa-fire-burner"></i> 皇家廚房</h2>
-                        <p class="subtitle">合成高級料理，賺取更高額的金幣回報！</p>
+                        <p class="subtitle">合成高級玉井芒果料理，賺取更高額的金幣回報！</p>
                     </div>
                     <div id="kitchen-recipes" class="recipe-list">
                         <!-- Recipes will be injected here -->
@@ -731,7 +864,7 @@
                 <div id="territory-tab-pawn" class="territory-content hidden">
                     <div class="territory-header">
                         <h2 class="glow-text"><i class="fas fa-vault"></i> 皇家當舖</h2>
-                        <p class="subtitle">將農場物資與料理兌換成冒險儲備金。</p>
+                        <p class="subtitle">將芒果、物資與在地料理兌換成冒險儲備金。</p>
                     </div>
                     <div id="territory-pawn-inventory" class="pawn-list">
                         <!-- Inventory for sale will be injected here -->
@@ -741,10 +874,118 @@
                 <div class="territory-footer">
                     <div class="user-assets-bar">
                         <span><i class="fas fa-coins" style="color: var(--gold);"></i> <span id="territory-gold">0</span></span>
-                        <span><i class="fas fa-egg" style="color: #fff176;"></i> <span id="territory-egg">0</span></span>
-                        <span><i class="fas fa-prescription-bottle-medical" style="color: #e3f2fd;"></i> <span id="territory-milk">0</span></span>
-                        <span><i class="fas fa-cookie" style="color: #ffb74d;"></i> <span id="territory-pudding">0</span></span>
+                        <span><i class="fas fa-seedling" style="color: #4caf50;" title="芒果種子"></i> <span id="territory-mango-seeds">0</span></span>
+                        <span><i class="fas fa-lemon" style="color: #ffb300;" title="玉井芒果"></i> <span id="territory-mango">0</span></span>
+                        <span><i class="fas fa-egg" style="color: #fff176;" title="雞蛋"></i> <span id="territory-egg">0</span></span>
+                        <span><i class="fas fa-prescription-bottle-medical" style="color: #e3f2fd;" title="牛奶"></i> <span id="territory-milk">0</span></span>
+                        <span><i class="fas fa-ice-cream" style="color: #ff8a65;" title="芒果冰/芒果布丁"></i> <span id="territory-pudding">0</span></span>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Control Modal -->
+        <div id="teacher-modal" class="modal hidden" style="z-index: 2400;">
+            <div class="glass-card modal-content" style="max-width: 900px;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-chalkboard-user"></i> 任課教師管理後台</h2>
+                    <button class="close-modal" onclick="document.getElementById('teacher-modal').classList.add('hidden')">&times;</button>
+                </div>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;" id="teacher-tabs-container">
+                    <button class="btn btn-outline btn-primary" onclick="switchTeacherTab('students')" id="teacher-tab-students-btn">班級學生名單</button>
+                    <button class="btn btn-outline" onclick="switchTeacherTab('stats')" id="teacher-tab-stats-btn">學生練習情形</button>
+                </div>
+
+                <!-- Students list tab -->
+                <div id="teacher-tab-students" class="table-wrapper">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+                        <h3 style="color: var(--gold); margin: 0;">班級學生名冊</h3>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <input type="file" id="student-csv-file" class="hidden" accept=".csv" onchange="importStudentsCSV(event)">
+                            <button class="btn btn-outline btn-small" onclick="document.getElementById('student-csv-file').click()"><i class="fas fa-file-csv"></i> 匯入學生 CSV</button>
+                            <button class="btn btn-outline btn-small" onclick="toggleAddStudentManual()"><i class="fas fa-plus"></i> 手動新增學生</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual Student form -->
+                    <div id="manual-student-form" class="glass-card hidden" style="margin-bottom: 1rem; padding: 1rem; border-color: var(--gold);">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group" style="margin: 0;">
+                                <label for="new-student-class">班級</label>
+                                <input type="text" id="new-student-class" placeholder="例如：資科三" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label for="new-student-name">姓名</label>
+                                <input type="text" id="new-student-name" placeholder="例如：王小明" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label for="new-student-email">Email (@apps.ycvs.tn.edu.tw)</label>
+                                <input type="email" id="new-student-email" placeholder="例如：student@apps.ycvs.tn.edu.tw" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem;">
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                            <button class="btn btn-outline btn-small" onclick="toggleAddStudentManual()">取消</button>
+                            <button class="btn btn-primary btn-small" onclick="addStudentManualSubmit()">確認新增</button>
+                        </div>
+                    </div>
+
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>班級</th>
+                                <th>學生姓名</th>
+                                <th>學生 Email</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-students-body">
+                            <tr><td colspan="4" style="text-align: center;">載入中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Student Stats tab -->
+                <div id="teacher-tab-stats" class="table-wrapper hidden">
+                    <h3 style="color: var(--gold); margin-bottom: 1rem;">學生練習情形檢視</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>班級</th>
+                                <th>姓名</th>
+                                <th>等級</th>
+                                <th>累積題數</th>
+                                <th>總練習時間</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="teacher-stats-body">
+                            <tr><td colspan="6" style="text-align: center;">載入中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Suggestion / Feedback Modal -->
+        <div id="feedback-modal" class="modal hidden" style="z-index: 2300;">
+            <div class="glass-card modal-content" style="max-width: 550px;">
+                <div class="modal-header">
+                    <h2><i class="fas fa-comment-dots"></i> 提供網站建議給管理者</h2>
+                    <button class="close-modal" onclick="document.getElementById('feedback-modal').classList.add('hidden')">&times;</button>
+                </div>
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="feedback-content"><i class="fas fa-pen"></i> 您的寶貴建議</label>
+                    <textarea id="feedback-content" rows="4" style="width: 100%; padding: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; border-radius: 0.5rem; font-family: inherit;" placeholder="請輸入您對此網站的建議或遇到的問題..."></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem;">
+                    <button class="btn btn-outline" onclick="document.getElementById('feedback-modal').classList.add('hidden')">取消</button>
+                    <button class="btn btn-primary" onclick="submitUserFeedback()"><i class="fas fa-paper-plane"></i> 提交建議</button>
+                </div>
+                <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 1.2rem 0;">
+                <h3 style="color: var(--gold); margin-bottom: 0.5rem;">建議回覆紀錄</h3>
+                <div id="user-feedbacks-history" style="max-height: 180px; overflow-y: auto; font-size: 0.875rem;">
+                    <p style="text-align: center; color: var(--text-dim);">載入中...</p>
                 </div>
             </div>
         </div>

@@ -1,5 +1,16 @@
-import { auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, LEVEL_THRESHOLDS, PUZZLE_THEMES, TERRITORY_CONFIG, getAllUsers, getAllPracticeRecords, getUserPracticeRecords, processBattleResult, WARRIOR_SKILLS } from './firebase_app.js';
+import { 
+  auth, loginUser, registerUser, loginWithGoogle, loginWithGoogleRedirect, 
+  handleRedirectResult, logoutUser, savePracticeRecord, getUserHistory, 
+  getUserProfile, updateUserProfile, syncUserStats, getGlobalLeaderboard, 
+  LEVEL_THRESHOLDS, PUZZLE_THEMES, TERRITORY_CONFIG, getAllUsers, 
+  getAllPracticeRecords, getUserPracticeRecords, processBattleResult, 
+  WARRIOR_SKILLS, checkUserAuthorization, getAllTeachers, addTeacher, 
+  deleteTeacher, getStudentsOfTeacher, addStudent, deleteStudent, 
+  submitUserFeedback, getAllFeedbacks, getFeedbacksOfUser, replyToFeedback 
+} from './firebase_app.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
+import * as THREE from "three";
+import { OrbitControls } from "https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js";
 
 // Main Application Logic
 if (window.location.protocol === 'file:') {
@@ -71,7 +82,22 @@ const state = {
     },
     userProgress: { scores: {} },
     pendingProgressUpdates: false,
-    territoryInterval: null
+    territoryInterval: null,
+    userRole: '', // 'admin', 'teacher', 'student'
+    userAuthorized: false,
+    three: {
+        renderer: null,
+        scene: null,
+        camera: null,
+        controls: null,
+        tiles: [],          // 36 cell mesh array
+        buildings: {},      // 'x_y' -> THREE.Group
+        selectedCoords: { x: 2, y: 2 },
+        selectionBox: null,
+        isVisiting: false,
+        visitedProfile: null,
+        animatingHearts: []  // for 3D blessings
+    }
 };
 
 // Unique Question ID Helper
@@ -174,6 +200,22 @@ const elements = {
     territoryEgg: document.getElementById('territory-egg'),
     territoryMilk: document.getElementById('territory-milk'),
     territoryPudding: document.getElementById('territory-pudding'),
+    territoryMango: document.getElementById('territory-mango'),
+    territoryMangoSeeds: document.getElementById('territory-mango-seeds'),
+    threeCanvasContainer: document.getElementById('three-canvas-container'),
+    threeLoading: document.getElementById('three-loading'),
+    selectedCoords: document.getElementById('selected-coords'),
+    selectedStatus: document.getElementById('selected-status'),
+    selectedDesc: document.getElementById('selected-desc'),
+    landmarkPhotoContainer: document.getElementById('landmark-photo-container'),
+    landmarkPhotoImg: document.getElementById('landmark-photo-img'),
+    cellActionButtons: document.getElementById('cell-action-buttons'),
+    buildOptionsList: document.getElementById('build-options-list'),
+    teacherBtn: document.getElementById('teacher-btn'),
+    openFeedbackBtn: document.getElementById('open-feedback-btn'),
+    feedbackModal: document.getElementById('feedback-modal'),
+    teacherModal: document.getElementById('teacher-modal'),
+    ttsSpeakSceneBtn: document.getElementById('tts-speak-scene-btn'),
     globalPreloader: document.getElementById('global-preloader'),
     preloaderBar: document.getElementById('preloader-bar'),
     preloaderStatus: document.getElementById('preloader-status'),
@@ -184,9 +226,6 @@ const elements = {
     confirmChallengeBtn: document.getElementById('confirm-challenge-btn'),
     challengeOpponentName: document.getElementById('challenge-opponent-name'),
     challengeOpponentLevel: document.getElementById('challenge-opponent-level'),
-    challengeOpponentAvatar: document.getElementById('challenge-opponent-avatar'),
-    closeDosBtn: document.getElementById('close-dos-btn'),
-    battleConsoleTimer: document.getElementById('battle-console-timer'),
     challengeOpponentAvatar: document.getElementById('challenge-opponent-avatar'),
     closeDosBtn: document.getElementById('close-dos-btn'),
     battleConsoleTimer: document.getElementById('battle-console-timer'),
@@ -395,7 +434,34 @@ async function setupUserSession(user) {
     state.currentUser = user;
     const reqElements = document.querySelectorAll('.auth-required');
     if (user) {
+        // 1. School Domain Validation Constraint
+        const normalizedEmail = user.email ? user.email.trim().toLowerCase() : '';
+        if (!devMode && normalizedEmail !== "adamzombie85@gmail.com" && !normalizedEmail.endsWith("@apps.ycvs.tn.edu.tw")) {
+            alert("登入失敗：本網站僅限使用管理者信箱或學校網域信箱 (@apps.ycvs.tn.edu.tw) 進行登入！");
+            state.currentUser = null;
+            await logoutUser();
+            return;
+        }
+
         try {
+            // 2. check teacher/student authorization
+            let authStatus;
+            if (devMode) {
+                authStatus = { authorized: true, role: "admin" };
+            } else {
+                authStatus = await checkUserAuthorization(user.email);
+            }
+
+            if (!authStatus.authorized) {
+                alert(`您的帳號 (${user.email}) 尚未在授權的名單內。\n\n如果您是學生，請向任課教師申請將您的 Email 加入班級學生名冊！`);
+                state.currentUser = null;
+                await logoutUser();
+                return;
+            }
+
+            state.userRole = authStatus.role;
+            state.userAuthorized = true;
+            
             state.userProfile = await getUserProfile(user.uid, user.email);
             
             // Self-Healing for corrupted stats (NaN)
@@ -467,11 +533,19 @@ async function setupUserSession(user) {
             }, 1000);
         }
         
-        // Check for Admin
-        if (user.email === 'adamzombie85@gmail.com' || devMode) {
+        // Show/hide buttons based on role
+        if (state.userRole === 'admin') {
             elements.adminBtn.classList.remove('hidden');
-        } else {
+            elements.teacherBtn.classList.add('hidden');
+            elements.openFeedbackBtn.classList.remove('hidden');
+        } else if (state.userRole === 'teacher') {
             elements.adminBtn.classList.add('hidden');
+            elements.teacherBtn.classList.remove('hidden');
+            elements.openFeedbackBtn.classList.remove('hidden');
+        } else if (state.userRole === 'student') {
+            elements.adminBtn.classList.add('hidden');
+            elements.teacherBtn.classList.add('hidden');
+            elements.openFeedbackBtn.classList.remove('hidden');
         }
 
         // Check for Territory Unlock
@@ -484,9 +558,13 @@ async function setupUserSession(user) {
         reqElements.forEach(el => el.classList.remove('hidden'));
     } else {
         state.userProfile = null;
+        state.userRole = '';
+        state.userAuthorized = false;
         elements.userAvatarBtn.classList.add('hidden');
         elements.authBtn.classList.remove('hidden');
         elements.adminBtn.classList.add('hidden');
+        elements.teacherBtn.classList.add('hidden');
+        elements.openFeedbackBtn.classList.add('hidden');
         reqElements.forEach(el => el.classList.add('hidden'));
     }
     // Always refresh leaderboard
@@ -1102,6 +1180,48 @@ function triggerHitEffect() {
 }
 
 async function endQuiz(isGiveUp = false) {
+    if (state.currentMonster && state.currentMonster.tileCoords) {
+        clearInterval(state.timerInterval);
+        const totalToGrade = isGiveUp ? state.currentQuestionIndex : state.filteredQuestions.length;
+        const scorePercent = Math.round((state.score / totalToGrade) * 100) || 0;
+        
+        elements.quizScreen.classList.add('hidden');
+        elements.setupScreen.classList.remove('hidden');
+
+        // Reset dragon sprites
+        elements.dragonSprite.classList.remove('dragon-die');
+        elements.dragonSprite.classList.add('dragon-idle');
+        elements.dragonHp.style.width = '100%';
+        elements.dragonHpText.textContent = '100%';
+
+        const damageDealt = state.score * 20;
+        const remainingHp = Math.max(0, state.currentMonster.hp - damageDealt);
+
+        if (remainingHp <= 0 && totalToGrade > 0) {
+            // Defeated!
+            await processMonsterBattleDefeated();
+        } else {
+            showLoadingOverlay(true);
+            try {
+                const { x, y } = state.currentMonster.tileCoords;
+                const lands = [...state.userProfile.territory.lands];
+                const idx = lands.findIndex(l => l.x === x && l.y === y);
+                if (idx !== -1) {
+                    lands[idx].monsterHp = remainingHp;
+                    await updateUserProfile(state.currentUser.uid, { "territory.lands": lands });
+                    state.userProfile.territory.lands = lands;
+                }
+                alert(`戰鬥結束！你對野怪造成了 ${damageDealt} 點傷害，但野怪頑強抵抗，目前仍剩餘 ${remainingHp} 生命值。請繼續修煉並再度挑戰！`);
+            } catch (e) {
+                console.error(e);
+            } finally {
+                showLoadingOverlay(false);
+            }
+        }
+        state.currentMonster = null;
+        return;
+    }
+
     clearInterval(state.timerInterval);
     const elapsedSecs = Math.floor((Date.now() - state.startTime) / 1000);
     const m = Math.floor(elapsedSecs / 60).toString().padStart(2, '0');
@@ -2066,8 +2186,6 @@ async function showPrologue() {
     const skipBtn = document.getElementById('skip-prologue-btn');
     const storyText = "古老的王國傳說著... 邪惡的惡龍奪走了世界上所有的珍貴名畫，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗惡龍，奪回失去的拼圖碎片，重現名畫的光輝！";
     
-    // Preloading is now handled by initApp sequence before calling showPrologue
-    
     modal.classList.remove('hidden');
     
     let i = 0;
@@ -2087,8 +2205,10 @@ async function showPrologue() {
     skipBtn.onclick = () => {
         modal.classList.add('hidden');
         localStorage.setItem('prologue_shown', 'true');
-        if (!isMusicMuted && elements.bgMusic.paused) {
-            elements.bgMusic.play().catch(e => console.log("Music play blocked:", e));
+        // Let user audio trigger safely on skip click
+        const bgMusic = document.getElementById('bg-music');
+        if (bgMusic && bgMusic.paused) {
+            bgMusic.play().catch(e => console.log("Music play blocked:", e));
         }
     };
 }
@@ -2100,7 +2220,6 @@ async function preloadAllQuizData() {
 
     console.log("開始並行預載入題庫資料...");
     
-    // Update Progress
     const updateProgress = () => {
         const percent = Math.round((loaded / total) * 100);
         if (elements.preloaderBar) elements.preloaderBar.style.width = `${percent}%`;
@@ -2109,7 +2228,6 @@ async function preloadAllQuizData() {
 
     updateProgress();
 
-    // Use Promise.all for parallel fetching
     const promises = subjects.map(async (subKey) => {
         try {
             if (!state.cachedData[subKey]) {
@@ -2130,18 +2248,13 @@ async function preloadAllQuizData() {
     console.log("題庫預載入完成");
 }
 
-// Start the app sequence
 async function initApp() {
     try {
-        // 1. Preload Data
         await preloadAllQuizData();
-        
-        // 2. Small delay for smooth transition
         setTimeout(() => {
             if (elements.globalPreloader) {
                 elements.globalPreloader.classList.add('fade-out');
             }
-            // 3. Show Prologue
             showPrologue();
         }, 800);
     } catch (err) {
@@ -2150,20 +2263,17 @@ async function initApp() {
     }
 }
 
-// Kick off initialization
 initApp();
 
-// Global Modal Background Click to Close
 window.addEventListener('click', (e) => {
     if (e.target.classList.contains('modal')) {
-        // Don't close Auth Modal or Levelup Modal or Prologue by clicking background (to prevent accidental loss)
         if (e.target.id === 'auth-modal' || e.target.id === 'levelup-modal' || e.target.id === 'prologue-modal') return;
         e.target.classList.add('hidden');
     }
 });
-// --- Idle Auto-Logout Logic ---
+
 let idleTimer;
-const IDLE_LIMIT = 2 * 60 * 60 * 1000; // 2 hours in ms
+const IDLE_LIMIT = 2 * 60 * 60 * 1000;
 
 function resetIdleTimer() {
     if (idleTimer) clearTimeout(idleTimer);
@@ -2182,31 +2292,1653 @@ async function handleIdleLogout() {
     }
 }
 
-// Global activity listeners
 ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(evt => {
     window.addEventListener(evt, resetIdleTimer);
 });
 
-// Initial start
 resetIdleTimer();
+// --- 3D Yujing Accessibility Kingdom Builder & Admin Features ---
 
-// --- Territory & Farm System Logic ---
+const BUILDING_TYPES = {
+    mango_orchard: { name: '玉井芒果園', cost: 100, desc: '種植甜美的愛文芒果。定期生產「玉井芒果」與「芒果種子」。', icon: 'fa-lemon' },
+    orchard_native: { name: '土芒果園', cost: 100, desc: '特化土芒果園。100%生產「土芒果」與「土芒果種子」。需要5顆土芒果或通用種子。', icon: 'fa-lemon' },
+    orchard_irwin: { name: '愛文芒果園', cost: 150, desc: '特化愛文芒果園。100%生產「愛文芒果」與「愛文芒果種子」。需要5顆愛文種子。', icon: 'fa-lemon' },
+    orchard_jinhuang: { name: '金煌芒果園', cost: 200, desc: '特化金煌芒果園。100%生產「金煌芒果」與「金煌芒果種子」。需要5顆金煌種子。', icon: 'fa-lemon' },
+    orchard_yuwen: { name: '玉文芒果園', cost: 250, desc: '特化玉文芒果園。100%生產「玉文芒果」與「玉文芒果種子」。需要5顆玉文種子。', icon: 'fa-lemon' },
+    house: { name: '皇家住宅', cost: 150, desc: '增加王國的人口上限，定期生產少量金幣。', icon: 'fa-house' },
+    windmill: { name: '皇家風車', cost: 200, desc: '引導微風運轉，定期生產「牛奶」。', icon: 'fa-wind' },
+    watchtower: { name: '王國暸望塔', cost: 250, desc: '防禦領土，提供對戰防守力加成。', icon: 'fa-shield-halved' },
+    library: { name: '皇家圖書館', cost: 400, desc: '累積學識。使您在答對題目時獲得的金幣 +10%。', icon: 'fa-book' },
+    goldmine: { name: '金礦山', cost: 500, desc: '開採地底金礦。定期產生「金幣」。', icon: 'fa-coins' },
+    castle: { name: '玉井皇家城堡', cost: 1000, desc: '王國核心，解鎖各種在地特色地標。', icon: 'fa-fort-awesome' },
+    
+    // Yujing Local Landmarks
+    yujing_sugar: { name: '玉井糖廠', cost: 600, desc: '懷舊的紅磚煙囪地標。定期產生大量金幣。', photo: 'local pictures/玉井糖廠.jpg', icon: 'fa-industry' },
+    yujing_school: { name: '玉井工商 (YCVS)', cost: 800, desc: '培育技術人才的學習殿堂。答題獲得的經驗值 +20%。', photo: 'local pictures/玉井工商.jpg', icon: 'fa-school' },
+    yujing_fruit_market: { name: '玉井青果集貨場', cost: 700, desc: '全台最大芒果批發市場。芒果物資收購價 +15%。', photo: 'local pictures/玉井青果集貨場.jpg', icon: 'fa-store' },
+    yujing_police: { name: '玉井警察局', cost: 500, desc: '維護地方治安。答題遭遇野怪機率減半。', photo: 'local pictures/玉井警察局.jpeg', icon: 'fa-building-shield' },
+    yujing_temple: { name: '玉井北極殿', cost: 900, desc: '三百多年信仰中心。每日可在此免費祈福隨機獲得物資。', photo: 'local pictures/玉井北極殿.jpg', icon: 'fa-gopuram' },
+    yujing_roundabout: { name: '玉井圓環', cost: 400, desc: '市區交通樞紐，中央設有美麗的噴水池。', photo: 'local pictures/玉井圓環.jpg', icon: 'fa-circle-dot' },
+    yujing_landmark: { name: '玉井芒果地標', cost: 300, desc: '圓環的巨型愛文芒果雕像。象徵芒果之鄉！', photo: 'local pictures/玉井地標.jpg', icon: 'fa-lemon' },
+    yujing_fire_station: { name: '玉井消防隊', cost: 500, desc: '守護家園安全，避免意外損失。', photo: 'local pictures/玉井消防隊.jpg', icon: 'fa-fire-extinguisher' }
+};
+
+// Material helper supporting High Contrast mode
+function getMaterial(color, isEmissive = false) {
+    const isHighContrast = document.body.classList.contains('a11y-contrast-high');
+    if (isHighContrast) {
+        let hcColor = color;
+        if (color === '#4caf50' || color === '#388e3c') hcColor = '#00ff00'; // Neon green
+        else if (color === '#7f1d1d' || color === '#ef4444') hcColor = '#ff0000'; // Neon red
+        else if (color === '#1e293b' || color === '#5a4d41') hcColor = '#000000'; // Black
+        else if (color === '#fbbf24') hcColor = '#ffff00'; // Bright yellow
+        else if (color === '#3b82f6') hcColor = '#0000ff'; // Bright blue
+        else if (color === '#ffffff') hcColor = '#ffffff';
+        return new THREE.MeshBasicMaterial({ color: hcColor });
+    } else {
+        return new THREE.MeshStandardMaterial({
+            color: color,
+            flatShading: true,
+            roughness: 0.8,
+            metalness: 0.15,
+            emissive: isEmissive ? color : '#000000',
+            emissiveIntensity: isEmissive ? 0.5 : 0
+        });
+    }
+}
+
+// Procedural 3D model generator
+function createProceduralModel(type, level) {
+    const group = new THREE.Group();
+    group.name = type;
+
+    switch (type) {
+        case 'mango_orchard':
+        case 'orchard_native':
+        case 'orchard_irwin':
+        case 'orchard_jinhuang':
+        case 'orchard_yuwen':
+            // Trunk
+            const trunkGeom = new THREE.CylinderGeometry(0.08, 0.1, 0.4, 6);
+            const trunkMat = getMaterial('#78350f');
+            const trunk = new THREE.Mesh(trunkGeom, trunkMat);
+            trunk.position.y = 0.2;
+            group.add(trunk);
+            
+            // Foliage & Mango Colors based on variety
+            let foliageColor = '#16a34a';
+            let mangoColor = '#f59e0b';
+            
+            if (type === 'orchard_native') {
+                foliageColor = '#16a34a';
+                mangoColor = '#4caf50'; // 青綠色
+            } else if (type === 'orchard_irwin') {
+                foliageColor = '#15803d'; // 翠綠
+                mangoColor = '#ea580c'; // 橘紅色
+            } else if (type === 'orchard_jinhuang') {
+                foliageColor = '#166534'; // 暗綠
+                mangoColor = '#facc15'; // 鮮黃色
+            } else if (type === 'orchard_yuwen') {
+                foliageColor = '#14532d'; // 墨綠
+                mangoColor = '#db2777'; // 桃紅色
+            }
+            
+            // Foliage
+            const foliageGeom = new THREE.SphereGeometry(0.28, 8, 8);
+            const foliageMat = getMaterial(foliageColor);
+            const foliage = new THREE.Mesh(foliageGeom, foliageMat);
+            foliage.position.y = 0.45;
+            group.add(foliage);
+            // Hanging Mangoes
+            for (let i = 0; i < 3; i++) {
+                const mangoGeom = new THREE.SphereGeometry(0.05, 4, 4);
+                mangoGeom.scale(0.8, 1.2, 0.8);
+                const mangoMat = getMaterial(mangoColor);
+                const mango = new THREE.Mesh(mangoGeom, mangoMat);
+                const angle = (i * Math.PI * 2) / 3;
+                mango.position.set(Math.cos(angle) * 0.18, 0.35, Math.sin(angle) * 0.18);
+                group.add(mango);
+            }
+            break;
+            
+        case 'house':
+            // Base
+            const houseGeom = new THREE.BoxGeometry(0.4, 0.35, 0.4);
+            const houseMat = getMaterial('#ffffff');
+            const house = new THREE.Mesh(houseGeom, houseMat);
+            house.position.y = 0.175;
+            group.add(house);
+            // Roof
+            const roofGeom = new THREE.ConeGeometry(0.35, 0.25, 4);
+            roofGeom.rotateY(Math.PI / 4);
+            const roofMat = getMaterial('#dc2626');
+            const roof = new THREE.Mesh(roofGeom, roofMat);
+            roof.position.y = 0.45;
+            group.add(roof);
+            break;
+
+        case 'windmill':
+            // Tower
+            const windGeom = new THREE.CylinderGeometry(0.12, 0.2, 0.5, 6);
+            const windMat = getMaterial('#e2e8f0');
+            const wind = new THREE.Mesh(windGeom, windMat);
+            wind.position.y = 0.25;
+            group.add(wind);
+            // Dome
+            const domeGeom = new THREE.SphereGeometry(0.13, 6, 6);
+            const domeMat = getMaterial('#b91c1c');
+            const dome = new THREE.Mesh(domeGeom, domeMat);
+            dome.position.y = 0.5;
+            group.add(dome);
+            // Sails Group (so we can rotate it)
+            const sailsGroup = new THREE.Group();
+            sailsGroup.name = "sails";
+            sailsGroup.position.set(0, 0.45, 0.15);
+            // Cross sails
+            const crossMat = getMaterial('#475569');
+            for (let i = 0; i < 4; i++) {
+                const bladeGeom = new THREE.BoxGeometry(0.04, 0.4, 0.01);
+                const blade = new THREE.Mesh(bladeGeom, crossMat);
+                blade.rotation.z = (i * Math.PI) / 2;
+                blade.position.y = 0.15;
+                const singleBladeGroup = new THREE.Group();
+                singleBladeGroup.rotation.z = (i * Math.PI) / 2;
+                blade.position.set(0, 0.15, 0);
+                singleBladeGroup.add(blade);
+                sailsGroup.add(singleBladeGroup);
+            }
+            group.add(sailsGroup);
+            break;
+
+        case 'watchtower':
+            // Columns
+            const towerGeom = new THREE.CylinderGeometry(0.18, 0.2, 0.6, 6);
+            const towerMat = getMaterial('#64748b');
+            const tower = new THREE.Mesh(towerGeom, towerMat);
+            tower.position.y = 0.3;
+            group.add(tower);
+            // Platform
+            const platGeom = new THREE.BoxGeometry(0.45, 0.05, 0.45);
+            const platMat = getMaterial('#78350f');
+            const platform = new THREE.Mesh(platGeom, platMat);
+            platform.position.y = 0.6;
+            group.add(platform);
+            // Roof
+            const topConeGeom = new THREE.ConeGeometry(0.3, 0.2, 4);
+            const topConeMat = getMaterial('#475569');
+            const topCone = new THREE.Mesh(topConeGeom, topConeMat);
+            topCone.position.y = 0.75;
+            group.add(topCone);
+            break;
+
+        case 'library':
+            // Main structure
+            const libGeom = new THREE.BoxGeometry(0.5, 0.3, 0.5);
+            const libMat = getMaterial('#1e3a8a');
+            const library = new THREE.Mesh(libGeom, libMat);
+            library.position.y = 0.15;
+            group.add(library);
+            // Portico Columns
+            const colMat = getMaterial('#ffffff');
+            for (let xOffset of [-0.2, 0, 0.2]) {
+                const colGeom = new THREE.CylinderGeometry(0.03, 0.03, 0.28, 4);
+                const col = new THREE.Mesh(colGeom, colMat);
+                col.position.set(xOffset, 0.14, 0.24);
+                group.add(col);
+            }
+            // Triangular Pediment Roof
+            const triGeom = new THREE.ConeGeometry(0.4, 0.18, 4);
+            triGeom.rotateY(Math.PI / 4);
+            const triMat = getMaterial('#3b82f6');
+            const pediment = new THREE.Mesh(triGeom, triMat);
+            pediment.position.y = 0.38;
+            group.add(pediment);
+            break;
+
+        case 'goldmine':
+            // Rock base
+            const rockGeom = new THREE.DodecahedronGeometry(0.25);
+            const rockMat = getMaterial('#475569');
+            const rock = new THREE.Mesh(rockGeom, rockMat);
+            rock.position.y = 0.2;
+            group.add(rock);
+            // Gold crystals
+            for (let i = 0; i < 4; i++) {
+                const goldCrystGeom = new THREE.BoxGeometry(0.06, 0.06, 0.06);
+                const goldMat = getMaterial('#fbbf24', true);
+                const crystal = new THREE.Mesh(goldCrystGeom, goldMat);
+                crystal.rotation.set(Math.random(), Math.random(), Math.random());
+                crystal.position.set(
+                    (Math.random() - 0.5) * 0.2,
+                    0.2 + (Math.random() * 0.15),
+                    (Math.random() - 0.5) * 0.2
+                );
+                group.add(crystal);
+            }
+            break;
+
+        case 'castle':
+            // Main structure
+            const castleGeom = new THREE.BoxGeometry(0.55, 0.4, 0.55);
+            const castleMat = getMaterial('#475569');
+            const mainKeep = new THREE.Mesh(castleGeom, castleMat);
+            mainKeep.position.y = 0.2;
+            group.add(mainKeep);
+            // Corner Towers
+            const tOffset = 0.25;
+            for (let dx of [-tOffset, tOffset]) {
+                for (let dz of [-tOffset, tOffset]) {
+                    const ctGeom = new THREE.CylinderGeometry(0.08, 0.08, 0.55, 6);
+                    const ct = new THREE.Mesh(ctGeom, castleMat);
+                    ct.position.set(dx, 0.275, dz);
+                    group.add(ct);
+                    // Tower roofs
+                    const crGeom = new THREE.ConeGeometry(0.12, 0.2, 6);
+                    const crMat = getMaterial('#dc2626');
+                    const cr = new THREE.Mesh(crGeom, crMat);
+                    cr.position.set(dx, 0.65, dz);
+                    group.add(cr);
+                }
+            }
+            break;
+
+        // --- 8 Yujing Local Landmarks ---
+        case 'yujing_sugar':
+            // Factory hangar
+            const hangarGeom = new THREE.BoxGeometry(0.5, 0.25, 0.4);
+            const hangarMat = getMaterial('#4b5563');
+            const hangar = new THREE.Mesh(hangarGeom, hangarMat);
+            hangar.position.set(-0.1, 0.125, 0);
+            group.add(hangar);
+            // Red-brick tall chimney
+            const chimneyGeom = new THREE.CylinderGeometry(0.06, 0.1, 0.8, 8);
+            const chimneyMat = getMaterial('#b91c1c');
+            const chimney = new THREE.Mesh(chimneyGeom, chimneyMat);
+            chimney.position.set(0.18, 0.4, 0.05);
+            group.add(chimney);
+            // Chimney black rim top
+            const rimGeom = new THREE.CylinderGeometry(0.065, 0.065, 0.05, 8);
+            const rimMat = getMaterial('#1f2937');
+            const rim = new THREE.Mesh(rimGeom, rimMat);
+            rim.position.set(0.18, 0.825, 0.05);
+            group.add(rim);
+            break;
+
+        case 'yujing_school':
+            // Main blue and white school block
+            const baseSchoolGeom = new THREE.BoxGeometry(0.65, 0.35, 0.35);
+            const baseSchoolMat = getMaterial('#ffffff');
+            const schoolBase = new THREE.Mesh(baseSchoolGeom, baseSchoolMat);
+            schoolBase.position.y = 0.175;
+            group.add(schoolBase);
+            // Blue accents & windows
+            const accentGeom = new THREE.BoxGeometry(0.67, 0.05, 0.05);
+            const accentMat = getMaterial('#2563eb');
+            const accentLine = new THREE.Mesh(accentGeom, accentMat);
+            accentLine.position.set(0, 0.28, 0.16);
+            group.add(accentLine);
+            // Micro YCVS sign gate
+            const gateGeom = new THREE.BoxGeometry(0.2, 0.18, 0.05);
+            const gateMat = getMaterial('#e2e8f0');
+            const gate = new THREE.Mesh(gateGeom, gateMat);
+            gate.position.set(0, 0.09, 0.19);
+            group.add(gate);
+            break;
+
+        case 'yujing_fruit_market':
+            // Structural pillars (4 columns)
+            const columnMat = getMaterial('#15803d');
+            for (let dx of [-0.25, 0.25]) {
+                for (let dz of [-0.2, 0.2]) {
+                    const cGeom = new THREE.CylinderGeometry(0.02, 0.02, 0.32, 4);
+                    const col = new THREE.Mesh(cGeom, columnMat);
+                    col.position.set(dx, 0.16, dz);
+                    group.add(col);
+                }
+            }
+            // Green flat sheet warehouse roof
+            const marketRoofGeom = new THREE.BoxGeometry(0.6, 0.04, 0.55);
+            const marketRoofMat = getMaterial('#16a34a');
+            const mRoof = new THREE.Mesh(marketRoofGeom, marketRoofMat);
+            mRoof.position.y = 0.34;
+            group.add(mRoof);
+            // Stack of tiny mango crates below
+            for (let i = 0; i < 3; i++) {
+                const crateGeom = new THREE.BoxGeometry(0.12, 0.08, 0.12);
+                const crateMat = getMaterial('#d97706'); // Wooden crate
+                const crate = new THREE.Mesh(crateGeom, crateMat);
+                crate.position.set((i - 1) * 0.15, 0.04, 0);
+                group.add(crate);
+                
+                // Yellow dots inside representing mangoes
+                const mGeom = new THREE.BoxGeometry(0.04, 0.04, 0.04);
+                const mMat = getMaterial('#fbbf24');
+                const fruit = new THREE.Mesh(mGeom, mMat);
+                fruit.position.set((i - 1) * 0.15, 0.08, 0);
+                group.add(fruit);
+            }
+            break;
+
+        case 'yujing_police':
+            // High security blue/white headquarters block
+            const polGeom = new THREE.BoxGeometry(0.45, 0.45, 0.45);
+            const polMat = getMaterial('#ffffff');
+            const polBase = new THREE.Mesh(polGeom, polMat);
+            polBase.position.y = 0.225;
+            group.add(polBase);
+            // Blue shield front stripes
+            const polStripGeom = new THREE.BoxGeometry(0.47, 0.12, 0.47);
+            const polStripMat = getMaterial('#1e3a8a');
+            const stripe = new THREE.Mesh(polStripGeom, polStripMat);
+            stripe.position.y = 0.3;
+            group.add(stripe);
+            // Red-blue tiny sirens on roof
+            const redSireGeom = new THREE.SphereGeometry(0.03, 4, 4);
+            const redSireMat = getMaterial('#ef4444', true);
+            const redSiren = new THREE.Mesh(redSireGeom, redSireMat);
+            redSiren.position.set(-0.1, 0.47, 0.1);
+            group.add(redSiren);
+            const blueSireMat = getMaterial('#3b82f6', true);
+            const blueSiren = new THREE.Mesh(redSireGeom, blueSireMat);
+            blueSiren.position.set(0.1, 0.47, 0.1);
+            group.add(blueSiren);
+            break;
+
+        case 'yujing_temple':
+            // Red sanctuary base
+            const tempBaseGeom = new THREE.BoxGeometry(0.55, 0.28, 0.55);
+            const tempBaseMat = getMaterial('#b91c1c');
+            const tempBase = new THREE.Mesh(tempBaseGeom, tempBaseMat);
+            tempBase.position.y = 0.14;
+            group.add(tempBase);
+            // Double-tiered golden curved roofs
+            for (let i = 0; i < 2; i++) {
+                const trGeom = new THREE.ConeGeometry(0.48 - (i * 0.12), 0.16, 4);
+                trGeom.rotateY(Math.PI / 4);
+                trGeom.scale(1.2, 0.8, 1.2); // stretch to make curved profile
+                const trMat = getMaterial('#d97706'); // Gold/orange
+                const tRoof = new THREE.Mesh(trGeom, trMat);
+                tRoof.position.y = 0.28 + (i * 0.18);
+                group.add(tRoof);
+            }
+            // Tiny incense burner in front
+            const burnerGeom = new THREE.CylinderGeometry(0.06, 0.06, 0.08, 6);
+            const burnerMat = getMaterial('#fbbf24');
+            const burner = new THREE.Mesh(burnerGeom, burnerMat);
+            burner.position.set(0, 0.04, 0.32);
+            group.add(burner);
+            break;
+
+        case 'yujing_roundabout':
+            // Circular base pavement
+            const circleGeom = new THREE.CylinderGeometry(0.48, 0.48, 0.05, 12);
+            const circleMat = getMaterial('#64748b');
+            const circle = new THREE.Mesh(circleGeom, circleMat);
+            circle.position.y = 0.025;
+            group.add(circle);
+            // Inner lawn circular island
+            const lawnGeom = new THREE.CylinderGeometry(0.38, 0.38, 0.06, 12);
+            const lawnMat = getMaterial('#22c55e');
+            const lawn = new THREE.Mesh(lawnGeom, lawnMat);
+            lawn.position.y = 0.055;
+            group.add(lawn);
+            // Central fountain column
+            const fColGeom = new THREE.CylinderGeometry(0.03, 0.05, 0.2, 6);
+            const fColMat = getMaterial('#ffffff');
+            const fCol = new THREE.Mesh(fColGeom, fColMat);
+            fCol.position.y = 0.18;
+            group.add(fCol);
+            // Translucent water spray
+            const waterGeom = new THREE.SphereGeometry(0.08, 6, 6);
+            const waterMat = getMaterial('#93c5fd', true); // Ice/water glow
+            const water = new THREE.Mesh(waterGeom, waterMat);
+            water.position.y = 0.28;
+            group.add(water);
+            break;
+
+        case 'yujing_landmark':
+            // Landmark stone pedestal
+            const pedGeom = new THREE.CylinderGeometry(0.12, 0.15, 0.28, 6);
+            const pedMat = getMaterial('#94a3b8');
+            const pedestal = new THREE.Mesh(pedGeom, pedMat);
+            pedestal.position.y = 0.14;
+            group.add(pedestal);
+            // Giant red-yellow mango
+            const gMangoGeom = new THREE.SphereGeometry(0.18, 12, 12);
+            gMangoGeom.scale(1.3, 0.9, 0.9); // mango asymmetric shape
+            const gMangoMat = getMaterial('#fbbf24', true); // luminous golden yellow
+            const giantMango = new THREE.Mesh(gMangoGeom, gMangoMat);
+            giantMango.rotation.set(0.2, 0.1, 0.4);
+            giantMango.position.set(0, 0.38, 0);
+            group.add(giantMango);
+            break;
+
+        case 'yujing_fire_station':
+            // Bright red rescue headquarters block
+            const fireGeom = new THREE.BoxGeometry(0.5, 0.45, 0.45);
+            const fireMat = getMaterial('#b91c1c');
+            const fireBase = new THREE.Mesh(fireGeom, fireMat);
+            fireBase.position.y = 0.225;
+            group.add(fireBase);
+            // Grey roll doors representation
+            const door1Geom = new THREE.BoxGeometry(0.18, 0.26, 0.02);
+            const doorMat = getMaterial('#cbd5e1');
+            const door1 = new THREE.Mesh(door1Geom, doorMat);
+            door1.position.set(-0.12, 0.13, 0.23);
+            group.add(door1);
+            const door2 = new THREE.Mesh(door1Geom, doorMat);
+            door2.position.set(0.12, 0.13, 0.23);
+            group.add(door2);
+            // Flashing yellow warning lamp
+            const lampGeom = new THREE.CylinderGeometry(0.03, 0.03, 0.06, 6);
+            const lampMat = getMaterial('#fbbf24', true);
+            const lamp = new THREE.Mesh(lampGeom, lampMat);
+            lamp.position.set(0, 0.47, 0.15);
+            group.add(lamp);
+            break;
+    }
+
+    // Apply level label or minor visual scaling
+    const scale = 0.9 + (level * 0.1);
+    group.scale.set(scale, scale, scale);
+
+    // Enable shadows for all meshes inside the group
+    group.traverse(child => {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    });
+
+    return group;
+}
+
+// Global Three.js Initialization function
+function initThreeJS() {
+    if (state.three.renderer) return; // Already initialized
+
+    const container = elements.threeCanvasContainer;
+    const width = container.clientWidth || 800;
+    const height = container.clientHeight || 450;
+
+    // 1. Scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color('#0f172a'); // Midnight dark theme matching style.css
+    // Subtle star field background (particle system)
+    const starGeom = new THREE.BufferGeometry();
+    const starCount = 300;
+    const starPositions = new Float32Array(starCount * 3);
+    for (let i = 0; i < starCount * 3; i += 3) {
+        starPositions[i] = (Math.random() - 0.5) * 40;
+        starPositions[i+1] = Math.random() * 20;
+        starPositions[i+2] = (Math.random() - 0.5) * 40;
+    }
+    starGeom.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    const starMat = new THREE.PointsMaterial({ color: '#ffffff', size: 0.15, sizeAttenuation: true });
+    const stars = new THREE.Points(starGeom, starMat);
+    scene.add(stars);
+    state.three.scene = scene;
+
+    // 2. Camera
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+    camera.position.set(0, 5, 6.5);
+    state.three.camera = camera;
+
+    // 3. Renderer
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    // Clear spinner
+    elements.threeLoading.classList.add('hidden');
+    container.appendChild(renderer.domElement);
+    state.three.renderer = renderer;
+
+    // 4. Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.55);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.7);
+    dirLight.position.set(5, 10, 5);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
+    dirLight.shadow.bias = -0.002;
+    scene.add(dirLight);
+
+    // 5. Controls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.maxPolarAngle = Math.PI / 2.1; // Don't allow camera to go below ground
+    controls.minDistance = 3;
+    controls.maxDistance = 12;
+    controls.target.set(0, 0, 0);
+    state.three.controls = controls;
+
+    // 6. 3D Selection Box Outline
+    const wireGeom = new THREE.BoxGeometry(1.05, 0.22, 1.05);
+    const edges = new THREE.EdgesGeometry(wireGeom);
+    const lineMat = new THREE.LineBasicMaterial({ color: '#fbbf24', linewidth: 3 });
+    const selectionBox = new THREE.LineSegments(edges, lineMat);
+    selectionBox.position.set(0, 0.05, 0);
+    scene.add(selectionBox);
+    state.three.selectionBox = selectionBox;
+
+    // 7. Raycaster Setup for click handling
+    container.addEventListener('click', onCanvasClick);
+
+    // Keyboard focus navigation visual support
+    container.addEventListener('focus', () => {
+        lineMat.color.set('#f59e0b');
+    });
+    container.addEventListener('blur', () => {
+        lineMat.color.set('#fbbf24');
+    });
+
+    // Event listener for keyboard navigation
+    container.addEventListener('keydown', onCanvasKeyDown);
+
+    // 8. Animation loop
+    let clock = new THREE.Clock();
+    function animate() {
+        requestAnimationFrame(animate);
+        
+        // Dynamic rotation of Windmill sails
+        scene.traverse(node => {
+            if (node.name === "sails") {
+                node.rotation.z += 0.02;
+            }
+            if (node.name.startsWith("monster_group")) {
+                // Hover floating animation
+                node.position.y = 0.22 + Math.sin(clock.getElapsedTime() * 2.5 + node.userData.x * 2) * 0.06;
+                node.rotation.y += 0.01;
+            }
+        });
+
+        // Blessing heart floating animation
+        for (let i = state.three.animatingHearts.length - 1; i >= 0; i--) {
+            const heart = state.three.animatingHearts[i];
+            heart.position.y += 0.015;
+            heart.scale.multiplyScalar(0.97);
+            if (heart.scale.x < 0.1) {
+                scene.remove(heart);
+                state.three.animatingHearts.splice(i, 1);
+            }
+        }
+
+        // Damping and Lerping look targets
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    // RWD resizing canvas
+    window.addEventListener('resize', () => {
+        if (!state.three.renderer) return;
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    });
+}
+
+// Smoothly move 3D selection box
+function moveSelectionBox(x, y) {
+    const xPos = (x - 2.5) * 1.1;
+    const zPos = (y - 2.5) * 1.1;
+    
+    // Animate position smoothly (or jump immediately for quick feedback)
+    state.three.selectionBox.position.set(xPos, 0.05, zPos);
+    
+    // Gently focus controls target to look at the cell
+    state.three.controls.target.set(xPos * 0.6, 0, zPos * 0.6);
+}
+
+// Raycast Click Selection
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function onCanvasClick(event) {
+    const container = elements.threeCanvasContainer;
+    const rect = container.getBoundingClientRect();
+    
+    // Normalize coordinates
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    raycaster.setFromCamera(mouse, state.three.camera);
+    const intersects = raycaster.intersectObjects(state.three.tiles);
+
+    if (intersects.length > 0) {
+        const hitTile = intersects[0].object;
+        if (hitTile.userData && typeof hitTile.userData.x === 'number') {
+            const { x, y } = hitTile.userData;
+            const lands = getActiveLandsList();
+            const land = lands.find(l => l.x === x && l.y === y);
+            if (land) {
+                state.three.selectedCoords = { x, y };
+                moveSelectionBox(x, y);
+                updateActiveCellInfo();
+                if (elements.a11yTts.value === 'on') {
+                    readSceneStatusAloud();
+                }
+            }
+        }
+    }
+}
+
+// Keyboard Navigation Keydown handler
+function onCanvasKeyDown(event) {
+    const key = event.key;
+    let dx = 0;
+    let dy = 0;
+
+    if (key === 'ArrowUp' || key === 'w' || key === 'W') dx = -1;
+    else if (key === 'ArrowDown' || key === 's' || key === 'S') dx = 1;
+    else if (key === 'ArrowLeft' || key === 'a' || key === 'A') dy = -1;
+    else if (key === 'ArrowRight' || key === 'd' || key === 'D') dy = 1;
+    else if (key === 'Enter' || key === ' ') {
+        // Trigger default primary button of the selected cell
+        event.preventDefault();
+        const primaryBtn = elements.cellActionButtons.querySelector('.btn-primary, .btn-gold');
+        if (primaryBtn && !primaryBtn.disabled) {
+            primaryBtn.click();
+        }
+        return;
+    } else if (key === 'Escape') {
+        event.preventDefault();
+        toggleTerritoryModal();
+        return;
+    } else {
+        return; // Let other keys proceed
+    }
+
+    event.preventDefault(); // Prevent scroll on arrow keys
+    
+    const nextX = Math.max(0, Math.min(5, state.three.selectedCoords.x + dx));
+    const nextY = Math.max(0, Math.min(5, state.three.selectedCoords.y + dy));
+    
+    // Check if tile is defined in active lands
+    const lands = getActiveLandsList();
+    const targetLand = lands.find(l => l.x === nextX && l.y === nextY);
+    if (targetLand) {
+        state.three.selectedCoords = { x: nextX, y: nextY };
+        moveSelectionBox(nextX, nextY);
+        updateActiveCellInfo();
+        
+        // Auto announce keyboard movement via speech if turned on
+        if (elements.a11yTts.value === 'on') {
+            readSceneStatusAloud();
+        }
+    }
+}
+
+// Retrieve active lands array based on visiting/owner state
+function getActiveLandsList() {
+    if (state.three.isVisiting && state.three.visitedProfile) {
+        return (state.three.visitedProfile.territory && state.three.visitedProfile.territory.lands) || [];
+    }
+    return (state.userProfile.territory && state.userProfile.territory.lands) || [];
+}
+
+// Main 3D Territory Grid Generator
+function renderTerritoryMap() {
+    initThreeJS(); // Make sure Three is initialized
+
+    const scene = state.three.scene;
+    const lands = getActiveLandsList();
+
+    // 1. Clear previous dynamic meshes (excluding selectionBox and background stars)
+    const objectsToRemove = [];
+    scene.traverse(node => {
+        if (node !== scene && node !== state.three.selectionBox && node !== scene.children[0] && !node.isLight) {
+            // Only remove children added dynamically (we check parents)
+            if (node.parent === scene) {
+                objectsToRemove.push(node);
+            }
+        }
+    });
+    objectsToRemove.forEach(obj => scene.remove(obj));
+
+    state.three.tiles = [];
+    state.three.buildings = {};
+
+    // 2. Build Layered Mudstone floating island base structure
+    const baseGroup = new THREE.Group();
+    // Stepped layers for badlands mudstone look
+    const layerColors = ['#5a4d41', '#4a3f35', '#3d332a'];
+    for (let l = 0; l < 3; l++) {
+        const size = 6.4 - (l * 0.4);
+        const thick = 0.5 - (l * 0.1);
+        const lGeom = new THREE.BoxGeometry(size, thick, size);
+        const lMat = getMaterial(layerColors[l]);
+        const layer = new THREE.Mesh(lGeom, lMat);
+        layer.position.y = -thick/2 - (l * 0.3) - 0.08;
+        layer.receiveShadow = true;
+        baseGroup.add(layer);
+    }
+    scene.add(baseGroup);
+
+    // 3. Render 36 individual tiles
+    lands.forEach(land => {
+        const xPos = (land.x - 2.5) * 1.1;
+        const zPos = (land.y - 2.5) * 1.1;
+
+        // Ground Mesh
+        const groundGeom = new THREE.BoxGeometry(0.95, 0.15, 0.95);
+        let color = '#388e3c'; // Green grass
+        if (land.type === 'locked') {
+            color = '#1e293b'; // Slate grey for locked
+        } else if (land.isMonster) {
+            color = '#7f1d1d'; // Crimson dark red for wild monster
+        }
+        
+        const groundMat = getMaterial(color);
+        const tile = new THREE.Mesh(groundGeom, groundMat);
+        tile.position.set(xPos, -0.05, zPos);
+        tile.userData = { x: land.x, y: land.y };
+        tile.receiveShadow = true;
+        scene.add(tile);
+        state.three.tiles.push(tile); // Add to hit-test pool
+
+        // If locked, render small grey borders
+        if (land.type === 'locked') {
+            const wireGeom = new THREE.BoxGeometry(0.98, 0.18, 0.98);
+            const edges = new THREE.EdgesGeometry(wireGeom);
+            const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: '#475569', opacity: 0.4 }));
+            line.position.set(xPos, -0.05, zPos);
+            scene.add(line);
+        }
+
+        // Render Building structure
+        if (land.type !== 'empty' && land.type !== 'locked') {
+            const bModel = createProceduralModel(land.type, land.level);
+            bModel.position.set(xPos, 0.02, zPos);
+            scene.add(bModel);
+            state.three.buildings[land.x + "_" + land.y] = bModel;
+        }
+
+        // Render Wild Monster mesh
+        if (land.isMonster && land.monsterHp > 0) {
+            const mGroup = new THREE.Group();
+            mGroup.name = `monster_group_${land.x}_${land.y}`;
+            mGroup.userData = { x: land.x, y: land.y };
+
+            // Draw low-poly slime / threat monster shape
+            const mBodyGeom = new THREE.SphereGeometry(0.18, 6, 6);
+            const mBodyMat = getMaterial('#ef4444', true);
+            const mBody = new THREE.Mesh(mBodyGeom, mBodyMat);
+            mBody.scale.set(1, 0.8, 1);
+            mGroup.add(mBody);
+
+            // Red glowing eyes
+            for (let eyeX of [-0.06, 0.06]) {
+                const eyeGeom = new THREE.BoxGeometry(0.04, 0.04, 0.04);
+                const eyeMat = getMaterial('#ffff00', true);
+                const eye = new THREE.Mesh(eyeGeom, eyeMat);
+                eye.position.set(eyeX, 0.04, 0.15);
+                mGroup.add(eye);
+            }
+
+            mGroup.position.set(xPos, 0.22, zPos);
+            scene.add(mGroup);
+        }
+    });
+
+    // 4. Update coordinates view and side panel
+    moveSelectionBox(state.three.selectedCoords.x, state.three.selectedCoords.y);
+    updateActiveCellInfo();
+    renderBuildShop();
+}
+
+// Side Control Panel: Cell Details Render
+function isTileAdjacentToOwned(x, y) {
+    const lands = getActiveLandsList();
+    const dirs = [
+        { dx: 0, dy: -1 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 },
+        { dx: 1, dy: 0 }
+    ];
+    for (const dir of dirs) {
+        const nx = x + dir.dx;
+        const ny = y + dir.dy;
+        if (nx >= 0 && nx < 6 && ny >= 0 && ny < 6) {
+            const adjLand = lands.find(l => l.x === nx && l.y === ny);
+            if (adjLand && adjLand.type !== 'locked' && !adjLand.isMonster) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+function updateActiveCellInfo() {
+    const { x, y } = state.three.selectedCoords;
+    elements.selectedCoords.textContent = `座標：(${x + 1}, ${y + 1})`;
+    
+    const lands = getActiveLandsList();
+    const land = lands.find(l => l.x === x && l.y === y);
+
+    if (!land) {
+        elements.selectedStatus.textContent = '未知';
+        elements.selectedDesc.textContent = '無法獲取該地塊的資料。';
+        elements.cellActionButtons.innerHTML = '';
+        elements.landmarkPhotoContainer.classList.add('hidden');
+        return;
+    }
+
+    let status = '空地';
+    let desc = '一片空曠的綠意草地，您可以在此建造各種玉井生產地標。';
+    let photo = null;
+
+    if (land.type === 'locked') {
+        status = '未解鎖';
+        const indexInLands = y * 6 + x;
+        // Unlocking requirements: scale with grid coordinates distance
+        const threshold = 50 + (x + y) * 35;
+        desc = `尚未開發的未知土地。解鎖此地塊需要累積答對至少 ${threshold} 題。`;
+        elements.selectedStatus.textContent = status;
+        elements.selectedStatus.style.background = 'rgba(239, 68, 68, 0.15)';
+        elements.selectedStatus.style.color = '#f87171';
+        elements.selectedDesc.textContent = desc;
+        elements.landmarkPhotoContainer.classList.add('hidden');
+
+        // Action button for unlocking
+        if (state.three.isVisiting) {
+            elements.cellActionButtons.innerHTML = '<p class="cell-desc" style="color: var(--text-dim); text-align: center;">唯讀參觀模式中</p>';
+        } else {
+            const currentCorrect = state.userProfile.totalQuestions || 0;
+            const canUnlock = currentCorrect >= threshold;
+            elements.cellActionButtons.innerHTML = `
+                <button class="btn btn-primary" ${canUnlock ? '' : 'disabled'} onclick="unlockGridCell(${x}, ${y}, ${threshold})">
+                    <i class="fas fa-key"></i> 解鎖地塊 (需要 ${threshold} 題，當前 ${currentCorrect} 題)
+                </button>
+            `;
+        }
+        return;
+    }
+
+    if (land.isMonster) {
+        status = '野怪領地';
+        desc = `警告！此地塊被野怪「${land.monsterName || '芒果小偷'}」佔領了！\n野怪血量：${land.monsterHp} / ${land.maxMonsterHp}。\n您可以挑戰攻打它，答對題目扣除其生命，擊敗可將其收復為空地並獲得高額芒果種子與金幣獎勵！`;
+        elements.selectedStatus.textContent = status;
+        elements.selectedStatus.style.background = 'rgba(239, 68, 68, 0.2)';
+        elements.selectedStatus.style.color = '#ef4444';
+        elements.selectedDesc.textContent = desc;
+        elements.landmarkPhotoContainer.classList.add('hidden');
+
+        if (state.three.isVisiting) {
+            elements.cellActionButtons.innerHTML = '<p class="cell-desc" style="color: var(--text-dim); text-align: center;">唯讀參觀模式中</p>';
+        } else {
+            const isAdjacent = isTileAdjacentToOwned(x, y);
+            elements.cellActionButtons.innerHTML = `
+                <button class="btn btn-outline" style="border-color: #ef4444; color: #ef4444; font-weight: bold;" 
+                        ${isAdjacent ? '' : 'disabled'} 
+                        onclick="triggerMonsterBattle(${x}, ${y})">
+                    <i class="fas fa-swords"></i> 攻打挑戰野怪
+                </button>
+                ${isAdjacent ? '' : '<p style="color: #f87171; font-size: 0.75rem; text-align: center; margin-top: 0.5rem; width: 100%;">領地未接壤，無法攻打</p>'}
+            `;
+        }
+        return;
+    }
+
+    if (land.type !== 'empty') {
+        const bConfig = BUILDING_TYPES[land.type];
+        if (bConfig) {
+            status = `${bConfig.name} (等級 ${land.level})`;
+            desc = bConfig.desc;
+            photo = bConfig.photo;
+        }
+    }
+
+    elements.selectedStatus.textContent = status;
+    elements.selectedStatus.style.background = 'rgba(16, 185, 129, 0.15)';
+    elements.selectedStatus.style.color = '#34d399';
+    elements.selectedDesc.textContent = desc;
+
+    // Load actual local pictures if defined
+    if (photo) {
+        elements.landmarkPhotoImg.src = photo;
+        elements.landmarkPhotoImg.alt = `實景照片：${status}`;
+        elements.landmarkPhotoContainer.classList.remove('hidden');
+    } else {
+        elements.landmarkPhotoContainer.classList.add('hidden');
+    }
+
+    // Dynamic actions buttons based on building state
+    if (state.three.isVisiting) {
+        // Visitor interactions
+        elements.cellActionButtons.innerHTML = `
+            <button class="btn btn-gold" onclick="sendBlessingToHost()">
+                <i class="fas fa-heart"></i> 給予祝福 (+50 金幣)
+            </button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
+                <button class="btn btn-outline btn-small" onclick="sendGiftToHost('egg')" title="贈送雞蛋"><i class="fas fa-egg"></i> 送蛋</button>
+                <button class="btn btn-outline btn-small" onclick="sendGiftToHost('milk')" title="贈送牛奶"><i class="fas fa-prescription-bottle-medical"></i> 送奶</button>
+            </div>
+        `;
+    } else {
+        if (land.type === 'empty') {
+            elements.cellActionButtons.innerHTML = '<p style="font-size: 0.75rem; text-align: center; color: var(--text-dim);">請在下方的建築工坊中點選想要建造的地標。</p>';
+        } else {
+            // Upgrade and harvest
+            const lastHarvest = land.lastHarvest || 0;
+            const elapsed = Date.now() - lastHarvest;
+            const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
+            const canHarvest = Q > 0;
+            const progressPct = Math.min(100, (elapsed / TERRITORY_CONFIG.productionTime) * 100);
+            
+            // Upgrade costs
+            const upgradeCost = land.level * 200;
+            const canUpgrade = (state.userProfile.gold || 0) >= upgradeCost;
+
+            let harvestText = '';
+            if (land.type === 'mango_orchard') harvestText = `收成芒果 (可收成: ${Q} 個)`;
+            else if (land.type === 'windmill') harvestText = `收集牛奶 (可收成: ${Q} 瓶)`;
+            else if (land.type === 'farm') harvestText = `收集雞蛋 (可收成: ${Q} 顆)`;
+            else if (land.type === 'goldmine' || land.type === 'yujing_sugar') harvestText = `開採金幣 (可收成: ${Q * 50} 金幣)`;
+            else harvestText = '收取資源';
+
+            elements.cellActionButtons.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 0.75rem; color: var(--text-dim);">
+                        <span>生產進度：${Math.floor(progressPct)}%</span>
+                        <span>剩餘時間：${Math.max(0, Math.ceil((TERRITORY_CONFIG.productionTime - (elapsed % TERRITORY_CONFIG.productionTime)) / 60000))} 分鐘</span>
+                    </div>
+                    <div class="farm-progress-container" style="width: 100%; margin: 0; background: rgba(0,0,0,0.5);">
+                        <div class="farm-progress-fill" style="width: ${progressPct}%"></div>
+                    </div>
+                    
+                    <button class="btn btn-gold" ${canHarvest ? '' : 'disabled'} onclick="harvestGridCell(${x}, ${y})">
+                        <i class="fas fa-basket-shopping"></i> ${harvestText}
+                    </button>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem;">
+                        <button class="btn btn-outline btn-small" ${canUpgrade ? '' : 'disabled'} onclick="upgradeGridCell(${x}, ${y}, ${upgradeCost})">
+                            <i class="fas fa-circle-arrow-up"></i> 升級 (需要 ${upgradeCost} 金幣)
+                        </button>
+                        <button class="btn btn-outline btn-small" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.3);" onclick="demolishGridCell(${x}, ${y})">
+                            <i class="fas fa-trash-can"></i> 拆除
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    }
+}
+
+// Side Control Panel: Build Shop Rendering
+function renderBuildShop() {
+    elements.buildOptionsList.innerHTML = '';
+    
+    if (state.three.isVisiting) {
+        elements.buildOptionsList.innerHTML = '<p style="grid-column: span 2; text-align: center; color: var(--text-dim); font-size: 0.75rem; padding: 1rem 0;">參觀模式下無法建造</p>';
+        return;
+    }
+
+    const { x, y } = state.three.selectedCoords;
+    const lands = getActiveLandsList();
+    const land = lands.find(l => l.x === x && l.y === y);
+
+    if (!land || land.type !== 'empty') {
+        elements.buildOptionsList.innerHTML = '<p style="grid-column: span 2; text-align: center; color: var(--text-dim); font-size: 0.75rem; padding: 1rem 0;">目前選取位置非空地，無法建造</p>';
+        return;
+    }
+
+    // Verify if castle built to unlock Yujing landmarks
+    const hasCastle = lands.some(l => l.type === 'castle');
+
+    Object.entries(BUILDING_TYPES).forEach(([key, b]) => {
+        const gold = state.userProfile.gold || 0;
+        const inv = state.userProfile.inventory || {};
+        const canAfford = gold >= b.cost;
+        let seedCheckPass = true;
+        let seedMsg = '';
+
+        if (key === 'orchard_native') {
+            const hasSeeds = (inv.seed_native || 0) + (inv.mango_seeds || 0);
+            if (hasSeeds < 5) {
+                seedCheckPass = false;
+                seedMsg = '(需5顆土/通用種子)';
+            }
+        } else if (key === 'orchard_irwin') {
+            const hasSeeds = inv.seed_irwin || 0;
+            if (hasSeeds < 5) {
+                seedCheckPass = false;
+                seedMsg = '(需5顆愛文種子)';
+            }
+        } else if (key === 'orchard_jinhuang') {
+            const hasSeeds = inv.seed_jinhuang || 0;
+            if (hasSeeds < 5) {
+                seedCheckPass = false;
+                seedMsg = '(需5顆金煌種子)';
+            }
+        } else if (key === 'orchard_yuwen') {
+            const hasSeeds = inv.seed_yuwen || 0;
+            if (hasSeeds < 5) {
+                seedCheckPass = false;
+                seedMsg = '(需5顆玉文種子)';
+            }
+        }
+        
+        // Hide Yujing Landmarks unless Castle is built (lock validation)
+        const isYujingLandmark = key.startsWith('yujing_');
+        const lockedByCastle = isYujingLandmark && !hasCastle;
+
+        const btn = document.createElement('button');
+        btn.className = 'build-btn';
+        btn.disabled = !canAfford || lockedByCastle || !seedCheckPass;
+        btn.innerHTML = `
+            <span style="font-size: 1.25rem; margin-bottom: 2px;"><i class="fas ${b.icon}"></i></span>
+            <strong style="font-size: 0.75rem;">${b.name}</strong>
+            <span class="btn-cost">${b.cost} 金幣</span>
+            ${lockedByCastle ? '<span style="font-size: 0.55rem; color: #f87171; margin-top: 2px;">(需要城堡)</span>' : ''}
+            ${seedMsg ? `<span style="font-size: 0.55rem; color: #f87171; margin-top: 2px;">${seedMsg}</span>` : ''}
+        `;
+        btn.onclick = () => buildStructure(key, b.cost);
+        elements.buildOptionsList.appendChild(btn);
+    });
+}
+
+// Action: Build Structure on Tile
+async function buildStructure(type, cost) {
+    if (!state.currentUser || !state.userProfile) return;
+    const { x, y } = state.three.selectedCoords;
+    const gold = state.userProfile.gold || 0;
+    const inv = state.userProfile.inventory || {};
+
+    if (gold < cost) {
+        showToast('金幣不足，無法建造！', 'error');
+        return;
+    }
+
+    let invUpdate = { ...inv };
+    if (type === 'orchard_native') {
+        const nativeSeeds = inv.seed_native || 0;
+        const commonSeeds = inv.mango_seeds || 0;
+        if (nativeSeeds + commonSeeds < 5) {
+            showToast('種子不足，無法建造！', 'error');
+            return;
+        }
+        if (nativeSeeds >= 5) {
+            invUpdate.seed_native = nativeSeeds - 5;
+        } else {
+            invUpdate.seed_native = 0;
+            invUpdate.mango_seeds = commonSeeds - (5 - nativeSeeds);
+        }
+    } else if (type === 'orchard_irwin') {
+        const seeds = inv.seed_irwin || 0;
+        if (seeds < 5) {
+            showToast('愛文芒果種子不足，無法建造！', 'error');
+            return;
+        }
+        invUpdate.seed_irwin = seeds - 5;
+    } else if (type === 'orchard_jinhuang') {
+        const seeds = inv.seed_jinhuang || 0;
+        if (seeds < 5) {
+            showToast('金煌芒果種子不足，無法建造！', 'error');
+            return;
+        }
+        invUpdate.seed_jinhuang = seeds - 5;
+    } else if (type === 'orchard_yuwen') {
+        const seeds = inv.seed_yuwen || 0;
+        if (seeds < 5) {
+            showToast('玉文芒果種子不足，無法建造！', 'error');
+            return;
+        }
+        invUpdate.seed_yuwen = seeds - 5;
+    }
+
+    showLoadingOverlay(true);
+    try {
+        const lands = [...state.userProfile.territory.lands];
+        const idx = lands.findIndex(l => l.x === x && l.y === y);
+        if (idx !== -1 && lands[idx].type === 'empty') {
+            lands[idx].type = type;
+            lands[idx].level = 1;
+            lands[idx].lastHarvest = Date.now();
+
+            const newGold = gold - cost;
+            await updateUserProfile(state.currentUser.uid, {
+                "territory.lands": lands,
+                gold: newGold,
+                inventory: invUpdate
+            });
+
+            state.userProfile.territory.lands = lands;
+            state.userProfile.gold = newGold;
+            state.userProfile.inventory = invUpdate;
+
+            showToast(`建造 ${BUILDING_TYPES[type].name} 成功！`, 'success');
+            updateTerritoryAssets();
+            renderTerritoryMap();
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('建造失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+// Action: Upgrade Structure
+async function upgradeGridCell(x, y, cost) {
+    if (!state.currentUser || !state.userProfile) return;
+    const gold = state.userProfile.gold || 0;
+
+    if (gold < cost) {
+        showToast('金幣不足，無法升級！', 'error');
+        return;
+    }
+
+    showLoadingOverlay(true);
+    try {
+        const lands = [...state.userProfile.territory.lands];
+        const idx = lands.findIndex(l => l.x === x && l.y === y);
+        if (idx !== -1 && lands[idx].type !== 'empty') {
+            lands[idx].level += 1;
+            lands[idx].lastHarvest = Date.now(); // Reset production timer on upgrade
+
+            const newGold = gold - cost;
+            await updateUserProfile(state.currentUser.uid, {
+                "territory.lands": lands,
+                gold: newGold
+            });
+
+            state.userProfile.territory.lands = lands;
+            state.userProfile.gold = newGold;
+
+            showToast('升級成功！生產效率提升。', 'success');
+            renderTerritoryMap();
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('升級失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+// Action: Demolish Structure
+async function demolishGridCell(x, y) {
+    if (!state.currentUser || !state.userProfile) return;
+    const lands = state.userProfile.territory.lands;
+    const idx = lands.findIndex(l => l.x === x && l.y === y);
+    if (idx === -1 || lands[idx].type === 'empty') return;
+
+    const bName = BUILDING_TYPES[lands[idx].type]?.name || '建築';
+    if (!confirm(`確定要拆除 ${bName} 嗎？拆除將退還 50% 的建造金幣。`)) return;
+
+    showLoadingOverlay(true);
+    try {
+        const returnGold = Math.floor((BUILDING_TYPES[lands[idx].type]?.cost || 0) * 0.5);
+        lands[idx].type = 'empty';
+        lands[idx].level = 0;
+        lands[idx].lastHarvest = Date.now();
+
+        const newGold = (state.userProfile.gold || 0) + returnGold;
+        await updateUserProfile(state.currentUser.uid, {
+            "territory.lands": lands,
+            gold: newGold
+        });
+
+        state.userProfile.territory.lands = lands;
+        state.userProfile.gold = newGold;
+
+        showToast('拆除成功。', 'info');
+        renderTerritoryMap();
+    } catch (e) {
+        console.error(e);
+        showToast('拆除失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+// Action: Unlock New Coordinate Tile
+async function unlockGridCell(x, y, threshold) {
+    if (!state.currentUser || !state.userProfile) return;
+    const currentCorrect = state.userProfile.totalQuestions || 0;
+    if (currentCorrect < threshold) return;
+
+    if (!confirm(`確認要解鎖座標 (${x + 1}, ${y + 1}) 的地塊嗎？`)) return;
+
+    showLoadingOverlay(true);
+    try {
+        const lands = [...state.userProfile.territory.lands];
+        const idx = lands.findIndex(l => l.x === x && l.y === y);
+        if (idx !== -1 && lands[idx].type === 'locked') {
+            lands[idx].type = 'empty';
+            lands[idx].level = 0;
+            lands[idx].lastHarvest = Date.now();
+
+            await updateUserProfile(state.currentUser.uid, {
+                "territory.lands": lands
+            });
+
+            state.userProfile.territory.lands = lands;
+            showToast('地塊解鎖成功！', 'success');
+            renderTerritoryMap();
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('解鎖失敗，請稍後重試。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+// Action: Harvest Resources from Structure
+async function harvestGridCell(x, y) {
+    if (!state.currentUser || !state.userProfile) return;
+    const lands = state.userProfile.territory.lands;
+    const idx = lands.findIndex(l => l.x === x && l.y === y);
+    if (idx === -1) return;
+
+    const land = lands[idx];
+    const elapsed = Date.now() - (land.lastHarvest || 0);
+    const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
+
+    if (Q <= 0) return;
+
+    showLoadingOverlay(true);
+    try {
+        let invUpdate = { ...(state.userProfile.inventory || {}) };
+        let goldUpdate = state.userProfile.gold || 0;
+        let msg = '';
+
+        if (land.type === 'mango_orchard' || land.type === 'orchard_native' || land.type === 'orchard_irwin' || land.type === 'orchard_jinhuang' || land.type === 'orchard_yuwen') {
+            const mangoAmount = Q * land.level;
+            const seedAmount = Q;
+            
+            const harvestMap = {
+                native: { mango: 0, seed: 0 },
+                irwin: { mango: 0, seed: 0 },
+                jinhuang: { mango: 0, seed: 0 },
+                yuwen: { mango: 0, seed: 0 }
+            };
+
+            if (land.type === 'mango_orchard') {
+                for (let i = 0; i < mangoAmount; i++) {
+                    const r = Math.random();
+                    if (r < 0.4) harvestMap.native.mango++;
+                    else if (r < 0.7) harvestMap.irwin.mango++;
+                    else if (r < 0.9) harvestMap.jinhuang.mango++;
+                    else harvestMap.yuwen.mango++;
+                }
+                for (let i = 0; i < seedAmount; i++) {
+                    const r = Math.random();
+                    if (r < 0.4) harvestMap.native.seed++;
+                    else if (r < 0.7) harvestMap.irwin.seed++;
+                    else if (r < 0.9) harvestMap.jinhuang.seed++;
+                    else harvestMap.yuwen.seed++;
+                }
+            } else if (land.type === 'orchard_native') {
+                harvestMap.native.mango = mangoAmount;
+                harvestMap.native.seed = seedAmount;
+            } else if (land.type === 'orchard_irwin') {
+                harvestMap.irwin.mango = mangoAmount;
+                harvestMap.irwin.seed = seedAmount;
+            } else if (land.type === 'orchard_jinhuang') {
+                harvestMap.jinhuang.mango = mangoAmount;
+                harvestMap.jinhuang.seed = seedAmount;
+            } else if (land.type === 'orchard_yuwen') {
+                harvestMap.yuwen.mango = mangoAmount;
+                harvestMap.yuwen.seed = seedAmount;
+            }
+
+            invUpdate.mango_native = (invUpdate.mango_native || 0) + harvestMap.native.mango;
+            invUpdate.seed_native = (invUpdate.seed_native || 0) + harvestMap.native.seed;
+            invUpdate.mango_irwin = (invUpdate.mango_irwin || 0) + harvestMap.irwin.mango;
+            invUpdate.seed_irwin = (invUpdate.seed_irwin || 0) + harvestMap.irwin.seed;
+            invUpdate.mango_jinhuang = (invUpdate.mango_jinhuang || 0) + harvestMap.jinhuang.mango;
+            invUpdate.seed_jinhuang = (invUpdate.seed_jinhuang || 0) + harvestMap.jinhuang.seed;
+            invUpdate.mango_yuwen = (invUpdate.mango_yuwen || 0) + harvestMap.yuwen.mango;
+            invUpdate.seed_yuwen = (invUpdate.seed_yuwen || 0) + harvestMap.yuwen.seed;
+
+            const parts = [];
+            if (harvestMap.native.mango > 0 || harvestMap.native.seed > 0) {
+                parts.push(`土芒果: ${harvestMap.native.mango}果/${harvestMap.native.seed}種子`);
+            }
+            if (harvestMap.irwin.mango > 0 || harvestMap.irwin.seed > 0) {
+                parts.push(`愛文: ${harvestMap.irwin.mango}果/${harvestMap.irwin.seed}種子`);
+            }
+            if (harvestMap.jinhuang.mango > 0 || harvestMap.jinhuang.seed > 0) {
+                parts.push(`金煌: ${harvestMap.jinhuang.mango}果/${harvestMap.jinhuang.seed}種子`);
+            }
+            if (harvestMap.yuwen.mango > 0 || harvestMap.yuwen.seed > 0) {
+                parts.push(`玉文: ${harvestMap.yuwen.mango}果/${harvestMap.yuwen.seed}種子`);
+            }
+            msg = `成功收成！獲得：${parts.join(', ')}`;
+        } else if (land.type === 'farm') {
+            invUpdate.egg = (invUpdate.egg || 0) + (Q * land.level);
+            msg = `成功收集 ${Q * land.level} 顆雞蛋！`;
+        } else if (land.type === 'windmill') {
+            invUpdate.milk = (invUpdate.milk || 0) + (Q * land.level);
+            msg = `成功收集 ${Q * land.level} 瓶新鮮牛奶！`;
+        } else if (land.type === 'goldmine' || land.type === 'yujing_sugar') {
+            const goldGained = Q * 50 * land.level;
+            goldUpdate += goldGained;
+            msg = `成功開採 ${goldGained} 金幣！`;
+        }
+
+        // Reset harvest timer
+        lands[idx].lastHarvest = Date.now() - (elapsed % TERRITORY_CONFIG.productionTime);
+
+        await updateUserProfile(state.currentUser.uid, {
+            "territory.lands": lands,
+            inventory: invUpdate,
+            gold: goldUpdate
+        });
+
+        state.userProfile.territory.lands = lands;
+        state.userProfile.inventory = invUpdate;
+        state.userProfile.gold = goldUpdate;
+
+        showToast(msg, 'success');
+        updateTerritoryAssets();
+        renderTerritoryMap();
+    } catch (e) {
+        console.error(e);
+        showToast('收集物資失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+}
+
+// Action: Attack Wild Monster on Tile
+function triggerMonsterBattle(x, y) {
+    const lands = state.userProfile.territory.lands;
+    const land = lands.find(l => l.x === x && l.y === y);
+    if (!land || !land.isMonster) return;
+
+    if (!isTileAdjacentToOwned(x, y)) {
+        alert('領地未接壤，無法攻打該野怪！請先解鎖與其相鄰的土地。');
+        return;
+    }
+
+    // Check if questions are loaded
+    if (!state.allQuestions || state.allQuestions.length === 0) {
+        alert('請先在主畫面選擇一個學科題庫，才能與野怪進行答題對戰！');
+        return;
+    }
+
+    if (!confirm(`確定要進入戰鬥挑戰野怪「${land.monsterName}」嗎？\n挑戰需要回答 5 題檢定題，答對對野怪造成傷害，答錯野怪會進行反擊！`)) return;
+
+    // Close territory modal
+    toggleTerritoryModal();
+
+    // Prep tile-monster as the currentMonster for battle
+    state.currentMonster = {
+        name: land.monsterName,
+        hp: land.monsterHp,
+        maxHp: land.maxMonsterHp || land.monsterHp,
+        tileCoords: { x, y },
+        icon: 'fa-dragon',
+        color: '#ef4444'
+    };
+    state.heroHp = 100;
+
+    // Pick 5 random questions from the loaded pool
+    let pool = [...state.allQuestions];
+    pool.sort(() => Math.random() - 0.5);
+    state.filteredQuestions = pool.slice(0, 5);
+
+    state.currentQuestionIndex = 0;
+    state.score = 0;
+    state.wrongQuestions = [];
+    state.practicedQuestionIds = [];
+    state.startTime = Date.now();
+    state.isRetryMode = false;
+    state.goldPerQuestion = 10; // 5 questions x 10 = 50 gold base
+
+    // Update Monster UI
+    elements.monsterNameLabel.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i> ${state.currentMonster.name}`;
+    elements.dragonSprite.innerHTML = `<i class="fas ${state.currentMonster.icon}"></i>`;
+    elements.dragonSprite.style.color = state.currentMonster.color;
+    elements.dragonSprite.style.filter = `drop-shadow(0 0 15px ${state.currentMonster.color}80)`;
+    elements.dragonHp.style.width = '100%';
+    elements.dragonHpText.textContent = '100%';
+
+    // Update Hero UI
+    elements.heroHpBar.style.width = '100%';
+    elements.heroHpText.textContent = '100%';
+
+    // Transition to quiz screen
+    elements.setupScreen.classList.add('hidden');
+    elements.quizScreen.classList.remove('hidden');
+
+    updateTimer();
+    state.timerInterval = setInterval(updateTimer, 1000);
+    showQuestion();
+}
+
+// Process Battle result for Wild Monsters inside quiz completion
+async function processMonsterBattleDefeated() {
+    if (!state.currentMonster) return;
+    const { x, y } = state.currentMonster.tileCoords;
+    const lands = [...state.userProfile.territory.lands];
+    const idx = lands.findIndex(l => l.x === x && l.y === y);
+
+    if (idx !== -1) {
+        showLoadingOverlay(true);
+        try {
+            // Liberate land tile
+            lands[idx].type = 'empty';
+            lands[idx].level = 0;
+            lands[idx].isMonster = false;
+            lands[idx].monsterHp = 0;
+            lands[idx].lastHarvest = Date.now();
+
+            // Awards
+            const goldAward = 500;
+            const seedAward = 3;
+            const newGold = (state.userProfile.gold || 0) + goldAward;
+            const inv = { ...(state.userProfile.inventory || {}) };
+            inv.mango_seeds = (inv.mango_seeds || 0) + seedAward;
+
+            await updateUserProfile(state.currentUser.uid, {
+                "territory.lands": lands,
+                gold: newGold,
+                inventory: inv
+            });
+
+            state.userProfile.territory.lands = lands;
+            state.userProfile.gold = newGold;
+            state.userProfile.inventory = inv;
+
+            alert(`戰鬥勝利！您成功收復了地塊，野怪逃跑了！\n獲得獎勵：${goldAward} 金幣與 ${seedAward} 顆芒果種子！`);
+            updateTerritoryAssets();
+        } catch (e) {
+            console.error("Failed to process monster defeat", e);
+        } finally {
+            showLoadingOverlay(false);
+            state.currentMonster = null;
+        }
+    }
+}
+
+// Web Speech API Announcement
+window.readSceneStatusAloud = () => {
+    if (!('speechSynthesis' in window)) {
+        alert("您的瀏覽器不支援語音朗讀功能");
+        return;
+    }
+    const { x, y } = state.three.selectedCoords;
+    const lands = getActiveLandsList();
+    const land = lands.find(l => l.x === x && l.y === y);
+
+    if (!land) return;
+
+    let text = `座標： ${x + 1} 之 ${y + 1}。`;
+    if (land.type === 'locked') {
+        const threshold = 50 + (x + y) * 35;
+        text += `未開發地塊。需要累積答對至少 ${threshold} 題才能解鎖。`;
+    } else if (land.isMonster) {
+        text += `野怪領地，被野怪 ${land.monsterName} 佔領。剩餘血量 ${land.monsterHp}。`;
+    } else if (land.type === 'empty') {
+        text += `空曠草地。您可以在此建造芒果園、住宅或其它地標。`;
+    } else {
+        const b = BUILDING_TYPES[land.type];
+        text += `等級 ${land.level} 的 ${b ? b.name : '地標'}。${b ? b.desc : ''}`;
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'zh-TW';
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+};
+
+// --- Social visiting and blessings ---
+
+window.visitPlayerKingdom = async (uid) => {
+    // Hide profile and other modals
+    elements.leaderboardModal.classList.add('hidden');
+    elements.profileModal.classList.add('hidden');
+    
+    showLoadingOverlay(true);
+    try {
+        const profile = await getUserProfile(uid, '');
+        if (profile) {
+            state.three.isVisiting = true;
+            state.three.visitedProfile = profile;
+            
+            // Adjust modal headings
+            document.getElementById('territory-map-title').innerHTML = `<i class="fas fa-crown"></i> 參觀：${profile.nickname} 的國度`;
+            document.getElementById('territory-map-subtitle').textContent = `正在欣賞該勇者的領土，給予祝福可增加對方的人氣與金幣！`;
+            
+            elements.territoryModal.classList.remove('hidden');
+            switchTerritoryTab('map');
+            updateTerritoryAssets();
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('載入該玩家國度失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+
+window.sendBlessingToHost = async () => {
+    if (!state.three.isVisiting || !state.three.visitedProfile || !state.currentUser) return;
+    const hostUid = state.three.visitedProfile.uid;
+    const gold = state.userProfile.gold || 0;
+
+    if (gold < 10) {
+        showToast('您的金幣不足 10 金幣，無法送出祝福！', 'error');
+        return;
+    }
+
+    showLoadingOverlay(true);
+    try {
+        // Visitor: -10 gold
+        // Host: +50 gold
+        await updateUserProfile(state.currentUser.uid, { gold: gold - 10 });
+        state.userProfile.gold = gold - 10;
+        
+        await syncUserStats(hostUid, { goldDelta: 50 });
+
+        showToast(`祝福送出成功！扣除您 10 金幣，對方獲得 50 金幣。`, 'success');
+        updateTerritoryAssets();
+
+        // Spawn 3D Heart floating particles in Three.js
+        const scene = state.three.scene;
+        if (scene) {
+            const geom = new THREE.DodecahedronGeometry(0.12);
+            const mat = getMaterial('#ef4444', true);
+            for (let i = 0; i < 5; i++) {
+                const heart = new THREE.Mesh(geom, mat);
+                heart.position.set(
+                    (Math.random() - 0.5) * 1.5,
+                    0.5 + Math.random(),
+                    (Math.random() - 0.5) * 1.5
+                );
+                scene.add(heart);
+                state.three.animatingHearts.push(heart);
+            }
+        }
+    } catch (e) {
+        console.error(e);
+        showToast('送出祝福失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+
+window.sendGiftToHost = async (item) => {
+    if (!state.three.isVisiting || !state.three.visitedProfile || !state.currentUser) return;
+    const hostUid = state.three.visitedProfile.uid;
+    const inv = state.userProfile.inventory || {};
+    const count = inv[item] || 0;
+
+    if (count <= 0) {
+        showToast(`您的背包裡沒有多的 ${item === 'egg' ? '雞蛋' : '牛奶'} 了！`, 'error');
+        return;
+    }
+
+    showLoadingOverlay(true);
+    try {
+        // Visitor inventory -1
+        const newInv = { ...inv };
+        newInv[item] = count - 1;
+        await updateUserProfile(state.currentUser.uid, { inventory: newInv });
+        state.userProfile.inventory = newInv;
+
+        // Host inventory +1
+        const hostProfile = await getUserProfile(hostUid, '');
+        const hostInv = hostProfile.inventory || {};
+        hostInv[item] = (hostInv[item] || 0) + 1;
+        await updateUserProfile(hostUid, { inventory: hostInv });
+
+        showToast(`贈送成功！已將 1 個物資送給對方。`, 'success');
+        updateTerritoryAssets();
+    } catch (e) {
+        console.error(e);
+        showToast('贈送禮物失敗。', 'error');
+    } finally {
+        showLoadingOverlay(false);
+    }
+};
+
+// Toggle Territory modal
 window.toggleTerritoryModal = () => {
     if (!state.currentUser) return;
     
     // Close profile modal if open
-    if (elements.profileModal) {
-        elements.profileModal.classList.add('hidden');
-    }
+    if (elements.profileModal) elements.profileModal.classList.add('hidden');
 
     const isHidden = elements.territoryModal.classList.toggle('hidden');
     if (!isHidden) {
+        // Open
         switchTerritoryTab('map');
         updateTerritoryAssets();
-        // Start real-time timer
         if (state.territoryInterval) clearInterval(state.territoryInterval);
-        state.territoryInterval = setInterval(updateProductionTimers, 5000); // Update every 5 seconds
+        state.territoryInterval = setInterval(updateProductionTimers, 5000); // 5 sec timer
+        
+        // Correct 3D viewport canvas size once DOM rendering settles
+        setTimeout(() => {
+            if (state.three.renderer && state.three.camera) {
+                const container = elements.threeCanvasContainer;
+                const w = container.clientWidth || 800;
+                const h = container.clientHeight || 450;
+                state.three.camera.aspect = w / h;
+                state.three.camera.updateProjectionMatrix();
+                state.three.renderer.setSize(w, h);
+            }
+        }, 80);
     } else {
+        // Close: Reset visit mode if active
+        if (state.three.isVisiting) {
+            state.three.isVisiting = false;
+            state.three.visitedProfile = null;
+            document.getElementById('territory-map-title').innerHTML = `<i class="fas fa-crown"></i> 3D 皇家疆域`;
+            document.getElementById('territory-map-subtitle').textContent = `在層狀泥岩島嶼上收復野怪、打造你的玉井王國！`;
+        }
+        
         // Stop timer
         if (state.territoryInterval) {
             clearInterval(state.territoryInterval);
@@ -2216,12 +3948,10 @@ window.toggleTerritoryModal = () => {
 };
 
 window.switchTerritoryTab = (tab) => {
-    // Update Tab Buttons
     document.querySelectorAll('.territory-tabs .tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('onclick').includes(tab));
     });
 
-    // Update Tab Content
     document.querySelectorAll('.territory-content').forEach(content => {
         content.classList.add('hidden');
     });
@@ -2234,238 +3964,42 @@ window.switchTerritoryTab = (tab) => {
 
 function updateTerritoryAssets() {
     if (!state.userProfile) return;
-    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
-    elements.territoryGold.textContent = state.userProfile.gold || 0;
+    const profile = state.three.isVisiting ? state.three.visitedProfile : state.userProfile;
+    const inv = profile.inventory || {};
+    
+    const totalSeeds = (inv.mango_seeds || 0) + (inv.seed_native || 0) + (inv.seed_irwin || 0) + (inv.seed_jinhuang || 0) + (inv.seed_yuwen || 0);
+    const totalMangoes = (inv.mango || 0) + (inv.mango_native || 0) + (inv.mango_irwin || 0) + (inv.mango_jinhuang || 0) + (inv.mango_yuwen || 0);
+    const totalDishes = (inv.mango_pudding || 0) + (inv.mango_shaved_ice || 0) + 
+                        (inv.mango_green_slush || 0) + (inv.deluxe_irwin_pudding || 0) + 
+                        (inv.premium_irwin_shaved_ice || 0) + (inv.dried_jinhuang_mango || 0) + 
+                        (inv.royal_yuwen_panna_cotta || 0);
+
+    elements.territoryGold.textContent = profile.gold || 0;
     elements.territoryEgg.textContent = inv.egg || 0;
     elements.territoryMilk.textContent = inv.milk || 0;
-    elements.territoryPudding.textContent = inv.pudding || 0;
-}
-
-function renderTerritoryMap() {
-    elements.territoryGrid.innerHTML = '';
-    const lands = state.userProfile.territory ? state.userProfile.territory.lands : [];
-    
-    // Standard 3x3 Grid (9 slots)
-    for (let i = 0; i < 9; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'land-cell';
-        cell.dataset.index = i;
-        
-        const land = lands[i];
-        if (land) {
-            cell.classList.add('farm');
-            updateLandCellContent(cell, land, i);
-        } else {
-            const threshold = TERRITORY_CONFIG.landThresholds[i] || 99999;
-            const currentCorrect = state.userProfile.totalQuestions || 0;
-            
-            if (i === lands.length) {
-                // Next available expansion slot
-                cell.classList.add('purchasable');
-                cell.innerHTML = `
-                    <div class="land-icon"><i class="fas fa-plus-circle" style="color: var(--gold);"></i></div>
-                    <div class="land-name">擴張領地</div>
-                    <div style="font-size: 0.65rem; color: var(--gold); margin-top: 4px;">需累積答對 ${threshold} 題</div>
-                `;
-                cell.onclick = () => {
-                    if (currentCorrect >= threshold) {
-                        unlockNewLand(i);
-                    } else {
-                        showToast(`還需要累積答對 ${threshold - currentCorrect} 題才能擴張！`, 'error');
-                    }
-                };
-            } else {
-                // Future locked slots
-                cell.classList.add('locked');
-                cell.innerHTML = `
-                    <div class="land-icon"><i class="fas fa-lock" style="color: rgba(255,255,255,0.2);"></i></div>
-                    <div class="land-name">未開發</div>
-                `;
-                cell.onclick = () => {
-                    showToast(`此地塊解鎖條件：累積答對 ${threshold} 題。`, 'info');
-                };
-            }
-        }
-        elements.territoryGrid.appendChild(cell);
-    }
+    elements.territoryPudding.textContent = totalDishes;
+    elements.territoryMango.textContent = totalMangoes;
+    elements.territoryMangoSeeds.textContent = totalSeeds;
 }
 
 function updateProductionTimers() {
     if (elements.territoryModal.classList.contains('hidden')) return;
-    const lands = state.userProfile.territory ? state.userProfile.territory.lands : [];
-    const cells = elements.territoryGrid.querySelectorAll('.land-cell.farm');
-    
-    cells.forEach(cell => {
-        const idx = parseInt(cell.dataset.index);
-        const land = lands[idx];
-        if (land) {
-            updateLandCellContent(cell, land, idx);
-        }
-    });
+    // Simple refresh active cell to update production percentages
+    updateActiveCellInfo();
 }
 
-function updateLandCellContent(cell, land, index) {
-    const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
-    const now = Date.now();
-    const elapsed = now - lastHarvest;
-    const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
-
-    if (Q > 0) {
-        cell.innerHTML = `
-            <div class="land-icon"><i class="fas fa-tractor" style="color: #10b981;"></i></div>
-            <div class="land-name">等級 ${land.level} 農場</div>
-            <div class="harvest-indicator">${Q}</div>
-        `;
-        cell.onclick = () => harvestLand(index);
-    } else {
-        const progressPct = Math.min(100, (elapsed / TERRITORY_CONFIG.productionTime) * 100);
-        const remainingMs = Math.max(0, TERRITORY_CONFIG.productionTime - elapsed);
-        const h = Math.floor(remainingMs / 3600000);
-        const m = Math.floor((remainingMs % 3600000) / 60000);
-        
-        cell.innerHTML = `
-            <div class="land-icon"><i class="fas fa-tractor" style="color: #10b981; opacity: 0.7;"></i></div>
-            <div class="land-name">等級 ${land.level} 農場</div>
-            <div class="farm-progress-container">
-                <div class="farm-progress-fill" style="width: ${progressPct}%"></div>
-            </div>
-            <div class="farm-progress-text">生產中 ${Math.floor(progressPct)}%</div>
-            <div class="farm-time-remaining">剩餘 ${h}時${m}分</div>
-        `;
-        cell.onclick = () => showToast('物資生產中... 請耐心等待。');
-    }
-}
-
-async function unlockNewLand(index) {
-    if (!state.currentUser || !state.userProfile) return;
-    
-    const threshold = TERRITORY_CONFIG.landThresholds[index];
-    if (state.userProfile.totalQuestions < threshold) return;
-
-    if (!confirm(`確定要消耗您的勇者榮譽（累積答對 ${threshold} 題）來擴張領地嗎？`)) return;
-
-    showLoadingOverlay(true);
-    try {
-        const lands = [...(state.userProfile.territory.lands || [])];
-        const newLand = {
-            id: `L${lands.length + 1}`,
-            type: 'farm',
-            level: 1,
-            lastHarvest: new Date()
-        };
-        lands.push(newLand);
-
-        await updateUserProfile(state.currentUser.uid, {
-            "territory.lands": lands
-        });
-
-        state.userProfile.territory.lands = lands;
-        showToast('擴張成功！新農場已投入生產。', 'success');
-        renderTerritoryMap();
-    } catch (e) {
-        console.error(e);
-        showToast('擴張失敗，請稍後再試。', 'error');
-    } finally {
-        showLoadingOverlay(false);
-    }
-}
-
-async function harvestLand(landIndex) {
-    if (!state.userProfile || !state.currentUser) return;
-    
-    showLoadingOverlay(true);
-    try {
-        let now;
-        let isTrusted = true;
-
-        const getOnlineTime = async () => {
-            // Server 1: WorldTimeAPI
-            try {
-                const resp = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC');
-                const data = await resp.json();
-                if (data && data.datetime) return new Date(data.datetime).getTime();
-            } catch (e) {
-                console.warn("WorldTimeAPI failed, trying TimeAPI.world...", e);
-            }
-
-            // Server 2: TimeAPI.world
-            try {
-                const resp = await fetch('https://timeapi.world/api/timezone/Etc/UTC');
-                const data = await resp.json();
-                if (data && data.datetime) return new Date(data.datetime).getTime();
-            } catch (e) {
-                console.warn("TimeAPI.world failed, trying TimeAPI.io...", e);
-            }
-
-            // Server 3: TimeAPI.io
-            try {
-                const resp = await fetch('https://timeapi.io/api/time/current/zone?timeZone=Etc/UTC');
-                const data = await resp.json();
-                if (data && data.dateTime) return new Date(data.dateTime).getTime();
-            } catch (e) {
-                console.warn("TimeAPI.io failed...", e);
-            }
-
-            throw new Error("All time servers failed");
-        };
-
-        try {
-            now = await getOnlineTime();
-        } catch (apiErr) {
-            console.warn("All time servers down/busy. Falling back to local device time.", apiErr);
-            now = Date.now();
-            isTrusted = false;
-        }
-
-        if (!isTrusted) {
-            showToast('時間伺服器忙碌中，已使用本地時間進行收穫。', 'info');
-        }
-        
-        const land = state.userProfile.territory.lands[landIndex];
-        const lastHarvest = land.lastHarvest ? (land.lastHarvest.toMillis ? land.lastHarvest.toMillis() : new Date(land.lastHarvest).getTime()) : 0;
-        const elapsed = now - lastHarvest;
-        const Q = Math.floor(elapsed / TERRITORY_CONFIG.productionTime);
-        
-        if (Q <= 0) {
-            alert('還不到收穫時間喔！物資正在努力生長中。');
-            return;
-        }
-
-        const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
-        const newInv = {
-            egg: (inv.egg || 0) + Q,
-            milk: (inv.milk || 0) + Q,
-            pudding: (inv.pudding || 0)
-        };
-        
-        // Update last harvest time (keep overflow)
-        const newHarvestTime = new Date(lastHarvest + (Q * TERRITORY_CONFIG.productionTime));
-        const newLands = [...state.userProfile.territory.lands];
-        newLands[landIndex].lastHarvest = newHarvestTime;
-
-        await updateUserProfile(state.currentUser.uid, {
-            inventory: newInv,
-            "territory.lands": newLands
-        });
-        
-        state.userProfile.inventory = newInv;
-        state.userProfile.territory.lands = newLands;
-        
-        alert(`收穫成功！獲得了 ${Q} 個雞蛋與 ${Q} 瓶牛奶。`);
-        updateTerritoryAssets();
-        renderTerritoryMap();
-    } catch (e) {
-        console.error("Harvest error:", e);
-        alert('收穫失敗（可能是網路問題或時間伺服器忙碌中），請稍後再試。');
-    } finally {
-        showLoadingOverlay(false);
-    }
-}
+// --- Kitchen Synthesis & Pawn Shop (Updated for Mango recipes) ---
 
 function renderKitchen() {
     elements.kitchenRecipes.innerHTML = '';
     const recipes = [
-        { id: 'pudding', name: '皇家布丁', icon: 'fa-cookie', desc: '由農場新鮮物資製成，價值連城。', cost: '1 蛋 + 1 奶 + 200 金幣', canMake: true }
+        { id: 'mango_pudding', name: '芒果布丁', icon: 'fa-cookie', desc: '玉井特產芒果，搭配鮮乳與雞蛋，香甜滑嫩！', cost: '1 芒果 + 1 蛋 + 1 奶 + 200 金幣' },
+        { id: 'mango_shaved_ice', name: '玉井芒果冰', icon: 'fa-ice-cream', desc: '夏日解暑聖品！滿滿的芒果切丁與牛奶冰沙！', cost: '2 芒果 + 2 奶 + 300 金幣' },
+        { id: 'mango_green_slush', name: '情人果土芒果青', icon: 'fa-glass-water', desc: '酸酸甜甜的古早味情人果冰，戀愛的滋味！', cost: '2 土芒果 + 100 金幣' },
+        { id: 'deluxe_irwin_pudding', name: '豪華愛文芒果布丁', icon: 'fa-cookie', desc: '選用頂級愛文芒果製成的皇家布丁，入口即化！', cost: '1 愛文芒果 + 1 蛋 + 1 奶 + 300 金幣' },
+        { id: 'premium_irwin_shaved_ice', name: '頂級愛文芒果雪花冰', icon: 'fa-snowflake', desc: '綿密雪花冰鋪滿香甜多汁的愛文芒果，無上享受！', cost: '2 愛文芒果 + 2 奶 + 500 金幣' },
+        { id: 'dried_jinhuang_mango', name: '金煌芒果乾', icon: 'fa-leaf', desc: '厚實飽滿的金煌芒果果肉低溫烘乾，香Q有勁！', cost: '3 金煌芒果 + 200 金幣' },
+        { id: 'royal_yuwen_panna_cotta', name: '皇家玉文芒果鮮奶酪', icon: 'fa-cheese', desc: '香濃玉文芒果淋在滑順的義式鮮奶酪上，貴族般的美味！', cost: '2 玉文芒果 + 2 奶 + 400 金幣' }
     ];
 
     recipes.forEach(r => {
@@ -2489,22 +4023,42 @@ function renderKitchen() {
 async function synthesizeItem(recipeId) {
     if (!state.userProfile || !state.currentUser) return;
     const config = TERRITORY_CONFIG.synthesis[recipeId];
-    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    if (!config) return;
+    
+    const inv = state.userProfile.inventory || {};
     const gold = state.userProfile.gold || 0;
 
-    if (gold < config.gold || (inv.egg || 0) < config.egg || (inv.milk || 0) < config.milk) {
-        showToast('物資或金幣不足，無法製作！', 'error');
+    // Check Gold
+    if (gold < (config.gold || 0)) {
+        showToast('金幣不足，無法製作！', 'error');
         return;
+    }
+
+    // Check Materials
+    for (const [material, amount] of Object.entries(config)) {
+        if (material === 'gold' || material === 'reward') continue;
+        const owned = inv[material] || 0;
+        if (owned < amount) {
+            showToast('物資不足，無法製作！', 'error');
+            return;
+        }
     }
 
     showLoadingOverlay(true);
     try {
-        const newInv = {
-            egg: (inv.egg || 0) - config.egg,
-            milk: (inv.milk || 0) - config.milk,
-            pudding: (inv.pudding || 0) + 1
-        };
-        const newGold = gold - config.gold;
+        const newInv = { ...inv };
+        
+        // Deduct materials
+        for (const [material, amount] of Object.entries(config)) {
+            if (material === 'gold' || material === 'reward') continue;
+            newInv[material] = (newInv[material] || 0) - amount;
+        }
+        
+        // Add reward
+        const reward = config.reward;
+        newInv[reward] = (newInv[reward] || 0) + 1;
+        
+        const newGold = gold - (config.gold || 0);
 
         await updateUserProfile(state.currentUser.uid, {
             inventory: newInv,
@@ -2514,7 +4068,17 @@ async function synthesizeItem(recipeId) {
         state.userProfile.inventory = newInv;
         state.userProfile.gold = newGold;
 
-        showToast('製作成功！皇家布丁已存入背包。', 'success');
+        const recipeNames = {
+            mango_pudding: '芒果布丁',
+            mango_shaved_ice: '玉井芒果冰',
+            mango_green_slush: '情人果土芒果青',
+            deluxe_irwin_pudding: '豪華愛文芒果布丁',
+            premium_irwin_shaved_ice: '頂級愛文芒果雪花冰',
+            dried_jinhuang_mango: '金煌芒果乾',
+            royal_yuwen_panna_cotta: '皇家玉文芒果鮮奶酪'
+        };
+
+        showToast(`製作成功！${recipeNames[reward] || '料理'} 已存入背包。`, 'success');
         updateTerritoryAssets();
         renderKitchen();
     } catch (e) {
@@ -2527,11 +4091,35 @@ async function synthesizeItem(recipeId) {
 
 function renderTerritoryPawnShop() {
     elements.territoryPawnInventory.innerHTML = '';
-    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    const inv = state.userProfile.inventory || {};
     const sellables = [
         { id: 'egg', name: '雞蛋', icon: 'fa-egg', color: '#fff176', price: TERRITORY_CONFIG.pawnShop.egg, count: inv.egg || 0 },
         { id: 'milk', name: '牛奶', icon: 'fa-prescription-bottle-medical', color: '#e3f2fd', price: TERRITORY_CONFIG.pawnShop.milk, count: inv.milk || 0 },
-        { id: 'pudding', name: '皇家布丁', icon: 'fa-cookie', color: '#ffb74d', price: TERRITORY_CONFIG.pawnShop.pudding, count: inv.pudding || 0 }
+        
+        // Common
+        { id: 'mango', name: '玉井芒果', icon: 'fa-lemon', color: '#ffb74d', price: TERRITORY_CONFIG.pawnShop.mango, count: inv.mango || 0 },
+        { id: 'mango_seeds', name: '芒果種子', icon: 'fa-seedling', color: '#81c784', price: TERRITORY_CONFIG.pawnShop.mango_seeds, count: inv.mango_seeds || 0 },
+        { id: 'mango_pudding', name: '芒果布丁', icon: 'fa-cookie', color: '#ffb74d', price: TERRITORY_CONFIG.pawnShop.mango_pudding, count: inv.mango_pudding || 0 },
+        { id: 'mango_shaved_ice', name: '玉井芒果冰', icon: 'fa-ice-cream', color: '#ffb74d', price: TERRITORY_CONFIG.pawnShop.mango_shaved_ice, count: inv.mango_shaved_ice || 0 },
+
+        // Specialized seeds
+        { id: 'seed_native', name: '土芒果種子', icon: 'fa-seedling', color: '#c8e6c9', price: TERRITORY_CONFIG.pawnShop.seed_native, count: inv.seed_native || 0 },
+        { id: 'seed_irwin', name: '愛文芒果種子', icon: 'fa-seedling', color: '#a5d6a7', price: TERRITORY_CONFIG.pawnShop.seed_irwin, count: inv.seed_irwin || 0 },
+        { id: 'seed_jinhuang', name: '金煌芒果種子', icon: 'fa-seedling', color: '#81c784', price: TERRITORY_CONFIG.pawnShop.seed_jinhuang, count: inv.seed_jinhuang || 0 },
+        { id: 'seed_yuwen', name: '玉文芒果種子', icon: 'fa-seedling', color: '#66bb6a', price: TERRITORY_CONFIG.pawnShop.seed_yuwen, count: inv.seed_yuwen || 0 },
+
+        // Specialized mangoes
+        { id: 'mango_native', name: '土芒果', icon: 'fa-lemon', color: '#81c784', price: TERRITORY_CONFIG.pawnShop.mango_native, count: inv.mango_native || 0 },
+        { id: 'mango_irwin', name: '愛文芒果', icon: 'fa-lemon', color: '#ff8a65', price: TERRITORY_CONFIG.pawnShop.mango_irwin, count: inv.mango_irwin || 0 },
+        { id: 'mango_jinhuang', name: '金煌芒果', icon: 'fa-lemon', color: '#ffd54f', price: TERRITORY_CONFIG.pawnShop.mango_jinhuang, count: inv.mango_jinhuang || 0 },
+        { id: 'mango_yuwen', name: '玉文芒果', icon: 'fa-lemon', color: '#f06292', price: TERRITORY_CONFIG.pawnShop.mango_yuwen, count: inv.mango_yuwen || 0 },
+
+        // Specialized dishes
+        { id: 'mango_green_slush', name: '情人果土芒果青', icon: 'fa-glass-water', color: '#a5d6a7', price: TERRITORY_CONFIG.pawnShop.mango_green_slush, count: inv.mango_green_slush || 0 },
+        { id: 'deluxe_irwin_pudding', name: '豪華愛文芒果布丁', icon: 'fa-cookie', color: '#ffb74d', price: TERRITORY_CONFIG.pawnShop.deluxe_irwin_pudding, count: inv.deluxe_irwin_pudding || 0 },
+        { id: 'premium_irwin_shaved_ice', name: '頂級愛文芒果雪花冰', icon: 'fa-snowflake', color: '#e3f2fd', price: TERRITORY_CONFIG.pawnShop.premium_irwin_shaved_ice, count: inv.premium_irwin_shaved_ice || 0 },
+        { id: 'dried_jinhuang_mango', name: '金煌芒果乾', icon: 'fa-leaf', color: '#ffd54f', price: TERRITORY_CONFIG.pawnShop.dried_jinhuang_mango, count: inv.dried_jinhuang_mango || 0 },
+        { id: 'royal_yuwen_panna_cotta', name: '皇家玉文芒果鮮奶酪', icon: 'fa-cheese', color: '#f8bbd0', price: TERRITORY_CONFIG.pawnShop.royal_yuwen_panna_cotta, count: inv.royal_yuwen_panna_cotta || 0 }
     ];
 
     sellables.forEach(s => {
@@ -2559,7 +4147,7 @@ function renderTerritoryPawnShop() {
 
 async function sellToPawnShop(itemId) {
     if (!state.userProfile || !state.currentUser) return;
-    const inv = state.userProfile.inventory || { egg: 0, milk: 0, pudding: 0 };
+    const inv = state.userProfile.inventory || {};
     const count = inv[itemId] || 0;
     if (count <= 0) return;
 
@@ -2601,6 +4189,11 @@ window.toggleTerritoryModal = toggleTerritoryModal;
 window.switchTerritoryTab = switchTerritoryTab;
 window.openChallengeSelection = openChallengeSelection;
 window.openChallenge = openChallenge;
+window.triggerMonsterBattle = triggerMonsterBattle;
+window.unlockGridCell = unlockGridCell;
+window.harvestGridCell = harvestGridCell;
+window.upgradeGridCell = upgradeGridCell;
+window.demolishGridCell = demolishGridCell;
 
 // --- Warrior Battle System ---
 
