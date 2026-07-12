@@ -1,0 +1,8 @@
+node_modules
+.git
+.venv
+.DS_Store
+*.py
+*.gs
+scratch
+原始資料
