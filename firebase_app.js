@@ -21,7 +21,7 @@ const googleProvider = new GoogleAuthProvider();
 export const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);
 export const registerUser = (email, password) => {
   const normalizedEmail = email.trim().toLowerCase();
-  if (normalizedEmail !== "adamzombie85@gmail.com" && !normalizedEmail.endsWith("@apps.ycvs.tn.edu.tw")) {
+  if (normalizedEmail !== "adamzombie85@gmail.com" && normalizedEmail !== "ycvs176@gmail.com" && !normalizedEmail.endsWith("@apps.ycvs.tn.edu.tw")) {
     throw new Error("auth/domain-restricted: 僅限使用學校信箱 (@apps.ycvs.tn.edu.tw) 進行註冊與登入！");
   }
   return createUserWithEmailAndPassword(auth, email, password);

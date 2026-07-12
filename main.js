@@ -484,7 +484,7 @@ async function setupUserSession(user) {
     if (user) {
         // 1. School Domain Validation Constraint
         const normalizedEmail = user.email ? user.email.trim().toLowerCase() : '';
-        if (!devMode && normalizedEmail !== "adamzombie85@gmail.com" && !normalizedEmail.endsWith("@apps.ycvs.tn.edu.tw")) {
+        if (!devMode && normalizedEmail !== "adamzombie85@gmail.com" && normalizedEmail !== "ycvs176@gmail.com" && !normalizedEmail.endsWith("@apps.ycvs.tn.edu.tw")) {
             alert("登入失敗：本網站僅限使用管理者信箱或學校網域信箱 (@apps.ycvs.tn.edu.tw) 進行登入！");
             state.currentUser = null;
             await logoutUser();
@@ -2559,9 +2559,10 @@ const addStudentManualSubmit = async () => {
     }
     
     // Warning domain check
-    if (!email.endsWith('@apps.ycvs.tn.edu.tw')) {
-        alert('注意：學生僅限使用學校信箱 (@apps.ycvs.tn.edu.tw)！');
-        return;
+    if (!email.endsWith('@apps.ycvs.tn.edu.tw') && email !== 'adamzombie85@gmail.com' && email !== 'ycvs176@gmail.com') {
+        if (!confirm('提示：非學校網域信箱 (@apps.ycvs.tn.edu.tw) 可能無法直接註冊登入。是否確定要新增？')) {
+            return;
+        }
     }
     
     showLoadingOverlay(true);
@@ -3604,9 +3605,9 @@ function onCanvasKeyDown(event) {
 // Retrieve active lands array based on visiting/owner state
 function getActiveLandsList() {
     if (state.three.isVisiting && state.three.visitedProfile) {
-        return (state.three.visitedProfile.territory && state.three.visitedProfile.territory.lands) || [];
+        return (state.three.visitedProfile?.territory?.lands) || [];
     }
-    return (state.userProfile.territory && state.userProfile.territory.lands) || [];
+    return (state.userProfile?.territory?.lands) || [];
 }
 
 // Main 3D Territory Grid Generator
