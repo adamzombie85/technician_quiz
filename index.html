@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>勇者題庫：惡龍討伐戰 - 丙級檢定練習</title>
-    <meta name="description" content="結合勇者鬥惡龍元素的丙級檢定練習網站，讓你一邊練習一邊打敗惡龍！">
+    <title>噍吧哖少年的奮鬥 - 丙級檢定練習</title>
+    <meta name="description" content="結合少年鬥挑戰元素的丙級檢定練習網站，讓你一邊練習一邊打敗挑戰！">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/fonts/iansui@latest/index.css">
@@ -22,14 +22,15 @@
     <script src="https://unpkg.com/docx@8.2.2/build/index.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
-<body class="dark-theme">
+<body class="light-theme">
+    <button id="escape-home-btn" class="btn btn-home" onclick="location.reload();" aria-label="回首頁"><i class="fas fa-home"></i> 🏠 回首頁</button>
     <a href="#app" class="skip-link">跳過主選單並進入主要內容</a>
 
     <!-- Global Preloader -->
     <div id="global-preloader">
         <div class="preloader-content">
-            <div class="preloader-logo"><i class="fas fa-dragon"></i></div>
-            <h2 class="glow-text" style="font-size: 1.5rem;">勇者集結中...</h2>
+            <div class="preloader-logo"><i class="fas fa-tree"></i></div>
+            <h2 class="glow-text" style="font-size: 1.5rem;">果園集結中...</h2>
             <div class="progress-container">
                 <div id="preloader-bar" class="progress-bar"></div>
             </div>
@@ -41,7 +42,7 @@
     <!-- Top Controls (View, A11y & Auth) -->
     <div class="top-controls" style="justify-content: space-between;">
         <div id="site-title" class="site-title" style="cursor: pointer; display: flex; align-items: center; gap: 0.5rem; font-size: 1.25rem; font-weight: bold; color: var(--gold);">
-            <i class="fas fa-dragon"></i> 勇者題庫
+            <i class="fas fa-tree"></i> 噍吧哖少年的奮鬥
         </div>
         <div style="display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
             <button id="admin-btn" class="control-btn hidden" onclick="toggleAdminModal()" title="管理介面" style="border-color: var(--gold); color: var(--gold);">
@@ -66,10 +67,21 @@
     <div id="app">
         <!-- Setup Screen -->
         <section id="setup-screen" class="screen active">
+            
+            <!-- My Tasks Section -->
+            <div class="glass-card my-tasks-section" style="margin-bottom: 2rem; background: rgba(16, 185, 129, 0.1); border: 2px solid var(--success);">
+                <h3 class="glow-text" style="text-align: center; margin-bottom: 1.5rem; color: var(--success); text-shadow: none;">
+                    <i class="fas fa-clipboard-list"></i> 教師指派任務 (獎勵加倍)
+                </h3>
+                <div id="my-tasks-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="text-align: center; color: var(--text-dim);">載入中... 請先登入</div>
+                </div>
+            </div>
+    
             <!-- Homepage Leaderboard Section -->
             <div class="glass-card leaderboard-homepage" style="margin-bottom: 2rem;">
                 <h3 class="glow-text" style="text-align: center; margin-bottom: 1.5rem;">
-                    <i class="fas fa-trophy"></i> 全服勇者榮譽榜
+                    <i class="fas fa-trophy"></i> 全服少年榮譽榜
                 </h3>
                 <div class="table-container" style="max-height: 250px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--gold) transparent;">
                     <table class="leaderboard-table">
@@ -77,7 +89,7 @@
                             <tr>
                                 <th>排名</th>
                                 <th>化身</th>
-                                <th>勇者暱稱</th>
+                                <th>少年暱稱</th>
                                 <th>等級</th>
                                 <th>累積題數</th>
                             </tr>
@@ -107,9 +119,12 @@
             </div>
 
             <div class="glass-card main-card">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <img src="assets/title_image.jpg" alt="Ta-Pa-Nî Siàu-Liân Ê Hùn-Tàu" style="max-width: 100%; border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                </div>
                 <header>
-                    <h1 class="glow-text"><i class="fas fa-dragon"></i> 勇者題庫</h1>
-                    <p class="subtitle">準備好挑戰惡龍了嗎？選擇你的戰場！</p>
+                    <h1 class="glow-text"><i class="fas fa-tree"></i> 噍吧哖少年的奮鬥</h1>
+                    <p class="subtitle">準備好開拓果園了嗎？選擇你的戰場！</p>
                 </header>
 
 
@@ -186,7 +201,7 @@
                     </div>
                     <div class="dragon-area">
                         <div id="dragon-sprite" class="dragon-idle">
-                            <i class="fas fa-dragon"></i>
+                            <i class="fas fa-tree"></i>
                         </div>
                     </div>
                 </div>
@@ -195,7 +210,7 @@
                     <!-- Monster HP -->
                     <div class="hp-bar-container dragon-hp-container" style="margin: 0;">
                         <div class="hp-label-container">
-                            <span id="monster-name-label"><i class="fas fa-dragon"></i> 惡龍血條</span>
+                            <span id="monster-name-label"><i class="fas fa-tree"></i> 挑戰血條</span>
                             <span id="dragon-hp-text">100%</span>
                         </div>
                         <div class="hp-bar">
@@ -205,7 +220,7 @@
                     <!-- Hero HP -->
                     <div class="hp-bar-container hero-hp-container" style="margin: 0;">
                         <div class="hp-label-container">
-                            <span style="color: var(--primary);"><i class="fas fa-shield-alt"></i> 勇者生命</span>
+                            <span style="color: var(--primary);"><i class="fas fa-shield-alt"></i> 少年生命</span>
                             <span id="hero-hp-text">100%</span>
                         </div>
                         <div class="hp-bar" style="border-color: rgba(59, 130, 246, 0.3);">
@@ -298,18 +313,18 @@
                 </div>
                 
                 <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;" id="admin-tabs-container">
-                    <button class="btn btn-outline btn-primary" onclick="switchAdminTab('users')" id="admin-tab-users-btn">勇者清單</button>
+                    <button class="btn btn-outline btn-primary" onclick="switchAdminTab('users')" id="admin-tab-users-btn">少年清單</button>
                     <button class="btn btn-outline" onclick="switchAdminTab('teachers')" id="admin-tab-teachers-btn">教師管理</button>
                     <button class="btn btn-outline" onclick="switchAdminTab('feedbacks')" id="admin-tab-feedbacks-btn">建議回饋箱</button>
                     <button class="btn btn-outline" onclick="switchAdminTab('records')" id="admin-tab-records-btn">全服練習紀錄</button>
                 </div>
 
                 <div id="admin-tab-users" class="table-wrapper">
-                    <div style="margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-dim);"><i class="fas fa-info-circle"></i> 點擊勇者名字可查看個人詳細紀錄</div>
+                    <div style="margin-bottom: 0.5rem; font-size: 0.875rem; color: var(--text-dim);"><i class="fas fa-info-circle"></i> 點擊少年名字可查看個人詳細紀錄</div>
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>勇者</th>
+                                <th>少年</th>
                                 <th>等級</th>
                                 <th>答對總數</th>
                                 <th>總時間</th>
@@ -386,7 +401,7 @@
 
                 <div id="admin-tab-userprofile" class="hidden">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                        <h3 style="color: var(--gold); margin: 0;">勇者詳細資料</h3>
+                        <h3 style="color: var(--gold); margin: 0;">少年詳細資料</h3>
                         <button class="btn btn-outline btn-small" onclick="switchAdminTab('users')"><i class="fas fa-arrow-left"></i> 返回列表</button>
                     </div>
                     <div id="admin-userprofile-content" style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 0.5rem;">
@@ -396,7 +411,7 @@
 
                 <div id="admin-tab-detail" class="table-wrapper hidden">
                     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
-                        <h3 id="admin-detail-name" style="color: var(--gold); margin: 0;">勇者詳情</h3>
+                        <h3 id="admin-detail-name" style="color: var(--gold); margin: 0;">少年詳情</h3>
                         <button class="btn btn-outline btn-small" onclick="switchAdminTab('users')"><i class="fas fa-arrow-left"></i> 返回列表</button>
                     </div>
                     <table class="admin-table">
@@ -417,7 +432,7 @@
                         <thead>
                             <tr>
                                 <th>時間</th>
-                                <th>勇者</th>
+                                <th>少年</th>
                                 <th>領域</th>
                                 <th>題數</th>
                                 <th>得分</th>
@@ -442,7 +457,7 @@
                             <tr>
                                 <th>排名</th>
                                 <th>頭像</th>
-                                <th>勇者暱稱</th>
+                                <th>少年暱稱</th>
                                 <th>等級</th>
                                 <th>累積題數</th>
                             </tr>
@@ -497,7 +512,7 @@
         <div id="auth-modal" class="modal hidden">
             <div class="glass-card modal-content" style="max-width: 400px;">
                 <div class="modal-header">
-                    <h2 id="auth-title" style="text-align: center; width: 100%;"><i class="fas fa-user-circle"></i> 勇者登入</h2>
+                    <h2 id="auth-title" style="text-align: center; width: 100%;"><i class="fas fa-user-circle"></i> 少年登入</h2>
                     <button class="close-modal" onclick="document.getElementById('auth-modal').classList.add('hidden')">&times;</button>
                 </div>
                 <div style="text-align: center; margin: 1.5rem 0;">
@@ -516,7 +531,7 @@
         <div id="profile-modal" class="modal hidden">
             <div class="glass-card modal-content" style="max-width: 500px;">
                 <div class="modal-header">
-                    <h2><i class="fas fa-address-card"></i> 勇者檔案</h2>
+                    <h2><i class="fas fa-address-card"></i> 少年檔案</h2>
                     <button id="close-profile-modal" class="close-modal" onclick="document.getElementById('profile-modal').classList.add('hidden')">&times;</button>
                 </div>
                 
@@ -526,10 +541,10 @@
                     </div>
                     <div class="profile-info">
                         <div class="form-group" style="margin-bottom: 0.5rem;">
-                            <label style="font-size: 0.75rem;">勇者暱稱 (排行榜用)</label>
-                            <input type="text" id="profile-nickname" placeholder="勇者暱稱" style="font-size: 1.25rem; font-weight: bold; width: 100%;">
+                            <label style="font-size: 0.75rem;">少年暱稱 (排行榜用)</label>
+                            <input type="text" id="profile-nickname" placeholder="少年暱稱" style="font-size: 1.25rem; font-weight: bold; width: 100%;">
                         </div>
-                        <div class="level-badge" id="profile-level-badge">LV 1 新手勇者</div>
+                        <div class="level-badge" id="profile-level-badge">LV 1 新手少年</div>
                     </div>
                 </div>
 
@@ -659,18 +674,14 @@
                 <!-- Gold & Actions -->
                 <div class="stats-grid" style="grid-template-columns: 1fr; margin-bottom: 1.5rem;">
                     <div class="stat-item" style="padding: 1rem; border-color: var(--gold); background: rgba(251, 191, 36, 0.05);">
-                        <div class="stat-label" style="color: var(--gold);"><i class="fas fa-coins"></i> 目前金幣</div>
+                        <div class="stat-label" style="color: var(--gold);"><i class="fas fa-coins"></i> 目前芒果幣</div>
                         <div id="profile-gold" class="stat-value" style="font-size: 2rem; color: var(--gold);">0</div>
                     </div>
                 </div>
 
                 <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
-                    <button id="open-gallery-btn" class="btn btn-outline" style="flex: 1; border-color: var(--primary); color: var(--primary);">
-                        <i class="fas fa-palette"></i> 名畫收藏
-                    </button>
-                    <button id="open-pawn-btn" class="btn btn-outline" style="flex: 1; border-color: var(--success); color: var(--success);">
-                        <i class="fas fa-shop"></i> 冒險當鋪
-                    </button>
+                    
+                    
                 </div>
 
                 <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
@@ -684,9 +695,9 @@
         <div id="prologue-modal" class="modal hidden">
             <div class="glass-card modal-content" style="max-width: 600px; text-align: center;">
                 <div class="prologue-icon">
-                    <i class="fas fa-dragon" style="color: var(--danger); font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.5));"></i>
+                    <i class="fas fa-tree" style="color: var(--danger); font-size: 5rem; margin-bottom: 1rem; filter: drop-shadow(0 0 20px rgba(239, 68, 68, 0.5));"></i>
                 </div>
-                <h2 class="glow-text" style="font-size: 1.5rem; margin-bottom: 2rem;">名畫奪還戰：勇者的使命</h2>
+                <h2 class="glow-text" style="font-size: 1.5rem; margin-bottom: 2rem;">名畫奪還戰：少年的使命</h2>
                 <div id="prologue-text" class="prologue-text">
                     <!-- Text will be typed here -->
                 </div>
@@ -719,20 +730,7 @@
             </div>
         </div>
 
-        <!-- Private Gallery Modal -->
-        <div id="gallery-modal" class="modal hidden">
-            <div class="glass-card modal-content">
-                <div class="modal-header">
-                    <h2><i class="fas fa-palette"></i> 勇者的私人畫廊</h2>
-                    <button class="close-modal" onclick="document.getElementById('gallery-modal').classList.add('hidden')">&times;</button>
-                </div>
-                <div id="gallery-container" class="gallery-grid">
-                    <!-- Paintings injected here -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Pawn Shop Modal -->
+        
         <div id="pawn-modal" class="modal hidden">
             <div class="glass-card modal-content">
                 <div class="modal-header">
@@ -758,7 +756,7 @@
                 <div id="honor-message-container" class="hidden" style="margin: 1rem 0; padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 1rem; border: 1px dashed var(--gold);">
                     <p style="color: var(--gold); font-weight: bold; margin-bottom: 0.5rem;"><i class="fas fa-crown"></i> 榮登前三名！留下上榜感言：</p>
                     <input type="text" id="honor-message-input" maxlength="20" placeholder="限20字以內..." style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--gold); color: white; padding: 0.5rem; border-radius: 0.5rem; text-align: center;">
-                    <p style="font-size: 0.7rem; color: #f87171; margin-top: 0.5rem;">提醒：請勿留下不雅或人身攻擊文字，違規者將被清除留言，情節嚴重者最重將處以「刪除金幣」之處分。</p>
+                    <p style="font-size: 0.7rem; color: #f87171; margin-top: 0.5rem;">提醒：請勿留下不雅或人身攻擊文字，違規者將被清除留言，情節嚴重者最重將處以「刪除芒果幣」之處分。</p>
                 </div>
 
                 <button class="btn btn-primary" onclick="closeBattleResult()">確定</button>
@@ -854,7 +852,7 @@
                 <div id="territory-tab-kitchen" class="territory-content hidden">
                     <div class="territory-header">
                         <h2 class="glow-text"><i class="fas fa-fire-burner"></i> 皇家廚房</h2>
-                        <p class="subtitle">合成高級玉井芒果料理，賺取更高額的金幣回報！</p>
+                        <p class="subtitle">合成高級玉井芒果料理，賺取更高額的芒果幣回報！</p>
                     </div>
                     <div id="kitchen-recipes" class="recipe-list">
                         <!-- Recipes will be injected here -->
@@ -1011,7 +1009,7 @@
                         <span id="bet-display" style="font-size: 1.5rem; font-weight: bold; min-width: 100px;">500</span>
                         <button class="btn btn-outline btn-small" onclick="adjustBet(1)">+</button>
                     </div>
-                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">單次挑戰限額：500 ~ 2000 金幣 (以 100 為單位)</p>
+                    <p style="font-size: 0.75rem; color: var(--text-dim); margin-top: 0.5rem;">單次挑戰限額：500 ~ 2000 芒果幣 (以 100 為單位)</p>
                 </div>
                 <!-- Battle Setup: Subject and Category Selection -->
                 <div class="form-group" style="text-align: left; margin-top: 1rem;">
@@ -1043,7 +1041,7 @@
                     <button class="close-modal" onclick="document.getElementById('challenge-selection-modal').classList.add('hidden')">&times;</button>
                 </div>
                 <div id="challenge-list-container" class="challenge-list-container" style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
-                    <!-- 勇者列表將由 JS 注入 -->
+                    <!-- 少年列表將由 JS 注入 -->
                 </div>
             </div>
         </div>
@@ -1074,7 +1072,7 @@
                 <div class="loading-spinner">
                     <i class="fas fa-shield-halved"></i>
                 </div>
-                <div class="loading-text">勇者整備中...</div>
+                <div class="loading-text">少年整備中...</div>
             </div>
         </div>
     </div>

@@ -11,6 +11,7 @@ import {
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
 import * as THREE from "three";
 import { OrbitControls } from "https://unpkg.com/three@0.128.0/examples/jsm/controls/OrbitControls.js";
+import { fetchMyTasks, saveRecordToGAS, saveTaskToGAS } from './api_sync.js';
 
 // Main Application Logic
 if (window.location.protocol === 'file:') {
@@ -60,7 +61,7 @@ const state = {
         { name: '魔力藥水', icon: '🧪', price: 100 },
         { name: '勇者披風', icon: '🧥', price: 200 },
         { name: '幸運護符', icon: '🧿', price: 150 },
-        { name: '惡龍的鱗片', icon: '💎', price: 500 },
+        { name: '挑戰的鱗片', icon: '💎', price: 500 },
         { name: '古老的神像', icon: '🗿', price: 1000 }
     ],
     monsterPool: [
@@ -341,7 +342,7 @@ function migrateUserData() {
             });
             state.userProfile.paintings[newName] = fragments;
             
-            console.log("已遷移名畫進度:", newName, state.userProfile.puzzlePieces);
+            console.log("已遷移成就進度:", newName, state.userProfile.puzzlePieces);
             
             // Sync immediately after migration
             syncUserStats(state.currentUser.uid, { 
@@ -384,7 +385,7 @@ function toggleMusic(forceState) {
     if (isMusicMuted) {
         elements.bgMusic.pause();
     } else {
-        elements.bgMusic.play().catch(e => console.log("Music play blocked:", e));
+        elements.// bgMusic.play().catch(e => console.log("Music play blocked:", e));
     }
     updateMusicSettings();
 }
@@ -394,7 +395,7 @@ elements.musicTrackSelect.addEventListener('change', (e) => {
     musicTrack = e.target.value;
     localStorage.setItem('music_track', musicTrack);
     elements.bgMusic.src = musicTrack;
-    if (!isMusicMuted) elements.bgMusic.play().catch(e => console.log("Play failed:", e));
+    if (!isMusicMuted) elements.// bgMusic.play().catch(e => console.log("Play failed:", e));
 });
 
 elements.musicVolumeSlider.addEventListener('input', (e) => {
@@ -415,14 +416,14 @@ if (elements.musicToggleBtn) {
 // Handle Autoplay Policy
 document.body.addEventListener('click', () => {
     if (!isMusicMuted && elements.bgMusic.paused) {
-        elements.bgMusic.play().catch(e => console.log("Still blocked:", e));
+        elements.// bgMusic.play().catch(e => console.log("Still blocked:", e));
     }
 }, { once: true });
 
 // Initial Load
 updateMusicSettings();
 if (!isMusicMuted) {
-    elements.bgMusic.play().catch(e => console.log("Initial play blocked:", e));
+    elements.// bgMusic.play().catch(e => console.log("Initial play blocked:", e));
 }
 elements.startBtn.addEventListener('click', startQuiz);
 elements.retryWrongBtn.addEventListener('click', retryWrongQuestions);
@@ -623,11 +624,46 @@ async function setupUserSession(user) {
             const { getUserProgress } = await import('./firebase_app.js');
             state.userProgress = await getUserProgress(user.uid);
             if (state.selectedSubject) renderMasteryStats();
+            
+            // Load Teacher Tasks from GAS
+            await renderMyTasks(user.email);
         } catch (e) {
             console.error("Failed to load user progress:", e);
         }
     } else {
         state.userProgress = { scores: {} };
+        const tasksList = document.getElementById('my-tasks-list');
+        if (tasksList) tasksList.innerHTML = '<div style="text-align: center; color: var(--text-dim);">請先登入以查看任務</div>';
+    }
+}
+
+async function renderMyTasks(email) {
+    const tasksList = document.getElementById('my-tasks-list');
+    if (!tasksList) return;
+    
+    tasksList.innerHTML = '<div style="text-align: center; color: var(--text-dim);">任務載入中...</div>';
+    
+    try {
+        const tasks = await fetchMyTasks(email);
+        if (tasks && tasks.length > 0) {
+            let html = '';
+            tasks.forEach(task => {
+                html += `
+                <div style="background: var(--card-bg); border-radius: 0.5rem; padding: 1rem; box-shadow: var(--shadow); border-left: 4px solid var(--success);">
+                    <h4 style="margin: 0 0 0.5rem 0; color: var(--text-dark);">${task.subject}</h4>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.9rem; color: var(--text-dim);">
+                        <span><i class="far fa-calendar-alt"></i> ${task.startDate.split('T')[0]} ~ ${task.endDate.split('T')[0]}</span>
+                        <span style="color: var(--success); font-weight: bold;">獎勵加倍中</span>
+                    </div>
+                </div>`;
+            });
+            tasksList.innerHTML = html;
+        } else {
+            tasksList.innerHTML = '<div style="text-align: center; color: var(--text-dim);">目前沒有指派任務</div>';
+        }
+    } catch (e) {
+        console.error("Error rendering tasks:", e);
+        tasksList.innerHTML = '<div style="text-align: center; color: var(--danger);">載入任務失敗</div>';
     }
 }
 
@@ -1204,7 +1240,7 @@ function triggerHitEffect() {
     // 勇者攻擊動畫
     elements.heroSprite.classList.add('hero-attack');
     
-    // 延遲播放惡龍受擊與劍光 (配合揮劍的時機點)
+    // 延遲播放挑戰受擊與劍光 (配合揮劍的時機點)
     setTimeout(() => {
         elements.dragonSprite.classList.remove('dragon-idle');
         elements.dragonSprite.classList.add('dragon-hit');
@@ -1400,14 +1436,14 @@ async function endQuiz(isGiveUp = false) {
         const resultAnimImg = document.getElementById('result-animation');
 
         if (scorePercent >= 80) {
-            elements.victoryMessage.innerHTML = `<span style="color: var(--success)">恭喜勇者！你成功討伐了惡龍！</span>`;
+            elements.victoryMessage.innerHTML = `<span style="color: var(--success)">恭喜勇者！你成功討伐了挑戰！</span>`;
             elements.dragonSprite.classList.add('dragon-die');
             if (resultAnimContainer && resultAnimImg) {
                 resultAnimImg.src = 'motion/win.webp';
                 resultAnimContainer.classList.remove('hidden');
             }
         } else {
-            elements.victoryMessage.innerHTML = `<span style="color: var(--danger)">戰敗了... 惡龍的力量太強，再修煉一下吧！</span>`;
+            elements.victoryMessage.innerHTML = `<span style="color: var(--danger)">戰敗了... 挑戰的力量太強，再修煉一下吧！</span>`;
             if (resultAnimContainer && resultAnimImg) {
                 resultAnimImg.src = 'motion/lose.webp';
                 resultAnimContainer.classList.remove('hidden');
@@ -1463,14 +1499,14 @@ async function awardRewards(scorePercent, questionCount) {
     
     // Show custom modal
     let resultHtml = `<div style="text-align: left; background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 0.5rem; border: 1px solid rgba(251, 191, 36, 0.2);">`;
-    resultHtml += `<div><i class="fas fa-coins" style="color: var(--gold);"></i> 獲得金幣: <span style="color: var(--gold); font-weight: bold;">${goldEarned}</span></div>`;
+    resultHtml += `<div><i class="fas fa-coins" style="color: var(--gold);"></i> 獲得芒果幣: <span style="color: var(--gold); font-weight: bold;">${goldEarned}</span></div>`;
     
     if (loot) {
         resultHtml += `<div><i class="fas fa-box-open" style="color: #60a5fa;"></i> 獲得寶物: <span style="color: #60a5fa;">${loot.icon} ${loot.name}</span></div>`;
     }
     
     if (newPiece) {
-        resultHtml += `<div><i class="fas fa-puzzle-piece" style="color: var(--success);"></i> 獲得名畫碎片: <span style="color: var(--success);">${newPiece.name} (碎片 ${newPiece.index + 1})</span></div>`;
+        resultHtml += `<div><i class="fas fa-puzzle-piece" style="color: var(--success);"></i> 獲得成就碎片: <span style="color: var(--success);">${newPiece.name} (碎片 ${newPiece.index + 1})</span></div>`;
     } else if (newPiece === false) {
         resultHtml += `<div><i class="fas fa-redo" style="color: var(--text-dim);"></i> 獲得重複碎片，已轉化為 <span style="color: var(--gold);">50G</span></div>`;
     }
@@ -2193,7 +2229,7 @@ window.viewUserProfile = async (uid) => {
                 <div><strong style="color:var(--gold);">真實姓名：</strong> ${user.realName || '未填寫'}</div>
                 <div><strong style="color:var(--gold);">學校名稱：</strong> ${user.school || '未填寫'}</div>
                 <div><strong style="color:var(--gold);">任教科目：</strong> ${user.teacherSubject || '未填寫'}</div>
-                <div><strong style="color:var(--gold);">持有金幣：</strong> ${user.gold || 0} G</div>
+                <div><strong style="color:var(--gold);">持有芒果幣：</strong> ${user.gold || 0} G</div>
                 <div><strong style="color:var(--gold);">上榜感言：</strong> ${user.honorMessage || '未設定'}</div>
             </div>
             <div style="margin-top: 1.5rem; display: flex; gap: 0.5rem; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1rem;">
@@ -2201,7 +2237,7 @@ window.viewUserProfile = async (uid) => {
                     <i class="fas fa-eraser"></i> 清除上榜感言
                 </button>
                 <button class="btn btn-outline btn-small" onclick="adminDeductGold('${user.uid}')" style="border-color: #f87171; color: #f87171;">
-                    <i class="fas fa-coins"></i> 扣除 500 金幣 (處罰)
+                    <i class="fas fa-coins"></i> 扣除 500 芒果幣 (處罰)
                 </button>
             </div>
         `;
@@ -2222,10 +2258,10 @@ window.adminClearHonorMessage = async (uid) => {
 };
 
 window.adminDeductGold = async (uid) => {
-    if (!confirm('確定要對此勇者扣除 500 金幣作為處罰嗎？')) return;
+    if (!confirm('確定要對此勇者扣除 500 芒果幣作為處罰嗎？')) return;
     try {
         await syncUserStats(uid, { goldDelta: -500 });
-        alert('金幣已扣除。');
+        alert('芒果幣已扣除。');
         viewUserProfile(uid); // Refresh
     } catch (e) { alert('操作失敗: ' + e.message); }
 };
@@ -2441,13 +2477,18 @@ window.toggleTeacherModal = toggleTeacherModal;
 const switchTeacherTab = async (tab) => {
     const studentsTab = document.getElementById('teacher-tab-students');
     const statsTab = document.getElementById('teacher-tab-stats');
+    const tasksTab = document.getElementById('teacher-tab-tasks');
     const studentsBtn = document.getElementById('teacher-tab-students-btn');
     const statsBtn = document.getElementById('teacher-tab-stats-btn');
+    const tasksBtn = document.getElementById('teacher-tab-tasks-btn');
     
     studentsTab.classList.add('hidden');
     statsTab.classList.add('hidden');
+    if(tasksTab) tasksTab.classList.add('hidden');
+    
     studentsBtn.classList.remove('btn-primary');
     statsBtn.classList.remove('btn-primary');
+    if(tasksBtn) tasksBtn.classList.remove('btn-primary');
     
     if (tab === 'students') {
         studentsTab.classList.remove('hidden');
@@ -2457,6 +2498,10 @@ const switchTeacherTab = async (tab) => {
         statsTab.classList.remove('hidden');
         statsBtn.classList.add('btn-primary');
         await renderTeacherStats();
+    } else if (tab === 'tasks') {
+        if(tasksTab) tasksTab.classList.remove('hidden');
+        if(tasksBtn) tasksBtn.classList.add('btn-primary');
+        await renderTeacherTasksDropdown();
     }
 };
 window.switchTeacherTab = switchTeacherTab;
@@ -2555,27 +2600,86 @@ const deleteStudentAction = async (email) => {
 };
 window.deleteStudentAction = deleteStudentAction;
 
-const importStudentsCSV = async (event) => {
+const renderTeacherTasksDropdown = async () => {
+    const select = document.getElementById('task-student-select');
+    if (!select) return;
+    
+    try {
+        const students = await getStudentsOfTeacher(state.currentUser.email);
+        select.innerHTML = '<option value="">請選擇學生...</option>' + 
+            students.map(s => `<option value='${JSON.stringify(s)}'>${s.className} - ${s.name} (${s.email})</option>`).join('');
+    } catch (error) {
+        console.error("Error loading students for tasks", error);
+    }
+};
+
+const handleAssignTask = async (event) => {
+    event.preventDefault();
+    if (!state.currentUser) return;
+
+    const studentJson = document.getElementById('task-student-select').value;
+    const subject = document.getElementById('task-subject-select').value;
+    const startDate = document.getElementById('task-start-date').value;
+    const endDate = document.getElementById('task-end-date').value;
+
+    if (!studentJson || !subject || !startDate || !endDate) {
+        alert('請填寫完整任務資訊');
+        return;
+    }
+
+    const student = JSON.parse(studentJson);
+    const taskData = {
+        email: student.email,
+        className: student.className,
+        name: student.name,
+        subject: subject,
+        startDate: startDate,
+        endDate: endDate
+    };
+
+    showLoadingOverlay(true);
+    const success = await saveTaskToGAS(taskData);
+    showLoadingOverlay(false);
+
+    if (success) {
+        alert('任務指派成功並已同步至 Google Sheet！');
+        document.getElementById('assign-task-form').reset();
+    } else {
+        alert('任務同步至 Google Sheet 失敗，請稍後再試。');
+    }
+};
+window.handleAssignTask = handleAssignTask;
+
+const downloadStudentTemplate = () => {
+    const ws_name = "學生名單範本";
+    const wb = XLSX.utils.book_new();
+    const ws_data = [
+        ["班級", "姓名", "Email"],
+        ["資科三", "王小明", "student@apps.ycvs.tn.edu.tw"]
+    ];
+    const ws = XLSX.utils.aoa_to_sheet(ws_data);
+    XLSX.utils.book_append_sheet(wb, ws, ws_name);
+    XLSX.writeFile(wb, "學生名單匯入範本.xlsx");
+};
+window.downloadStudentTemplate = downloadStudentTemplate;
+
+const importStudentsFile = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
     
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-        const text = e.target.result;
-        const lines = text.split('\n');
+    const extension = file.name.split('.').pop().toLowerCase();
+    
+    const processData = async (dataArray) => {
         let successCount = 0;
         let failCount = 0;
         
         showLoadingOverlay(true);
-        for (let line of lines) {
-            line = line.trim();
-            if (!line) continue;
-            const parts = parseCSVLine(line);
+        for (let parts of dataArray) {
             if (parts.length >= 3) {
-                const className = parts[0].trim();
-                const name = parts[1].trim();
-                const email = parts[2].trim().toLowerCase();
-                if (className && name && email) {
+                const className = (parts[0] || '').toString().trim();
+                const name = (parts[1] || '').toString().trim();
+                const email = (parts[2] || '').toString().trim().toLowerCase();
+                if (className && name && email && className !== '班級') {
                     try {
                         await addStudent(className, name, email, state.currentUser.email);
                         successCount++;
@@ -2591,8 +2695,33 @@ const importStudentsCSV = async (event) => {
         renderTeacherStudents();
         event.target.value = '';
     };
-    reader.readAsText(file);
+
+    if (extension === 'csv') {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const text = e.target.result;
+            const lines = text.split('\n');
+            const dataArray = lines.map(line => parseCSVLine(line.trim())).filter(parts => parts.length > 0);
+            await processData(dataArray);
+        };
+        reader.readAsText(file);
+    } else if (extension === 'xlsx' || extension === 'xls') {
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, {type: 'array'});
+            const firstSheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[firstSheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+            await processData(json);
+        };
+        reader.readAsArrayBuffer(file);
+    } else {
+        alert("不支援的檔案格式，請上傳 CSV 或 Excel 檔案");
+        event.target.value = '';
+    }
 };
+window.importStudentsFile = importStudentsFile;
 
 window.renderTeacherStats = async () => {
     const tbody = document.getElementById('teacher-stats-body');
@@ -2676,7 +2805,7 @@ async function showPrologue() {
     const modal = document.getElementById('prologue-modal');
     const textContainer = document.getElementById('prologue-text');
     const skipBtn = document.getElementById('skip-prologue-btn');
-    const storyText = "古老的王國傳說著... 邪惡的惡龍奪走了世界上所有的珍貴名畫，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗惡龍，奪回失去的拼圖碎片，重現名畫的光輝！";
+    const storyText = "古老的王國傳說著... 邪惡的挑戰奪走了世界上所有的珍貴成就，將它們撕碎並藏在深淵之中。\n\n身為勇者，你必須通過『丙級檢定』的試煉，在練習中磨練心智，在戰鬥中擊敗挑戰，奪回失去的拼圖碎片，重現成就的光輝！";
     
     modal.classList.remove('hidden');
     
@@ -2700,7 +2829,7 @@ async function showPrologue() {
         // Let user audio trigger safely on skip click
         const bgMusic = document.getElementById('bg-music');
         if (bgMusic && bgMusic.paused) {
-            bgMusic.play().catch(e => console.log("Music play blocked:", e));
+            // bgMusic.play().catch(e => console.log("Music play blocked:", e));
         }
     };
 }
@@ -2797,15 +2926,15 @@ const BUILDING_TYPES = {
     orchard_irwin: { name: '愛文芒果園', cost: 150, desc: '特化愛文芒果園。100%生產「愛文芒果」與「愛文芒果種子」。需要5顆愛文種子。', icon: 'fa-lemon' },
     orchard_jinhuang: { name: '金煌芒果園', cost: 200, desc: '特化金煌芒果園。100%生產「金煌芒果」與「金煌芒果種子」。需要5顆金煌種子。', icon: 'fa-lemon' },
     orchard_yuwen: { name: '玉文芒果園', cost: 250, desc: '特化玉文芒果園。100%生產「玉文芒果」與「玉文芒果種子」。需要5顆玉文種子。', icon: 'fa-lemon' },
-    house: { name: '皇家住宅', cost: 150, desc: '增加王國的人口上限，定期生產少量金幣。', icon: 'fa-house' },
+    house: { name: '皇家住宅', cost: 150, desc: '增加王國的人口上限，定期生產少量芒果幣。', icon: 'fa-house' },
     windmill: { name: '皇家風車', cost: 200, desc: '引導微風運轉，定期生產「牛奶」。', icon: 'fa-wind' },
     watchtower: { name: '王國暸望塔', cost: 250, desc: '防禦領土，提供對戰防守力加成。', icon: 'fa-shield-halved' },
-    library: { name: '皇家圖書館', cost: 400, desc: '累積學識。使您在答對題目時獲得的金幣 +10%。', icon: 'fa-book' },
-    goldmine: { name: '金礦山', cost: 500, desc: '開採地底金礦。定期產生「金幣」。', icon: 'fa-coins' },
+    library: { name: '皇家圖書館', cost: 400, desc: '累積學識。使您在答對題目時獲得的芒果幣 +10%。', icon: 'fa-book' },
+    goldmine: { name: '金礦山', cost: 500, desc: '開採地底金礦。定期產生「芒果幣」。', icon: 'fa-coins' },
     castle: { name: '玉井皇家城堡', cost: 1000, desc: '王國核心，解鎖各種在地特色地標。', icon: 'fa-fort-awesome' },
     
     // Yujing Local Landmarks
-    yujing_sugar: { name: '玉井糖廠', cost: 600, desc: '懷舊的紅磚煙囪地標。定期產生大量金幣。', photo: 'local pictures/玉井糖廠.jpg', icon: 'fa-industry' },
+    yujing_sugar: { name: '玉井糖廠', cost: 600, desc: '懷舊的紅磚煙囪地標。定期產生大量芒果幣。', photo: 'local pictures/玉井糖廠.jpg', icon: 'fa-industry' },
     yujing_school: { name: '玉井工商 (YCVS)', cost: 800, desc: '培育技術人才的學習殿堂。答題獲得的經驗值 +20%。', photo: 'local pictures/玉井工商.jpg', icon: 'fa-school' },
     yujing_fruit_market: { name: '玉井青果集貨場', cost: 700, desc: '全台最大芒果批發市場。芒果物資收購價 +15%。', photo: 'local pictures/玉井青果集貨場.jpg', icon: 'fa-store' },
     yujing_police: { name: '玉井警察局', cost: 500, desc: '維護地方治安。答題遭遇野怪機率減半。', photo: 'local pictures/玉井警察局.jpeg', icon: 'fa-building-shield' },
@@ -3660,7 +3789,7 @@ function updateActiveCellInfo() {
 
     if (land.isMonster) {
         status = '野怪領地';
-        desc = `警告！此地塊被野怪「${land.monsterName || '芒果小偷'}」佔領了！\n野怪血量：${land.monsterHp} / ${land.maxMonsterHp}。\n您可以挑戰攻打它，答對題目扣除其生命，擊敗可將其收復為空地並獲得高額芒果種子與金幣獎勵！`;
+        desc = `警告！此地塊被野怪「${land.monsterName || '芒果小偷'}」佔領了！\n野怪血量：${land.monsterHp} / ${land.maxMonsterHp}。\n您可以挑戰攻打它，答對題目扣除其生命，擊敗可將其收復為空地並獲得高額芒果種子與芒果幣獎勵！`;
         elements.selectedStatus.textContent = status;
         elements.selectedStatus.style.background = 'rgba(239, 68, 68, 0.2)';
         elements.selectedStatus.style.color = '#ef4444';
@@ -3711,7 +3840,7 @@ function updateActiveCellInfo() {
         // Visitor interactions
         elements.cellActionButtons.innerHTML = `
             <button class="btn btn-gold" onclick="sendBlessingToHost()">
-                <i class="fas fa-heart"></i> 給予祝福 (+50 金幣)
+                <i class="fas fa-heart"></i> 給予祝福 (+50 芒果幣)
             </button>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.5rem;">
                 <button class="btn btn-outline btn-small" onclick="sendGiftToHost('egg')" title="贈送雞蛋"><i class="fas fa-egg"></i> 送蛋</button>
@@ -3737,7 +3866,7 @@ function updateActiveCellInfo() {
             if (land.type === 'mango_orchard') harvestText = `收成芒果 (可收成: ${Q} 個)`;
             else if (land.type === 'windmill') harvestText = `收集牛奶 (可收成: ${Q} 瓶)`;
             else if (land.type === 'farm') harvestText = `收集雞蛋 (可收成: ${Q} 顆)`;
-            else if (land.type === 'goldmine' || land.type === 'yujing_sugar') harvestText = `開採金幣 (可收成: ${Q * 50} 金幣)`;
+            else if (land.type === 'goldmine' || land.type === 'yujing_sugar') harvestText = `開採芒果幣 (可收成: ${Q * 50} 芒果幣)`;
             else harvestText = '收取資源';
 
             elements.cellActionButtons.innerHTML = `
@@ -3756,7 +3885,7 @@ function updateActiveCellInfo() {
                     
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-top: 0.25rem;">
                         <button class="btn btn-outline btn-small" ${canUpgrade ? '' : 'disabled'} onclick="upgradeGridCell(${x}, ${y}, ${upgradeCost})">
-                            <i class="fas fa-circle-arrow-up"></i> 升級 (需要 ${upgradeCost} 金幣)
+                            <i class="fas fa-circle-arrow-up"></i> 升級 (需要 ${upgradeCost} 芒果幣)
                         </button>
                         <button class="btn btn-outline btn-small" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.3);" onclick="demolishGridCell(${x}, ${y})">
                             <i class="fas fa-trash-can"></i> 拆除
@@ -3832,7 +3961,7 @@ function renderBuildShop() {
         btn.innerHTML = `
             <span style="font-size: 1.25rem; margin-bottom: 2px;"><i class="fas ${b.icon}"></i></span>
             <strong style="font-size: 0.75rem;">${b.name}</strong>
-            <span class="btn-cost">${b.cost} 金幣</span>
+            <span class="btn-cost">${b.cost} 芒果幣</span>
             ${lockedByCastle ? '<span style="font-size: 0.55rem; color: #f87171; margin-top: 2px;">(需要城堡)</span>' : ''}
             ${seedMsg ? `<span style="font-size: 0.55rem; color: #f87171; margin-top: 2px;">${seedMsg}</span>` : ''}
         `;
@@ -3849,7 +3978,7 @@ async function buildStructure(type, cost) {
     const inv = state.userProfile.inventory || {};
 
     if (gold < cost) {
-        showToast('金幣不足，無法建造！', 'error');
+        showToast('芒果幣不足，無法建造！', 'error');
         return;
     }
 
@@ -3928,7 +4057,7 @@ async function upgradeGridCell(x, y, cost) {
     const gold = state.userProfile.gold || 0;
 
     if (gold < cost) {
-        showToast('金幣不足，無法升級！', 'error');
+        showToast('芒果幣不足，無法升級！', 'error');
         return;
     }
 
@@ -3968,7 +4097,7 @@ async function demolishGridCell(x, y) {
     if (idx === -1 || lands[idx].type === 'empty') return;
 
     const bName = BUILDING_TYPES[lands[idx].type]?.name || '建築';
-    if (!confirm(`確定要拆除 ${bName} 嗎？拆除將退還 50% 的建造金幣。`)) return;
+    if (!confirm(`確定要拆除 ${bName} 嗎？拆除將退還 50% 的建造芒果幣。`)) return;
 
     showLoadingOverlay(true);
     try {
@@ -4120,7 +4249,7 @@ async function harvestGridCell(x, y) {
         } else if (land.type === 'goldmine' || land.type === 'yujing_sugar') {
             const goldGained = Q * 50 * land.level;
             goldUpdate += goldGained;
-            msg = `成功開採 ${goldGained} 金幣！`;
+            msg = `成功開採 ${goldGained} 芒果幣！`;
         }
 
         // Reset harvest timer
@@ -4248,7 +4377,7 @@ async function processMonsterBattleDefeated() {
             state.userProfile.gold = newGold;
             state.userProfile.inventory = inv;
 
-            alert(`戰鬥勝利！您成功收復了地塊，野怪逃跑了！\n獲得獎勵：${goldAward} 金幣與 ${seedAward} 顆芒果種子！`);
+            alert(`戰鬥勝利！您成功收復了地塊，野怪逃跑了！\n獲得獎勵：${goldAward} 芒果幣與 ${seedAward} 顆芒果種子！`);
             updateTerritoryAssets();
         } catch (e) {
             console.error("Failed to process monster defeat", e);
@@ -4306,7 +4435,7 @@ window.visitPlayerKingdom = async (uid) => {
             
             // Adjust modal headings
             document.getElementById('territory-map-title').innerHTML = `<i class="fas fa-crown"></i> 參觀：${profile.nickname} 的國度`;
-            document.getElementById('territory-map-subtitle').textContent = `正在欣賞該勇者的領土，給予祝福可增加對方的人氣與金幣！`;
+            document.getElementById('territory-map-subtitle').textContent = `正在欣賞該勇者的領土，給予祝福可增加對方的人氣與芒果幣！`;
             
             elements.territoryModal.classList.remove('hidden');
             switchTerritoryTab('map');
@@ -4326,7 +4455,7 @@ window.sendBlessingToHost = async () => {
     const gold = state.userProfile.gold || 0;
 
     if (gold < 10) {
-        showToast('您的金幣不足 10 金幣，無法送出祝福！', 'error');
+        showToast('您的芒果幣不足 10 芒果幣，無法送出祝福！', 'error');
         return;
     }
 
@@ -4339,7 +4468,7 @@ window.sendBlessingToHost = async () => {
         
         await syncUserStats(hostUid, { goldDelta: 50 });
 
-        showToast(`祝福送出成功！扣除您 10 金幣，對方獲得 50 金幣。`, 'success');
+        showToast(`祝福送出成功！扣除您 10 芒果幣，對方獲得 50 芒果幣。`, 'success');
         updateTerritoryAssets();
 
         // Spawn 3D Heart floating particles in Three.js
@@ -4479,13 +4608,13 @@ function updateProductionTimers() {
 function renderKitchen() {
     elements.kitchenRecipes.innerHTML = '';
     const recipes = [
-        { id: 'mango_pudding', name: '芒果布丁', icon: 'fa-cookie', desc: '玉井特產芒果，搭配鮮乳與雞蛋，香甜滑嫩！', cost: '1 芒果 + 1 蛋 + 1 奶 + 200 金幣' },
-        { id: 'mango_shaved_ice', name: '玉井芒果冰', icon: 'fa-ice-cream', desc: '夏日解暑聖品！滿滿的芒果切丁與牛奶冰沙！', cost: '2 芒果 + 2 奶 + 300 金幣' },
-        { id: 'mango_green_slush', name: '情人果土芒果青', icon: 'fa-glass-water', desc: '酸酸甜甜的古早味情人果冰，戀愛的滋味！', cost: '2 土芒果 + 100 金幣' },
-        { id: 'deluxe_irwin_pudding', name: '豪華愛文芒果布丁', icon: 'fa-cookie', desc: '選用頂級愛文芒果製成的皇家布丁，入口即化！', cost: '1 愛文芒果 + 1 蛋 + 1 奶 + 300 金幣' },
-        { id: 'premium_irwin_shaved_ice', name: '頂級愛文芒果雪花冰', icon: 'fa-snowflake', desc: '綿密雪花冰鋪滿香甜多汁的愛文芒果，無上享受！', cost: '2 愛文芒果 + 2 奶 + 500 金幣' },
-        { id: 'dried_jinhuang_mango', name: '金煌芒果乾', icon: 'fa-leaf', desc: '厚實飽滿的金煌芒果果肉低溫烘乾，香Q有勁！', cost: '3 金煌芒果 + 200 金幣' },
-        { id: 'royal_yuwen_panna_cotta', name: '皇家玉文芒果鮮奶酪', icon: 'fa-cheese', desc: '香濃玉文芒果淋在滑順的義式鮮奶酪上，貴族般的美味！', cost: '2 玉文芒果 + 2 奶 + 400 金幣' }
+        { id: 'mango_pudding', name: '芒果布丁', icon: 'fa-cookie', desc: '玉井特產芒果，搭配鮮乳與雞蛋，香甜滑嫩！', cost: '1 芒果 + 1 蛋 + 1 奶 + 200 芒果幣' },
+        { id: 'mango_shaved_ice', name: '玉井芒果冰', icon: 'fa-ice-cream', desc: '夏日解暑聖品！滿滿的芒果切丁與牛奶冰沙！', cost: '2 芒果 + 2 奶 + 300 芒果幣' },
+        { id: 'mango_green_slush', name: '情人果土芒果青', icon: 'fa-glass-water', desc: '酸酸甜甜的古早味情人果冰，戀愛的滋味！', cost: '2 土芒果 + 100 芒果幣' },
+        { id: 'deluxe_irwin_pudding', name: '豪華愛文芒果布丁', icon: 'fa-cookie', desc: '選用頂級愛文芒果製成的皇家布丁，入口即化！', cost: '1 愛文芒果 + 1 蛋 + 1 奶 + 300 芒果幣' },
+        { id: 'premium_irwin_shaved_ice', name: '頂級愛文芒果雪花冰', icon: 'fa-snowflake', desc: '綿密雪花冰鋪滿香甜多汁的愛文芒果，無上享受！', cost: '2 愛文芒果 + 2 奶 + 500 芒果幣' },
+        { id: 'dried_jinhuang_mango', name: '金煌芒果乾', icon: 'fa-leaf', desc: '厚實飽滿的金煌芒果果肉低溫烘乾，香Q有勁！', cost: '3 金煌芒果 + 200 芒果幣' },
+        { id: 'royal_yuwen_panna_cotta', name: '皇家玉文芒果鮮奶酪', icon: 'fa-cheese', desc: '香濃玉文芒果淋在滑順的義式鮮奶酪上，貴族般的美味！', cost: '2 玉文芒果 + 2 奶 + 400 芒果幣' }
     ];
 
     recipes.forEach(r => {
@@ -4516,7 +4645,7 @@ async function synthesizeItem(recipeId) {
 
     // Check Gold
     if (gold < (config.gold || 0)) {
-        showToast('金幣不足，無法製作！', 'error');
+        showToast('芒果幣不足，無法製作！', 'error');
         return;
     }
 
@@ -4618,7 +4747,7 @@ function renderTerritoryPawnShop() {
                 <div class="item-details">
                     <h4>${s.name}</h4>
                     <p>持有數量：${s.count}</p>
-                    <p style="color: var(--gold);">收購價：${s.price} 金幣 / 個</p>
+                    <p style="color: var(--gold);">收購價：${s.price} 芒果幣 / 個</p>
                 </div>
             </div>
             <button class="btn btn-gold btn-sm" onclick="sellToPawnShop('${s.id}')">全部賣出</button>
@@ -4640,7 +4769,7 @@ async function sellToPawnShop(itemId) {
     const price = TERRITORY_CONFIG.pawnShop[itemId];
     const totalGain = count * price;
 
-    if (!confirm(`確定要賣出所有 ${count} 個項目嗎？這將獲得 ${totalGain} 金幣。`)) return;
+    if (!confirm(`確定要賣出所有 ${count} 個項目嗎？這將獲得 ${totalGain} 芒果幣。`)) return;
 
     showLoadingOverlay(true);
     try {
@@ -4656,7 +4785,7 @@ async function sellToPawnShop(itemId) {
         state.userProfile.inventory = newInv;
         state.userProfile.gold = newGold;
 
-        alert(`交易成功！獲得了 ${totalGain} 金幣。`);
+        alert(`交易成功！獲得了 ${totalGain} 芒果幣。`);
         updateTerritoryAssets();
         renderTerritoryPawnShop();
     } catch (e) {
@@ -4976,7 +5105,7 @@ async function askBattleQuestion(q, questionIndex, totalQuestions) {
 
 elements.confirmChallengeBtn.addEventListener('click', async () => {
     if (!state.userProfile || state.userProfile.gold < state.battle.bet) {
-        alert('金幣不足，無法發起這場挑戰！');
+        alert('芒果幣不足，無法發起這場挑戰！');
         return;
     }
 
@@ -4988,33 +5117,73 @@ elements.confirmChallengeBtn.addEventListener('click', async () => {
         return;
     }
 
-    if (confirm(`確定要打賭 ${state.battle.bet} 金幣與 ${state.battle.opponent.nickname} 進行決鬥嗎？\n(勝利獲得 2 倍獎勵，失敗失去賭注)`)) {
+    if (confirm(`確定要打賭 ${state.battle.bet} 芒果幣與 ${state.battle.opponent.nickname} 進行決鬥嗎？\n(勝利獲得 2 倍獎勵，失敗失去賭注)`)) {
         elements.challengeModal.classList.add('hidden');
         await startBattle();
     }
 });
 
 async function startBattle() {
-    state.battle.isBattling = true;
-    elements.battleConsoleModal.classList.remove('hidden');
-    elements.closeDosBtn.classList.add('hidden');
-    elements.dosLog.innerHTML = '';
+    showScreen('battle-screen');
+    // Simplified: directly process results without dragon battle
+    const totalQuestions = state.allQuestions.length;
+    const correctAnswers = state.score;
+    const accuracy = (correctAnswers / totalQuestions) * 100 || 0;
     
-    // Timer animation
-    let startTime = Date.now();
-    const timerInterval = setInterval(() => {
-        if (!state.battle.isBattling) {
-            clearInterval(timerInterval);
-            return;
-        }
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        const h = Math.floor(elapsed / 3600).toString().padStart(2, '0');
-        const m = Math.floor((elapsed % 3600) / 60).toString().padStart(2, '0');
-        const s = (elapsed % 60).toString().padStart(2, '0');
-        elements.battleConsoleTimer.textContent = `${h}:${m}:${s}`;
-    }, 1000);
-
-    await runBattleSimulation(state.battle.opponent, state.battle.bet);
+    // Calculate EXP and Coins (1.5x if accuracy > 80%, 2x if 100%)
+    let baseExp = correctAnswers * 10;
+    let baseCoins = correctAnswers * 5;
+    
+    if (accuracy === 100) {
+        baseExp *= 2;
+        baseCoins *= 2;
+    } else if (accuracy >= 80) {
+        baseExp = Math.floor(baseExp * 1.5);
+        baseCoins = Math.floor(baseCoins * 1.5);
+    }
+    
+    const timeSpent = Math.floor((Date.now() - state.startTime) / 1000);
+    
+    // Save to Google Apps Script
+    if (state.currentUser) {
+        const recordData = {
+            email: state.currentUser.email,
+            subject: state.config.subjectMap[state.selectedSubject]?.name || state.selectedSubject,
+            score: correctAnswers,
+            correctRate: accuracy.toFixed(2) + '%',
+            durationSec: timeSpent,
+            coinsEarned: baseCoins,
+            isTaskReward: false // TODO: Check task match
+        };
+        await saveRecordToGAS(recordData);
+    }
+    
+    try {
+        await processBattleResult({
+            isWin: accuracy >= 60,
+            expGained: baseExp,
+            coinsGained: baseCoins,
+            timeSpent: timeSpent,
+            subject: state.selectedSubject,
+            score: correctAnswers,
+            totalQuestions: totalQuestions
+        });
+        
+        // Show result modal instead of battle sequence
+        document.getElementById('battle-status').innerHTML = `
+            <h3>測驗完成！</h3>
+            <p>答對題數：${correctAnswers} / ${totalQuestions}</p>
+            <p>獲得經驗值：${baseExp} EXP</p>
+            <p>獲得芒果幣：${baseCoins}</p>
+        `;
+        setTimeout(() => {
+            endBattle(accuracy >= 60, baseExp, baseCoins);
+        }, 3000);
+    } catch (error) {
+        console.error("Error processing quiz result:", error);
+        alert("儲存紀錄時發生錯誤。");
+        showScreen('setup-screen');
+    }
 }
 
 async function runBattleSimulation(opponent, bet) {
@@ -5030,7 +5199,7 @@ async function runBattleSimulation(opponent, bet) {
     const opName = opponent.nickname || '對手';
     
     await writeLog(`\n[對戰開始] ${myName} 向 ${opName} 發起了決鬥！`, log, 'dos-text-gold');
-    await writeLog(`[對戰開始] 決鬥賭注：${bet} 枚金幣`, log, 'dos-text-gold');
+    await writeLog(`[對戰開始] 決鬥賭注：${bet} 枚芒果幣`, log, 'dos-text-gold');
     await new Promise(r => setTimeout(r, 500));
 
     const sub = document.getElementById('challenge-subject-select').value;
@@ -5151,7 +5320,7 @@ async function runBattleSimulation(opponent, bet) {
             await writeLog(`[判定勝利] 你的剩餘生命值 (${myHp}) 高於對手 (${opHp})！`, log, 'dos-text-gold');
         }
         await writeLog(`[勝利] 你贏得了這場決鬥！ (^_^)v`, log, 'dos-text-gold');
-        await writeLog(`>>> 獲得金幣：${bet * 2} (★≧▽^))★☆`, log, 'dos-text-gold');
+        await writeLog(`>>> 獲得芒果幣：${bet * 2} (★≧▽^))★☆`, log, 'dos-text-gold');
     } else {
         if (myHp <= 0) {
             await writeLog(`\n[失敗] 你感覺視線模糊，體力已到極限... (O_Q)`, log, 'dos-text-red');
@@ -5160,7 +5329,7 @@ async function runBattleSimulation(opponent, bet) {
             await writeLog(`[判定失敗] 你的剩餘生命值 (${myHp}) 低於對手 (${opHp})...`, log, 'dos-text-red');
         }
         await writeLog(`[失敗] ${opName} 獲得了勝利！ (つд⊂)`, log, 'dos-text-red');
-        await writeLog(`>>> 失去金幣：${bet} (T_T)`, log, 'dos-text-red');
+        await writeLog(`>>> 失去芒果幣：${bet} (T_T)`, log, 'dos-text-red');
     }
 
     try {
